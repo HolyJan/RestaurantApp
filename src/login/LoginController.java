@@ -56,7 +56,7 @@ public class LoginController implements Initializable {
                 if (!result.next()) {
                     showError("Chyba přihlášení. Login nebo heslo je špatně!");
                 }
-            }catch(SQLException e){
+            }catch(SQLException e){ 
                 System.out.println(e.getMessage());
             }
         }else{
