@@ -51,10 +51,12 @@ public class LoginController implements Initializable {
         if(!"".equals(usernameTextField.getText()) && !"".equals(passwordTextField.getText())){
             Statement statement = connection.createBlockedStatement();
             try {
-                ResultSet result = statement.executeQuery("SELECT * FROM uzivatele_view"
-                        + "login=" + "'" + usernameTextField.getText() + "'");
+                ResultSet result = statement.executeQuery("SELECT * FROM uzivatele WHERE "
+                        + "login=" + "'" + usernameTextField.getText() + "'AND heslo=" + "'" + passwordTextField.getText() + "'");
                 if (!result.next()) {
                     showError("Chyba přihlášení. Login nebo heslo je špatně!");
+                }else{
+                    System.out.println("Přihlášení proběhlo úspěšně");
                 }
             }catch(SQLException e){ 
                 System.out.println(e.getMessage());
