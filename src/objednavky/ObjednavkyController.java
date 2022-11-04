@@ -39,7 +39,7 @@ public class ObjednavkyController implements Initializable {
     @FXML
     private TableColumn<Objednavka, String> nazevPolozkyCol;
     @FXML
-    private TableColumn<Objednavka, String> cenaCol;
+    private TableColumn<Objednavka, String> cenaCol; 
 
     DatabaseConnection connection;
     ObservableList<Objednavka> objednavky = FXCollections.observableArrayList();
