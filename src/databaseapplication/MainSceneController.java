@@ -9,12 +9,17 @@ import connection.DatabaseConnection;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import login.LoginController;
@@ -29,13 +34,30 @@ import zamestnanci.ZamestnanciController;
 public class MainSceneController implements Initializable {
 
     DatabaseConnection connection;
-   
+    @FXML
+    private Button loginBtn;
+    public static BooleanProperty loggedIn;
+    @FXML
+    private Button logOut;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        loggedIn = new SimpleBooleanProperty(false);
+        loggedIn.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(newValue) {
+                    loginBtn.setVisible(false);
+                    logOut.setVisible(true);
+                } else {
+                    loginBtn.setVisible(true);
+                    logOut.setVisible(false);
+                }
+            }
+        });
         try {
             connection = new DatabaseConnection("ST60990", "60990");
             System.out.println("Přihlášení proběhlo úspěšně");
@@ -96,6 +118,10 @@ public class MainSceneController implements Initializable {
                 controllerObjednavky.setConnection(connection);
                 break;
         }
+    }
+
+    @FXML
+    private void logoutOnAc(ActionEvent event) {
     }
 
     

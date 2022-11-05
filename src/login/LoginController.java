@@ -23,6 +23,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import databaseapplication.*;
 
 /**
  * FXML Controller class
@@ -57,6 +58,9 @@ public class LoginController implements Initializable {
                     showError("Chyba přihlášení. Login nebo heslo je špatně!");
                 }else{
                     System.out.println("Přihlášení proběhlo úspěšně");
+                    MainSceneController.loggedIn.set(true);
+                    Stage stage = (Stage) passwordTextField.getScene().getWindow();
+                    stage.close();
                 }
             }catch(SQLException e){ 
                 System.out.println(e.getMessage());
