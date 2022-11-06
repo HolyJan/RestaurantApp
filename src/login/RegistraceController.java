@@ -7,6 +7,8 @@ package login;
 
 import connection.DatabaseConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  * FXML Controller class
@@ -54,20 +57,23 @@ public class RegistraceController implements Initializable {
                 && !"".equals(loginTextField.getText()) && !"".equals(hesloTextField.getText())) {
             Statement statement = connection.createBlockedStatement();
             try {
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                md.update(hesloTextField.getText().getBytes());
+                String hashedPassword = DatatypeConverter.printHexBinary(md.digest()).toUpperCase();
                 ResultSet result = statement.executeQuery("SELECT * FROM uzivatele WHERE "
                         + "login=" + "'" + loginTextField.getText() + "'");
                 if (!result.next()) {
                     statement.executeQuery("INSERT INTO UZIVATELE (jmeno, prijmeni, login,"
                             + "heslo, role) VALUES ('" + jmenoTextField.getText() + "','"
                             + prijmeniTextField.getText() + "','" + loginTextField.getText()
-                            + "','" + hesloTextField.getText() + "','user')");
+                            + "','" + hashedPassword + "','user')");
                     showInfoDialog("Registrace proběhla úspěšně.");
                     Stage stage = (Stage) registraceButton.getScene().getWindow();
                     stage.close();
                 } else {
                     showInfoDialog("Uživatel s tímto loginem jíž existuje.");
                 }
-            } catch (SQLException e) {
+            } catch (SQLException | NoSuchAlgorithmException e) {
                 System.out.println(e.getMessage());
             }
         } else {

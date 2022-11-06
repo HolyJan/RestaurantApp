@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 
 /**
  * FXML Controller class
@@ -54,12 +57,25 @@ public class ZakazniciController implements Initializable {
     private TableColumn<Adresa, String> pscCol;
     @FXML
     private TableColumn<Adresa, String> mestoCol;
+    @FXML
+    private AnchorPane pane;
+    boolean init;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        init = false;
+        pane.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(!init) {
+                    loadData();
+                    init = true;
+                }
+            }
+        });
         jmenoCol.setCellValueFactory(new PropertyValueFactory<>("jmeno"));
         prijmeniCol.setCellValueFactory(new PropertyValueFactory<>("prijmeni"));
         telefonCol.setCellValueFactory(new PropertyValueFactory<>("telefon"));

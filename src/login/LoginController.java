@@ -24,6 +24,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import databaseapplication.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  * FXML Controller class
@@ -52,8 +55,11 @@ public class LoginController implements Initializable {
         if(!"".equals(usernameTextField.getText()) && !"".equals(passwordTextField.getText())){
             Statement statement = connection.createBlockedStatement();
             try {
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                md.update(passwordTextField.getText().getBytes());
+                String hashedPassword = DatatypeConverter.printHexBinary(md.digest()).toUpperCase();
                 ResultSet result = statement.executeQuery("SELECT * FROM uzivatele WHERE "
-                        + "login=" + "'" + usernameTextField.getText() + "'AND heslo=" + "'" + passwordTextField.getText() + "'");
+                        + "login=" + "'" + usernameTextField.getText() + "'AND heslo=" + "'" + hashedPassword + "'");
                 if (!result.next()) {
                     showError("Chyba přihlášení. Login nebo heslo je špatně!");
                 }else{
@@ -62,7 +68,7 @@ public class LoginController implements Initializable {
                     Stage stage = (Stage) passwordTextField.getScene().getWindow();
                     stage.close();
                 }
-            }catch(SQLException e){ 
+            }catch(SQLException | NoSuchAlgorithmException e){ 
                 System.out.println(e.getMessage());
             }
         }else{
