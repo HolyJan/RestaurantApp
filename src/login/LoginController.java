@@ -57,7 +57,7 @@ public class LoginController implements Initializable {
             try {
                 MessageDigest md = MessageDigest.getInstance("MD5");
                 md.update(passwordTextField.getText().getBytes());
-                String hashedPassword = DatatypeConverter.printHexBinary(md.digest()).toUpperCase();
+                String hashedPassword = DatatypeConverter.printHexBinary(md.digest());
                 ResultSet result = statement.executeQuery("SELECT jmeno,prijmeni,id_role FROM uzivatele WHERE "
                         + "login=" + "'" + usernameTextField.getText() + "'AND heslo=" + "'" + hashedPassword + "'");
                 if (!result.next()) {

@@ -59,7 +59,7 @@ public class RegistraceController implements Initializable {
             try {
                 MessageDigest md = MessageDigest.getInstance("MD5");
                 md.update(hesloTextField.getText().getBytes());
-                String hashedPassword = DatatypeConverter.printHexBinary(md.digest()).toUpperCase();
+                String hashedPassword = DatatypeConverter.printHexBinary(md.digest());
                 ResultSet result = statement.executeQuery("SELECT * FROM uzivatele WHERE "
                         + "login=" + "'" + loginTextField.getText() + "'");
                 if (!result.next()) {
