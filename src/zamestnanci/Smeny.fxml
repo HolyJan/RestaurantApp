@@ -5,8 +5,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="400.0" prefWidth="624.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/18" fx:controller="zamestnanci.SmenyController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="400.0" prefWidth="624.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zamestnanci.SmenyController">
    <children>
       <TableView fx:id="tableView" layoutX="8.0" layoutY="9.0" prefHeight="400.0" prefWidth="498.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="125.60000000000002" AnchorPane.topAnchor="0.0">
          <columns>
@@ -16,6 +15,6 @@
             <TableColumn fx:id="prijmeniCol" minWidth="3.0" prefWidth="141.60003662109375" text="Příjmení" />
          </columns>
       </TableView>
-      <Button layoutX="534.0" layoutY="39.0" mnemonicParsing="false" onAction="#updateAction" text="Update" AnchorPane.rightAnchor="34.8" AnchorPane.topAnchor="39.0" />
+      <Button layoutX="533.0" layoutY="40.0" mnemonicParsing="false" onAction="#updateAction" text="Update" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="40.0" />
    </children>
 </AnchorPane>

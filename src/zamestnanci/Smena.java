@@ -20,7 +20,7 @@ public class Smena {
     public Smena(String smena, Date datum, String jmeno, String prijmeni) {
         this.smena = smena;
         this.datum = datum;
-        this.jmeno = jmeno;
+        this.jmeno = jmeno; 
         this.prijmeni = prijmeni;
     }
 

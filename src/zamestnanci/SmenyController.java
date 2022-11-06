@@ -61,7 +61,7 @@ public class SmenyController implements Initializable {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if (!init) {
                     loadData();
-                    init = true;
+                    init = true; 
                 }
             }
         });
