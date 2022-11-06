@@ -64,9 +64,9 @@ public class RegistraceController implements Initializable {
                         + "login=" + "'" + loginTextField.getText() + "'");
                 if (!result.next()) {
                     statement.executeQuery("INSERT INTO UZIVATELE (jmeno, prijmeni, login,"
-                            + "heslo, role) VALUES ('" + jmenoTextField.getText() + "','"
+                            + "heslo, id_role) VALUES ('" + jmenoTextField.getText() + "','"
                             + prijmeniTextField.getText() + "','" + loginTextField.getText()
-                            + "','" + hashedPassword + "','user')");
+                            + "','" + hashedPassword + "', 1)");
                     showInfoDialog("Registrace proběhla úspěšně.");
                     Stage stage = (Stage) registraceButton.getScene().getWindow();
                     stage.close();

@@ -6,11 +6,14 @@
 package databaseapplication;
 
 import connection.DatabaseConnection;
+import enums.Role;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -37,6 +40,8 @@ public class MainSceneController implements Initializable {
     @FXML
     private Button loginBtn;
     public static BooleanProperty loggedIn;
+    public static IntegerProperty roleId;
+    public static Role role;
     @FXML
     private Button logOut;
 
@@ -46,6 +51,7 @@ public class MainSceneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         loggedIn = new SimpleBooleanProperty(false);
+        roleId = new SimpleIntegerProperty();
         loggedIn.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -56,6 +62,13 @@ public class MainSceneController implements Initializable {
                     loginBtn.setVisible(true);
                     logOut.setVisible(false);
                 }
+            }
+        });
+        roleId.addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                role = Role.valueOf((int) newValue);
+                System.out.println(role);
             }
         });
         try {

@@ -58,12 +58,13 @@ public class LoginController implements Initializable {
                 MessageDigest md = MessageDigest.getInstance("MD5");
                 md.update(passwordTextField.getText().getBytes());
                 String hashedPassword = DatatypeConverter.printHexBinary(md.digest()).toUpperCase();
-                ResultSet result = statement.executeQuery("SELECT * FROM uzivatele WHERE "
+                ResultSet result = statement.executeQuery("SELECT jmeno,prijmeni,id_role FROM uzivatele WHERE "
                         + "login=" + "'" + usernameTextField.getText() + "'AND heslo=" + "'" + hashedPassword + "'");
                 if (!result.next()) {
                     showError("Chyba přihlášení. Login nebo heslo je špatně!");
                 }else{
                     System.out.println("Přihlášení proběhlo úspěšně");
+                    MainSceneController.roleId.set(result.getInt("ID_ROLE"));
                     MainSceneController.loggedIn.set(true);
                     Stage stage = (Stage) passwordTextField.getScene().getWindow();
                     stage.close();
