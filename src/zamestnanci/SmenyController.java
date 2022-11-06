@@ -95,9 +95,9 @@ public class SmenyController implements Initializable {
     }
     /*
     CREATE or REPLACE view smeny_view AS
-    SELECT s.id_smeny, s.nazev, s.datum, z.jmeno, z.prijmeni
-    FROM smeny s LEFT JOIN smeny_zamestn sz ON id_smeny = z.id_smeny
-    LEFT JOIN zakaznik z ON id_zakaznika = sz.id_zakaznika;
+    SELECT s.id_smena, s.nazev, s.datum, z.jmeno, z.prijmeni
+    FROM smeny s LEFT JOIN smeny_zamestn sz ON sz.id_smena = s.id_smena
+    LEFT JOIN zamestnanci z ON z.id_zamestnance = sz.id_zamestnance AND sz.id_smena = z.id_smena;
     
     */
     
