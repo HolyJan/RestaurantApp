@@ -26,7 +26,9 @@ import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import login.LoginController;
+import objednavky.ObjednavkyController;
 import zakaznici.ZakazniciController;
+import zamestnanci.SmenyController;
 import zamestnanci.ZamestnanciController;
 
 /**
@@ -99,6 +101,11 @@ public class MainSceneController implements Initializable {
         openANewView(event, "objednavky/Objednavky.fxml", connection);
     }
     
+    @FXML
+    private void smenyButAction(ActionEvent event) throws IOException {
+        openANewView(event, "zamestnanci/Smeny.fxml", connection);
+    }
+    
     public void openANewView(ActionEvent event, String fileLocation, DatabaseConnection conn) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource(fileLocation));
@@ -127,8 +134,12 @@ public class MainSceneController implements Initializable {
                 controllerLogin.setConnection(connection);
                 break;
             case "objednavky/Objednavky.fxml":
-                objednavky.ObjednavkyController controllerObjednavky = loader.getController();
+                ObjednavkyController controllerObjednavky = loader.getController();
                 controllerObjednavky.setConnection(connection);
+                break;
+            case "zamestnanci/Smeny.fxml":
+                SmenyController controllerSmeny = loader.getController();
+                controllerSmeny.setConnection(connection);
                 break;
         }
     }
@@ -136,6 +147,8 @@ public class MainSceneController implements Initializable {
     @FXML
     private void logoutOnAc(ActionEvent event) {
     }
+
+    
 
     
 

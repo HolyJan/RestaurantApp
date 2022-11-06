@@ -11,7 +11,7 @@
             <Button mnemonicParsing="false" onAction="#zakazaniciButAction" prefHeight="25.0" prefWidth="81.0" text="Zákazníci" />
             <Button mnemonicParsing="false" onAction="#zamestnanciButAction" text="Zaměstnanci" />
             <Button mnemonicParsing="false" onAction="#objednavkyButAction" text="Objednavky" />
-            <Button mnemonicParsing="false" text="Button" />
+            <Button mnemonicParsing="false" onAction="#smenyButAction" text="Směny" />
             <Button mnemonicParsing="false" text="Button" />
             <Button mnemonicParsing="false" text="Button" />
             <Button mnemonicParsing="false" text="Button" />
