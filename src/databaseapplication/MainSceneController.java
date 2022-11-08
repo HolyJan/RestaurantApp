@@ -146,6 +146,9 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void logoutOnAc(ActionEvent event) {
+        loginBtn.setVisible(true);
+        logOut.setVisible(false);
+        roleId.set(0);
     }
 
     

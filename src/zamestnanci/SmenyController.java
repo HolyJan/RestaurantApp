@@ -45,6 +45,10 @@ public class SmenyController implements Initializable {
     @FXML
     private AnchorPane pane;
     boolean init;
+    @FXML
+    private TableColumn<Smena, String> telefonCol;
+    @FXML
+    private TableColumn<Smena, String> poziceCol;
 
     /**
      * Initializes the controller class.
@@ -54,6 +58,8 @@ public class SmenyController implements Initializable {
         jmenoCol.setCellValueFactory(new PropertyValueFactory<>("jmeno"));
         prijmeniCol.setCellValueFactory(new PropertyValueFactory<>("prijmeni"));
         smenaCol.setCellValueFactory(new PropertyValueFactory<>("smena"));
+        telefonCol.setCellValueFactory(new PropertyValueFactory<>("telefon"));
+        poziceCol.setCellValueFactory(new PropertyValueFactory<>("pozice"));
         datumCol.setCellValueFactory(new PropertyValueFactory<>("datum"));
         init = false;
         pane.widthProperty().addListener(new ChangeListener<Number>() {
@@ -78,8 +84,8 @@ public class SmenyController implements Initializable {
         try {
             ResultSet result = statement.executeQuery("SELECT * FROM SMENY_VIEW");
             while (result.next()) {
-                smeny.add(new Smena(result.getString("NAZEV"), result.getDate("DATUM"),
-                        result.getString("JMENO"), result.getString("PRIJMENI")));
+                smeny.add(new Smena(result.getString("SMENA"), result.getDate("DATUM"),
+                        result.getString("JMENO"),result.getString("PRIJMENI"),result.getString("TELEFON"), result.getString("POZICE")));
 
             }
             tableView.getItems().addAll(smeny);

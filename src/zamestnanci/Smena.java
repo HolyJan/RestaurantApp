@@ -16,12 +16,16 @@ public class Smena {
     private Date datum;
     private String jmeno;
     private String prijmeni;
+    private String telefon;
+    private String pozice;
 
-    public Smena(String smena, Date datum, String jmeno, String prijmeni) {
+    public Smena(String smena, Date datum, String jmeno, String prijmeni, String telefon, String pozice) {
         this.smena = smena;
         this.datum = datum;
-        this.jmeno = jmeno; 
+        this.jmeno = jmeno;
         this.prijmeni = prijmeni;
+        this.telefon = telefon;
+        this.pozice = pozice;
     }
 
     public String getSmena() {
@@ -40,6 +44,14 @@ public class Smena {
         return prijmeni;
     }
 
+    public String getTelefon() {
+        return telefon;
+    }
+
+    public String getPozice() {
+        return pozice;
+    }
+
     public void setSmena(String smena) {
         this.smena = smena;
     }
@@ -56,10 +68,15 @@ public class Smena {
         this.prijmeni = prijmeni;
     }
 
-   
-    
-    
-    
+    public void setTelefon(String telefon) {
+        this.telefon = telefon;
+    }
+
+    public void setPozice(String pozice) {
+        this.pozice = pozice;
+    }
+
+      
     
     
     
