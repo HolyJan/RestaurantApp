@@ -8,12 +8,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="172.0" prefWidth="255.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="zakaznici.AkceZakaznikController">
+<AnchorPane id="AnchorPane" prefHeight="172.0" prefWidth="255.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zakaznici.AkceZakaznikController">
    <children>
       <HBox layoutX="14.0" layoutY="14.0" prefHeight="115.0" prefWidth="235.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="14.0">
          <children>
-            <VBox alignment="TOP_RIGHT" prefHeight="115.0" prefWidth="68.0" spacing="11.0">
+            <VBox alignment="TOP_RIGHT" prefHeight="237.0" prefWidth="87.0" spacing="11.0">
                <children>
                   <Label text="Jméno ">
                      <font>
@@ -35,6 +34,26 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
+                  <Label text="Ulice ">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label text="Číslo popiné ">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label text="PSČ ">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label text="Obec ">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
                </children>
             </VBox>
             <VBox prefHeight="115.0" prefWidth="153.0" spacing="5.0">
@@ -43,6 +62,10 @@
                   <TextField fx:id="prijmeniText" />
                   <TextField fx:id="telefonText" />
                   <TextField fx:id="emailText" />
+                  <TextField fx:id="uliceText" />
+                  <TextField fx:id="cisPopText" />
+                  <TextField fx:id="pscText" />
+                  <TextField fx:id="ObecText" />
                </children>
             </VBox>
          </children>

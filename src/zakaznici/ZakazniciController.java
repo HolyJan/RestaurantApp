@@ -141,7 +141,9 @@ public class ZakazniciController implements Initializable {
                     controllerAkceZakaznici.setData(zakaznik.getId(), 
                             zakaznik.getJmeno(), zakaznik.getPrijmeni(), 
                             zakaznik.getTelefon(), zakaznik.getEmail(), 
-                            zakaznik.getId_adresy());
+                            zakaznik.getId_adresy(), zakaznik.getUlice(),
+                            zakaznik.getCisloPop(), zakaznik.getPsc(),
+                            zakaznik.getMesto());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -158,6 +160,7 @@ public class ZakazniciController implements Initializable {
     private void pridatAction(ActionEvent event) throws IOException {
         edit = false;
         openANewView(event, "zakaznici/akceZakaznik.fxml", connection);
+        loadData();
 
     }
 
@@ -165,6 +168,7 @@ public class ZakazniciController implements Initializable {
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
         openANewView(event, "zakaznici/akceZakaznik.fxml", connection);
+        loadData();
 
     }
 
