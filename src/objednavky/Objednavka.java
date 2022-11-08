@@ -10,20 +10,31 @@ package objednavky;
  * @author jenik
  */
 public class Objednavka {
+
+    private int idObjednavky;
     private String jmeno;
     private String prijmeni;
+    private int idDoruceni;
     private String casObjednani;
     private String vyzvednuti;
+    private int idPolozky;
     private String nazevPolozky;
     private int cenaPolozky;
 
-    public Objednavka(String jmeno, String prijmeni, String casObjednani, String vyzvednuti, String nazevPolozky, int cenaPolozky) {
+    public Objednavka(int idObjednavky, String jmeno, String prijmeni, int idDoruceni, String casObjednani, String vyzvednuti, int idPolozky, String nazevPolozky, int cenaPolozky) {
+        this.idObjednavky = idObjednavky;
         this.jmeno = jmeno;
         this.prijmeni = prijmeni;
+        this.idDoruceni = idDoruceni;
         this.casObjednani = casObjednani;
         this.vyzvednuti = vyzvednuti;
+        this.idPolozky = idPolozky;
         this.nazevPolozky = nazevPolozky;
         this.cenaPolozky = cenaPolozky;
+    }
+
+    public int getIdObjednavky() {
+        return idObjednavky;
     }
 
     public String getJmeno() {
@@ -34,12 +45,20 @@ public class Objednavka {
         return prijmeni;
     }
 
+    public int getIdDoruceni() {
+        return idDoruceni;
+    }
+
     public String getCasObjednani() {
         return casObjednani;
     }
 
     public String getVyzvednuti() {
         return vyzvednuti;
+    }
+
+    public int getIdPolozky() {
+        return idPolozky;
     }
 
     public String getNazevPolozky() {
@@ -50,12 +69,20 @@ public class Objednavka {
         return cenaPolozky;
     }
 
+    public void setIdObjednavky(int idObjednavky) {
+        this.idObjednavky = idObjednavky;
+    }
+
     public void setJmeno(String jmeno) {
         this.jmeno = jmeno;
     }
 
     public void setPrijmeni(String prijmeni) {
         this.prijmeni = prijmeni;
+    }
+
+    public void setIdDoruceni(int idDoruceni) {
+        this.idDoruceni = idDoruceni;
     }
 
     public void setCasObjednani(String casObjednani) {
@@ -66,6 +93,10 @@ public class Objednavka {
         this.vyzvednuti = vyzvednuti;
     }
 
+    public void setIdPolozky(int idPolozky) {
+        this.idPolozky = idPolozky;
+    }
+
     public void setNazevPolozky(String nazevPolozky) {
         this.nazevPolozky = nazevPolozky;
     }
@@ -73,6 +104,6 @@ public class Objednavka {
     public void setCenaPolozky(int cenaPolozky) {
         this.cenaPolozky = cenaPolozky;
     }
-    
+
     
 }
