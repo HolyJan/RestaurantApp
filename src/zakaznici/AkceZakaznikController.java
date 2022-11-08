@@ -7,6 +7,7 @@ package zakaznici;
 
 import connection.DatabaseConnection;
 import java.net.URL;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ResourceBundle;
@@ -14,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -58,18 +60,29 @@ public class AkceZakaznikController implements Initializable {
     @FXML
     private void potvrditAction(ActionEvent event) {
         if (!"".equals(jmenoText.getText()) && !"".equals(prijmeniText.getText()) && !"".equals(telefonText.getText())) {
-            Statement statement = connection.createBlockedStatement();
+            
             try {
                 if (idZakaznika != -1) {
-                    statement.executeQuery("begin updateZakaznikaProc("
-                            + idZakaznika + ", '" + jmenoText.getText() + "','" + prijmeniText.getText() + "','"
-                            + telefonText.getText() + "','" + emailText.getText() + "'," + idAdresa + "); end;");
+                    CallableStatement cstmt = connection.getConnection().prepareCall("{call updateZakaznikaProc(?,?,?,?,?,?)}");
+                    cstmt.setInt(1,idZakaznika);
+                    cstmt.setString(2, jmenoText.getText());
+                    cstmt.setString(3, prijmeniText.getText());
+                    cstmt.setString(4, telefonText.getText());
+                    cstmt.setString(5, emailText.getText());
+                    cstmt.setInt(6,idAdresa);
+                    cstmt.execute();
                     System.out.println("aktualizace OK");
                 } else {
-                    statement.executeQuery("begin vlozZakaznikaProc('" 
-                            + jmenoText.getText() + "','" + prijmeniText.getText() + "','"
-                            + telefonText.getText() + "','" + emailText.getText() + "'," + 2 + "); end;");
+                    CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozZakaznikaProc(?,?,?,?,?)}");
+                    cstmt.setString(1, jmenoText.getText());
+                    cstmt.setString(2, prijmeniText.getText());
+                    cstmt.setString(3, telefonText.getText());
+                    cstmt.setString(4, emailText.getText());
+                    cstmt.setInt(5,2);
+                    cstmt.execute();
                 }
+                Stage stage = (Stage) jmenoText.getScene().getWindow();
+                stage.close();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
