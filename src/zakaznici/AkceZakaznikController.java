@@ -61,16 +61,14 @@ public class AkceZakaznikController implements Initializable {
             Statement statement = connection.createBlockedStatement();
             try {
                 if (idZakaznika != -1) {
-                    String jmeno = jmenoText.getText();
-                    String prijmeni = prijmeniText.getText();
-                    String telefon = telefonText.getText();
-                    String email = emailText.getText();
-                    statement.executeQuery("begin "
-                            + "updateZakaznikaProc(1, 'Vincen', 'Soukup', '790863271', 'sergvinnichuk@buzzcol.com', 1); "
-                            + "end;");
-
-                    System.out.println("aktualizace OK");
-
+                    ResultSet result = statement.executeQuery("begin updateZakaznikaProc("
+                            + idZakaznika + ", '" + jmenoText.getText() + "','" + prijmeniText.getText() + "','"
+                            + telefonText.getText()+"','"+emailText.getText()+"',"+idAdresa+"); end;");
+                    if (result.next()) {
+                        System.out.println("aktualizace OK");
+                    } else {
+                        System.out.println("aktualizace NOK");
+                    }
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
