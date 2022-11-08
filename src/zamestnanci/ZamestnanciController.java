@@ -21,8 +21,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import zakaznici.Adresa;
-import zakaznici.Zakaznik;
 
 /**
  * FXML Controller class
@@ -94,6 +92,18 @@ public class ZamestnanciController implements Initializable {
     @FXML
     private void updateAction(ActionEvent event) {
         loadData();
+    }
+
+    @FXML
+    private void pridatAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void upravitAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void odebratAction(ActionEvent event) {
     }
 
 }

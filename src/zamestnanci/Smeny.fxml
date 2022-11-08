@@ -4,6 +4,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane id="AnchorPane" fx:id="pane" prefHeight="400.0" prefWidth="864.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zamestnanci.SmenyController">
    <children>
@@ -17,6 +18,13 @@
             <TableColumn fx:id="poziceCol" minWidth="3.0" prefWidth="143.2000732421875" text="Pozice" />
          </columns>
       </TableView>
-      <Button layoutX="533.0" layoutY="40.0" mnemonicParsing="false" onAction="#updateAction" text="Update" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="40.0" />
+      <VBox alignment="TOP_CENTER" layoutX="750.0" layoutY="23.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="23.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
+            <Button mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />
+            <Button mnemonicParsing="false" onAction="#upravitAction" text="Upravit" />
+            <Button mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

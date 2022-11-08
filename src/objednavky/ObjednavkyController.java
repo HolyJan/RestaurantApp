@@ -101,4 +101,16 @@ public class ObjednavkyController implements Initializable {
         connection = con;
     }
 
+    @FXML
+    private void pridatAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void upravitAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void odebratAction(ActionEvent event) {
+    }
+
 }

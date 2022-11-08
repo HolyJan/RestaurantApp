@@ -8,7 +8,6 @@ package zakaznici;
 import connection.DatabaseConnection;
 import java.net.URL;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
@@ -44,11 +43,6 @@ public class ZakazniciController implements Initializable {
     ObservableList<Adresa> adresy = FXCollections.observableArrayList();
     @FXML
     private TableView<Zakaznik> tableView;
-    //private TableView<Adresa> adresyTable;
-    //private TableColumn<Adresa, String> uliceCol;
-    //private TableColumn<Adresa, String> cpCol;
-    //private TableColumn<Adresa, String> pscCol;
-    //private TableColumn<Adresa, String> mestoCol;
     @FXML
     private TableColumn<Adresa, String> uliceCol;
     @FXML
@@ -121,6 +115,18 @@ public class ZakazniciController implements Initializable {
     @FXML
     private void updateAction(ActionEvent event) {
         loadData();
+    }
+
+    @FXML
+    private void pridatAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void upravitAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void odebratAction(ActionEvent event) {
     }
 
 }

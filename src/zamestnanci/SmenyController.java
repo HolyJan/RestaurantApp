@@ -106,6 +106,18 @@ public class SmenyController implements Initializable {
     LEFT JOIN zamestnanci z ON z.id_zamestnance = sz.id_zamestnance AND sz.id_smena = z.id_smena;
     
     */
+
+    @FXML
+    private void pridatAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void upravitAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void odebratAction(ActionEvent event) {
+    }
     
     
     
