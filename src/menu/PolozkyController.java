@@ -6,6 +6,7 @@
 package menu;
 
 import connection.DatabaseConnection;
+import java.io.File;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -21,8 +22,19 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import objednavky.Objednavka;
+import databaseapplication.*;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.PreparedStatement;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import javax.imageio.ImageIO;
 
 /**
  * FXML Controller class
@@ -53,6 +65,8 @@ public class PolozkyController implements Initializable {
     DatabaseConnection connection;
     @FXML
     private AnchorPane pane;
+    @FXML
+    private ImageView imageViewJidlo;
 
     /**
      * Initializes the controller class.
@@ -118,6 +132,14 @@ public class PolozkyController implements Initializable {
 
                 }
             }
+            ResultSet result = statement.executeQuery("SELECT * FROM obrazky_menu_view");
+                if (result.next()) {
+                    Blob blob = result.getBlob("obrazek");
+                    InputStream is = blob.getBinaryStream(1, blob.length());
+                    Image img = SwingFXUtils.toFXImage(ImageIO.read(is), null);
+                    imageViewJidlo.setImage(img);
+
+                }
             tableView.getItems().addAll(polozky);
 
         } catch (Exception e) {
@@ -132,7 +154,33 @@ public class PolozkyController implements Initializable {
 
     @FXML
     private void pridatAction(ActionEvent event) {
-
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Výběr obrázku");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Image Files", "*.png", "*.jpg"));
+        File selectedFile = fileChooser.showOpenDialog(DatabaseApplication.mainStage);
+        if (selectedFile != null) {
+            String path = selectedFile.toString();
+            System.out.println(path);
+            int index = path.lastIndexOf('.');
+            String extension = "";
+            if (index > 0) {
+                extension = path.substring(index + 1);
+            }
+            try {
+                InputStream image = new FileInputStream(path);
+                PreparedStatement pstmt = connection.getConnection().prepareStatement("{call vlozObrazekProc(?,?,?,?,?)}");
+                pstmt.setBlob(1, image);
+                pstmt.setString(2, path);
+                pstmt.setString(3, extension);
+                pstmt.setInt(4, 1);
+                pstmt.setString(5, "obrazek");
+                pstmt.execute();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            
+        }
     }
 
     @FXML
