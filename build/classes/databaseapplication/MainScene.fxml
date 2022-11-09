@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
@@ -12,7 +13,7 @@
             <Button mnemonicParsing="false" onAction="#zamestnanciButAction" text="Zaměstnanci" />
             <Button mnemonicParsing="false" onAction="#objednavkyButAction" text="Objednavky" />
             <Button mnemonicParsing="false" onAction="#smenyButAction" text="Směny" />
-            <Button mnemonicParsing="false" text="Button" />
+            <Button fx:id="menu" mnemonicParsing="false" onAction="#menuAction" text="Menu" />
             <Button mnemonicParsing="false" text="Button" />
             <Button mnemonicParsing="false" text="Button" />
             <Button mnemonicParsing="false" text="Button" />
@@ -21,5 +22,6 @@
       </HBox>
       <Button fx:id="loginBtn" layoutX="3.0" layoutY="276.0" mnemonicParsing="false" onAction="#loginButAction" text="Login" />
       <Button fx:id="logOut" layoutX="6.0" layoutY="276.0" mnemonicParsing="false" onAction="#logoutOnAc" text="logout" visible="false" />
+      <Label fx:id="loginLabel" layoutX="12.0" layoutY="253.0" AnchorPane.bottomAnchor="43.0" AnchorPane.leftAnchor="12.0" />
    </children>
 </AnchorPane>

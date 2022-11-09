@@ -23,9 +23,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import login.LoginController;
+import menu.PolozkyController;
 import objednavky.ObjednavkyController;
 import zakaznici.ZakazniciController;
 import zamestnanci.SmenyController;
@@ -46,18 +48,23 @@ public class MainSceneController implements Initializable {
     public static Role role;
     @FXML
     private Button logOut;
+    @FXML
+    private Label loginLabel;
+    @FXML
+    private Button menu;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        loginLabel.setText("Neregistrovaný");
         loggedIn = new SimpleBooleanProperty(false);
         roleId = new SimpleIntegerProperty();
         loggedIn.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(newValue) {
+                if (newValue) {
                     loginBtn.setVisible(false);
                     logOut.setVisible(true);
                 } else {
@@ -71,6 +78,20 @@ public class MainSceneController implements Initializable {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 role = Role.valueOf((int) newValue);
                 System.out.println(role);
+                switch (role) {
+                    case ADMIN:
+                        loginLabel.setText("Admin");
+                        break;
+                    case NEREGISTROVANY:
+                        loginLabel.setText("Neregistrovaný");
+                        break;
+                    case ZAKAZNIK:
+                        loginLabel.setText("Zákazník");
+                        break;
+                    case ZAMESTNANEC:
+                        loginLabel.setText("Zaměstnanec");
+                        break;
+                }
             }
         });
         try {
@@ -90,22 +111,27 @@ public class MainSceneController implements Initializable {
     private void zakazaniciButAction(ActionEvent event) throws IOException {
         openANewView(event, "zakaznici/Zakaznici.fxml", connection);
     }
-    
+
     @FXML
     private void zamestnanciButAction(ActionEvent event) throws IOException {
         openANewView(event, "zamestnanci/Zamestnanci.fxml", connection);
     }
-    
+
     @FXML
     private void objednavkyButAction(ActionEvent event) throws IOException {
         openANewView(event, "objednavky/Objednavky.fxml", connection);
     }
-    
+
     @FXML
     private void smenyButAction(ActionEvent event) throws IOException {
         openANewView(event, "zamestnanci/Smeny.fxml", connection);
     }
     
+     @FXML
+    private void menuAction(ActionEvent event) throws IOException {
+        openANewView(event, "menu/Polozky.fxml", connection);
+    }
+
     public void openANewView(ActionEvent event, String fileLocation, DatabaseConnection conn) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource(fileLocation));
@@ -120,7 +146,7 @@ public class MainSceneController implements Initializable {
 
     public void sendDataViaController(String fileLocation, FXMLLoader loader) {
         loader.setLocation(getClass().getResource(fileLocation));
-        switch(fileLocation){
+        switch (fileLocation) {
             case "zakaznici/Zakaznici.fxml":
                 ZakazniciController controllerZakaznici = loader.getController();
                 controllerZakaznici.setConnection(connection);
@@ -141,6 +167,10 @@ public class MainSceneController implements Initializable {
                 SmenyController controllerSmeny = loader.getController();
                 controllerSmeny.setConnection(connection);
                 break;
+            case "menu/Polozky.fxml":
+                PolozkyController controllerPolozky = loader.getController();
+                controllerPolozky.setConnection(connection);
+                break;
         }
     }
 
@@ -151,10 +181,6 @@ public class MainSceneController implements Initializable {
         roleId.set(0);
     }
 
-    
-
-    
-
-    
+   
 
 }
