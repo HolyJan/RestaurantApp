@@ -63,6 +63,7 @@ public class PolozkyController implements Initializable {
     boolean init;
     ObservableList<Polozka> polozkyVse = FXCollections.observableArrayList();
     ObservableList<Polozka> polozkySelected = FXCollections.observableArrayList();
+    ObservableList<Obrazek> obrazky = FXCollections.observableArrayList();
     boolean edit = false;
     DatabaseConnection connection;
     @FXML
@@ -141,13 +142,9 @@ public class PolozkyController implements Initializable {
 
             }
 
-            ResultSet result1 = statement.executeQuery("SELECT * FROM obrazky_menu_view");
-            if (result1.next()) {
-                Blob blob = result1.getBlob("obrazek");
-                InputStream is = blob.getBinaryStream(1, blob.length());
-                Image img = SwingFXUtils.toFXImage(ImageIO.read(is), null);
-                imageViewJidlo.setImage(img);
-
+            ResultSet result2 = statement.executeQuery("SELECT * FROM obrazky_menu_view");
+            while (result2.next()) {
+                obrazky.add(new Obrazek(result2.getInt("ID_OBRAZKU"), result2.getString("NAZEV"), result2.getBlob("OBRAZEK")));
             }
 
         } catch (Exception e) {
@@ -264,19 +261,14 @@ public class PolozkyController implements Initializable {
 
     @FXML
     private void zableViewClickedAction(MouseEvent event) throws SQLException, IOException {
-        Statement statement = connection.createBlockedStatement();
-        try {
-            Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
-            ResultSet result1 = statement.executeQuery("SELECT * FROM obrazky_menu_view WHERE nazev='" + polozka.getNazevObrazku() + "'");
-            if (result1.next()) {
-                Blob blob = result1.getBlob("obrazek");
+        Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
+        for (Obrazek obr : obrazky) {
+            if (polozka.getIdObrazku() == obr.getIdObrazku()) {
+                Blob blob = obr.getObrazek();
                 InputStream is = blob.getBinaryStream(1, blob.length());
                 Image img = SwingFXUtils.toFXImage(ImageIO.read(is), null);
                 imageViewJidlo.setImage(img);
-
             }
-        } catch (IOException | SQLException e) {
-            System.out.println(e.getMessage());
         }
 
     }

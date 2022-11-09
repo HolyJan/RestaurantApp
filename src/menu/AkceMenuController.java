@@ -54,7 +54,7 @@ public class AkceMenuController implements Initializable {
                 Statement statement = connection.createBlockedStatement();
                 ResultSet result = statement.executeQuery("SELECT * FROM menu_view WHERE nazev='" + nazevText.getText() + "'");
                 if (!result.next()) {
-                    Date date = Date.valueOf(datumPicker.getValue().format(DateTimeFormatter.ofPattern("d.M.yyyy")));
+                    Date date = Date.valueOf(datumPicker.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozReceptProc(?,?)}");
                     cstmt.setDate(1, date);
                     cstmt.setString(2, nazevText.getText());

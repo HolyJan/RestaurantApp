@@ -188,8 +188,8 @@ public class AkcePolozkaController implements Initializable {
                     cstmt.setInt(1, idPolozky);
                     cstmt.setString(2, nazevText.getText());
                     cstmt.setInt(3, Integer.parseInt(cenaText.getText()));
-                    cstmt.setInt(4, idMenu);
-                    cstmt.setInt(5, idReceptu);
+                    cstmt.setInt(4, idReceptu);
+                    cstmt.setInt(5, idMenu);
                     cstmt.setInt(6, idObrazku);
                     cstmt.execute();
                 }
