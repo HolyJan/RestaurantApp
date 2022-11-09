@@ -17,8 +17,10 @@ public class Polozka {
     private String nazevReceptu;
     private int idMenu;
     private String nazevMenu;
+    private int idObrazku;
+    private String nazevObrazku;
 
-    public Polozka(int idPolozky, String nazevPolozky, int cenaPolozky, int idReceptu, String nazevReceptu, int idMenu, String nazevMenu) {
+    public Polozka(int idPolozky, String nazevPolozky, int cenaPolozky, int idReceptu, String nazevReceptu, int idMenu, String nazevMenu, int idObrazku, String nazevObrazku) {
         this.idPolozky = idPolozky;
         this.nazevPolozky = nazevPolozky;
         this.cenaPolozky = cenaPolozky;
@@ -26,6 +28,8 @@ public class Polozka {
         this.nazevReceptu = nazevReceptu;
         this.idMenu = idMenu;
         this.nazevMenu = nazevMenu;
+        this.idObrazku = idObrazku;
+        this.nazevObrazku = nazevObrazku;
     }
 
     public int getIdPolozky() {
@@ -56,6 +60,14 @@ public class Polozka {
         return nazevMenu;
     }
 
+    public int getIdObrazku() {
+        return idObrazku;
+    }
+
+    public String getNazevObrazku() {
+        return nazevObrazku;
+    }
+
     public void setIdPolozky(int idPolozky) {
         this.idPolozky = idPolozky;
     }
@@ -83,8 +95,13 @@ public class Polozka {
     public void setNazevMenu(String nazevMenu) {
         this.nazevMenu = nazevMenu;
     }
-    
-    
-    
-    
-}
+
+    public void setIdObrazku(int idObrazku) {
+        this.idObrazku = idObrazku;
+    }
+
+    public void setNazevObrazku(String nazevObrazku) {
+        this.nazevObrazku = nazevObrazku;
+    }
+
+    }

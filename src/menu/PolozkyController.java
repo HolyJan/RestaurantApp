@@ -6,7 +6,6 @@
 package menu;
 
 import connection.DatabaseConnection;
-import java.io.File;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -24,16 +23,18 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
-import objednavky.Objednavka;
-import databaseapplication.*;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
-import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 
 /**
@@ -60,7 +61,8 @@ public class PolozkyController implements Initializable {
     @FXML
     private CheckBox checkNapoje;
     boolean init;
-    ObservableList<Polozka> polozky = FXCollections.observableArrayList();
+    ObservableList<Polozka> polozkyVse = FXCollections.observableArrayList();
+    ObservableList<Polozka> polozkySelected = FXCollections.observableArrayList();
     boolean edit = false;
     DatabaseConnection connection;
     @FXML
@@ -74,11 +76,14 @@ public class PolozkyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if (!init) {
+                    checkVse.setSelected(true);
                     loadData();
+                    updateData();
                     init = true;
                 }
             }
@@ -91,56 +96,59 @@ public class PolozkyController implements Initializable {
         connection = con;
     }
 
+    private void openANewView(ActionEvent event, String fileLocation, DatabaseConnection conn) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getClassLoader().getResource(fileLocation));
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        Parent parent = loader.load();
+        sendDataViaController(fileLocation, loader);
+        Scene mainScene = new Scene(parent);
+        stage.setScene(mainScene);
+        stage.show();
+    }
+
+    private void sendDataViaController(String fileLocation, FXMLLoader loader) {
+        loader.setLocation(getClass().getResource(fileLocation));
+        AkcePolozkaController controllerAkcePolozky = loader.getController();
+        controllerAkcePolozky.setConnection(connection);
+        if (edit) {
+            Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
+            try {
+                controllerAkcePolozky.setData(polozka.getIdPolozky(),
+                        polozka.getNazevPolozky(), polozka.getCenaPolozky(),
+                        polozka.getIdReceptu(), polozka.getNazevReceptu(),
+                        polozka.getIdMenu(), polozka.getNazevMenu(),
+                        polozka.getIdObrazku(), polozka.getNazevObrazku());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+    }
+
     private void loadData() {
-        polozky.clear();
-        tableView.getItems().clear();
+        loadImages();
+        polozkyVse.clear();
         Statement statement = connection.createBlockedStatement();
         try {
-            if (checkPolevky.isSelected()) {
-                ResultSet result = statement.executeQuery("SELECT * FROM polozky_menu_view WHERE nazev_menu = 'Polévky'");
-                while (result.next()) {
-                    polozky.add(new Polozka(result.getInt("ID_POLOZKY"), result.getString("NAZEV_POLOZKY"), result.getInt("CENA"),
-                            result.getInt("ID_RECEPTU"), result.getString("NAZEV_RECEPTU"),
-                            result.getInt("ID_MENU"), result.getString("NAZEV_MENU")));
 
-                }
+            ResultSet result = statement.executeQuery("SELECT * FROM polozky_menu_view");
+            while (result.next()) {
+                polozkyVse.add(new Polozka(result.getInt("ID_POLOZKY"), result.getString("NAZEV_POLOZKY"), result.getInt("CENA"),
+                        result.getInt("ID_RECEPTU"), result.getString("NAZEV_RECEPTU"),
+                        result.getInt("ID_MENU"), result.getString("NAZEV_MENU"), result.getInt("ID_OBRAZKU"), result.getString("NAZEV_OBRAZKU")));
+
             }
-            if (checkHlavniJidla.isSelected()) {
-                ResultSet result = statement.executeQuery("SELECT * FROM polozky_menu_view WHERE nazev_menu = 'Jídlo'");
-                while (result.next()) {
-                    polozky.add(new Polozka(result.getInt("ID_POLOZKY"), result.getString("NAZEV_POLOZKY"), result.getInt("CENA"),
-                            result.getInt("ID_RECEPTU"), result.getString("NAZEV_RECEPTU"),
-                            result.getInt("ID_MENU"), result.getString("NAZEV_MENU")));
 
-                }
+            ResultSet result1 = statement.executeQuery("SELECT * FROM obrazky_menu_view");
+            if (result1.next()) {
+                Blob blob = result1.getBlob("obrazek");
+                InputStream is = blob.getBinaryStream(1, blob.length());
+                Image img = SwingFXUtils.toFXImage(ImageIO.read(is), null);
+                imageViewJidlo.setImage(img);
+
             }
-            if (checkDezerty.isSelected()) {
-                ResultSet result = statement.executeQuery("SELECT * FROM polozky_menu_view WHERE nazev_menu = 'Dezerty'");
-                while (result.next()) {
-                    polozky.add(new Polozka(result.getInt("ID_POLOZKY"), result.getString("NAZEV_POLOZKY"), result.getInt("CENA"),
-                            result.getInt("ID_RECEPTU"), result.getString("NAZEV_RECEPTU"),
-                            result.getInt("ID_MENU"), result.getString("NAZEV_MENU")));
-
-                }
-            }
-            if (checkNapoje.isSelected()) {
-                ResultSet result = statement.executeQuery("SELECT * FROM polozky_menu_view WHERE nazev_menu = 'Nápoje'");
-                while (result.next()) {
-                    polozky.add(new Polozka(result.getInt("ID_POLOZKY"), result.getString("NAZEV_POLOZKY"), result.getInt("CENA"),
-                            result.getInt("ID_RECEPTU"), result.getString("NAZEV_RECEPTU"),
-                            result.getInt("ID_MENU"), result.getString("NAZEV_MENU")));
-
-                }
-            }
-            ResultSet result = statement.executeQuery("SELECT * FROM obrazky_menu_view");
-                if (result.next()) {
-                    Blob blob = result.getBlob("obrazek");
-                    InputStream is = blob.getBinaryStream(1, blob.length());
-                    Image img = SwingFXUtils.toFXImage(ImageIO.read(is), null);
-                    imageViewJidlo.setImage(img);
-
-                }
-            tableView.getItems().addAll(polozky);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -153,38 +161,15 @@ public class PolozkyController implements Initializable {
     }
 
     @FXML
-    private void pridatAction(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Výběr obrázku");
-        fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("Image Files", "*.png", "*.jpg"));
-        File selectedFile = fileChooser.showOpenDialog(DatabaseApplication.mainStage);
-        if (selectedFile != null) {
-            String path = selectedFile.toString();
-            System.out.println(path);
-            int index = path.lastIndexOf('.');
-            String extension = "";
-            if (index > 0) {
-                extension = path.substring(index + 1);
-            }
-            try {
-                InputStream image = new FileInputStream(path);
-                PreparedStatement pstmt = connection.getConnection().prepareStatement("{call vlozObrazekProc(?,?,?,?,?)}");
-                pstmt.setBlob(1, image);
-                pstmt.setString(2, path);
-                pstmt.setString(3, extension);
-                pstmt.setInt(4, 1);
-                pstmt.setString(5, "obrazek");
-                pstmt.execute();
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            
-        }
+    private void pridatAction(ActionEvent event) throws IOException {
+        edit = false;
+        openANewView(event, "menu/AkcePolozka.fxml", connection);
     }
 
     @FXML
-    private void upravitAction(ActionEvent event) {
+    private void upravitAction(ActionEvent event) throws IOException {
+        edit = true;
+        openANewView(event, "menu/AkcePolozka.fxml", connection);
     }
 
     @FXML
@@ -204,7 +189,7 @@ public class PolozkyController implements Initializable {
             checkNapoje.setSelected(false);
             checkPolevky.setSelected(false);
         }
-        loadData();
+        updateData();
     }
 
     @FXML
@@ -212,7 +197,7 @@ public class PolozkyController implements Initializable {
         if (!checkPolevky.isSelected() && checkVse.isSelected()) {
             checkVse.setSelected(false);
         }
-        loadData();
+        updateData();
     }
 
     @FXML
@@ -220,7 +205,7 @@ public class PolozkyController implements Initializable {
         if (!checkHlavniJidla.isSelected() && checkVse.isSelected()) {
             checkVse.setSelected(false);
         }
-        loadData();
+        updateData();
     }
 
     @FXML
@@ -228,7 +213,7 @@ public class PolozkyController implements Initializable {
         if (!checkDezerty.isSelected() && checkVse.isSelected()) {
             checkVse.setSelected(false);
         }
-        loadData();
+        updateData();
     }
 
     @FXML
@@ -236,7 +221,64 @@ public class PolozkyController implements Initializable {
         if (!checkNapoje.isSelected() && checkVse.isSelected()) {
             checkVse.setSelected(false);
         }
-        loadData();
+        updateData();
+    }
+
+    private void loadImages() {
+
+    }
+
+    private void updateData() {
+        polozkySelected.clear();
+        tableView.getItems().clear();
+        if (checkVse.isSelected()) {
+            tableView.getItems().addAll(polozkyVse);
+        } else {
+            for (Polozka pol : polozkyVse) {
+                if (checkPolevky.isSelected()) {
+                    if (pol.getIdMenu() == 3) {
+                        polozkySelected.add(pol);
+                    }
+                }
+                if (checkHlavniJidla.isSelected()) {
+                    if (pol.getIdMenu() == 4) {
+                        polozkySelected.add(pol);
+                    }
+                }
+                if (checkDezerty.isSelected()) {
+                    if (pol.getIdMenu() == 2) {
+                        polozkySelected.add(pol);
+                    }
+                }
+                if (checkNapoje.isSelected()) {
+                    if (pol.getIdMenu() == 1) {
+                        polozkySelected.add(pol);
+                    }
+                }
+
+            }
+            tableView.getItems().addAll(polozkySelected);
+        }
+
+    }
+
+    @FXML
+    private void zableViewClickedAction(MouseEvent event) throws SQLException, IOException {
+        Statement statement = connection.createBlockedStatement();
+        try {
+            Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
+            ResultSet result1 = statement.executeQuery("SELECT * FROM obrazky_menu_view WHERE nazev='" + polozka.getNazevObrazku() + "'");
+            if (result1.next()) {
+                Blob blob = result1.getBlob("obrazek");
+                InputStream is = blob.getBinaryStream(1, blob.length());
+                Image img = SwingFXUtils.toFXImage(ImageIO.read(is), null);
+                imageViewJidlo.setImage(img);
+
+            }
+        } catch (IOException | SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
 }
