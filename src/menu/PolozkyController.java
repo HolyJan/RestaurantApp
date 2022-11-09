@@ -113,6 +113,7 @@ public class PolozkyController implements Initializable {
         loader.setLocation(getClass().getResource(fileLocation));
         AkcePolozkaController controllerAkcePolozky = loader.getController();
         controllerAkcePolozky.setConnection(connection);
+        controllerAkcePolozky.setObrazkyList(obrazky);
         if (edit) {
             Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
             try {
@@ -120,7 +121,7 @@ public class PolozkyController implements Initializable {
                         polozka.getNazevPolozky(), polozka.getCenaPolozky(),
                         polozka.getIdReceptu(), polozka.getNazevReceptu(),
                         polozka.getIdMenu(), polozka.getNazevMenu(),
-                        polozka.getIdObrazku(), polozka.getNazevObrazku());
+                        polozka.getObrazek());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -133,20 +134,31 @@ public class PolozkyController implements Initializable {
         polozkyVse.clear();
         Statement statement = connection.createBlockedStatement();
         try {
-
+            ResultSet result2 = statement.executeQuery("SELECT * FROM obrazky_menu_view");
+            Obrazek obrazek1 = null;
+            while (result2.next()) {
+                Blob obrazek = result2.getBlob("OBRAZEK");
+                InputStream is = obrazek.getBinaryStream(1, obrazek.length());
+                Image img = SwingFXUtils.toFXImage(ImageIO.read(is), null);
+                obrazek1 = new Obrazek(result2.getInt("ID_OBRAZKU"), result2.getString("NAZEV"), img);
+                obrazky.add(obrazek1);
+            }
+            
             ResultSet result = statement.executeQuery("SELECT * FROM polozky_menu_view");
             while (result.next()) {
+                int idobrazku = result.getInt("ID_OBRAZKU");
+                for(Obrazek o : obrazky) {
+                    if(o.getIdObrazku() == idobrazku) {
+                        obrazek1 = o;
+                    }
+                }
                 polozkyVse.add(new Polozka(result.getInt("ID_POLOZKY"), result.getString("NAZEV_POLOZKY"), result.getInt("CENA"),
                         result.getInt("ID_RECEPTU"), result.getString("NAZEV_RECEPTU"),
-                        result.getInt("ID_MENU"), result.getString("NAZEV_MENU"), result.getInt("ID_OBRAZKU"), result.getString("NAZEV_OBRAZKU")));
+                        result.getInt("ID_MENU"), result.getString("NAZEV_MENU"), obrazek1));
 
             }
 
-            ResultSet result2 = statement.executeQuery("SELECT * FROM obrazky_menu_view");
-            while (result2.next()) {
-                obrazky.add(new Obrazek(result2.getInt("ID_OBRAZKU"), result2.getString("NAZEV"), result2.getBlob("OBRAZEK")));
-            }
-
+            
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -263,11 +275,8 @@ public class PolozkyController implements Initializable {
     private void zableViewClickedAction(MouseEvent event) throws SQLException, IOException {
         Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
         for (Obrazek obr : obrazky) {
-            if (polozka.getIdObrazku() == obr.getIdObrazku()) {
-                Blob blob = obr.getObrazek();
-                InputStream is = blob.getBinaryStream(1, blob.length());
-                Image img = SwingFXUtils.toFXImage(ImageIO.read(is), null);
-                imageViewJidlo.setImage(img);
+            if (polozka.getObrazek() == obr) {
+                imageViewJidlo.setImage(obr.getObrazek());
             }
         }
 

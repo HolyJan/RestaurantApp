@@ -46,7 +46,7 @@ public class AkcePolozkaController implements Initializable {
     @FXML
     private ComboBox<String> menuCombo;
     @FXML
-    private ComboBox<String> obrazekCombo;
+    private ComboBox<Obrazek> obrazekCombo;
     int idPolozky = -1;
     int idObrazku;
     int idReceptu;
@@ -63,6 +63,7 @@ public class AkcePolozkaController implements Initializable {
     ObservableList<String> recepty = FXCollections.observableArrayList();
     ObservableList<String> menu = FXCollections.observableArrayList();
     ObservableList<String> obrazky = FXCollections.observableArrayList();
+    ObservableList<Obrazek> obrazkyList;
     @FXML
     private AnchorPane pane;
     @FXML
@@ -86,7 +87,7 @@ public class AkcePolozkaController implements Initializable {
     }
 
     public void setData(int idPolozky, String nazevPolozky, int cenaPolozky,
-            int idReceptu, String nazevReceptu, int idMenu, String nazevMenu, int idObrazku, String nazevObrazku) {
+            int idReceptu, String nazevReceptu, int idMenu, String nazevMenu, Obrazek obrazek) {
         this.idPolozky = idPolozky;
         this.idObrazku = idObrazku;
         nazevText.setText(nazevPolozky);
@@ -95,7 +96,7 @@ public class AkcePolozkaController implements Initializable {
         receptCombo.setValue(nazevReceptu);
         this.idMenu = idMenu;
         menuCombo.setValue(nazevMenu);
-        obrazekCombo.setValue(nazevObrazku);
+        obrazekCombo.setValue(obrazek);
     }
 
     private void openANewView(ActionEvent event, String fileLocation, DatabaseConnection conn) throws IOException {
@@ -120,6 +121,7 @@ public class AkcePolozkaController implements Initializable {
             case "menu/AkceObrazek.fxml":
                 AkceObrazekController controllerObrazek = loader.getController();
                 controllerObrazek.setConnection(connection);
+                controllerObrazek.setObrazky(obrazkyList);
                 break;
             case "menu/AkceRecept.fxml":
                 AkceReceptController controllerRecept = loader.getController();
@@ -141,13 +143,12 @@ public class AkcePolozkaController implements Initializable {
                 menu.add(result2.getString("NAZEV"));
             }
 
-            ResultSet result3 = statement.executeQuery("SELECT * FROM obrazky_menu_view");
-            while (result3.next()) {
-                obrazky.add(result3.getString("NAZEV"));
+            for(Obrazek o : obrazkyList) {
+                obrazky.add(o.getNazev());
             }
             receptCombo.setItems(recepty);
             menuCombo.setItems(menu);
-            obrazekCombo.setItems(obrazky);
+            obrazekCombo.setItems(obrazkyList);
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -170,10 +171,14 @@ public class AkcePolozkaController implements Initializable {
                 result1.next();
                 idReceptu = result1.getInt("ID_RECEPTU");
 
-                ResultSet result2 = statement.executeQuery("SELECT * FROM obrazky_menu_view"
+                /*ResultSet result2 = statement.executeQuery("SELECT * FROM obrazky_menu_view"
                         + " WHERE nazev='" + obrazekCombo.getValue() + "'");
-                result2.next();
-                idObrazku = result2.getInt("ID_OBRAZKU");
+                result2.next();*/
+                for(Obrazek o : obrazkyList) {
+                    if(o.getNazev().equals(obrazekCombo.getValue())) {
+                        idObrazku = o.getIdObrazku();
+                    }
+                }
                 if (idPolozky == -1) {
 
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozPolozky_menuProc(?,?,?,?,?)}");
@@ -218,6 +223,10 @@ public class AkcePolozkaController implements Initializable {
 
     void setConnection(DatabaseConnection con) {
         connection = con;
+    }
+
+    public void setObrazkyList(ObservableList<Obrazek> obrazkyList) {
+        this.obrazkyList = obrazkyList;
     }
 
 }

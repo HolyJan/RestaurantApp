@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,6 +26,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -42,10 +45,13 @@ public class AkceObrazekController implements Initializable {
     private String umisteni = "";
     private InputStream blob;
     private String pripona;
-    @FXML
     private Label nacteniLabel;
     @FXML
     private Button potvrditBut;
+    private Obrazek obrazek;
+    private ObservableList<Obrazek> obrazky;
+    @FXML
+    private ImageView imageView;
 
     /**
      * Initializes the controller class.
@@ -76,7 +82,7 @@ public class AkceObrazekController implements Initializable {
                 umisteni = path;
                 pripona = extension;
                 if (!"".equals(umisteni)) {
-                    nacteniLabel.setText("Obrázek načten");
+                    imageView.setImage(new Image(image));
                 }
 
             } catch (Exception e) {
@@ -105,6 +111,10 @@ public class AkceObrazekController implements Initializable {
                 pstmt.setString(3, pripona);
                 pstmt.setString(4, nazevObrazku);
                 pstmt.execute();
+                result = statement.executeQuery("SELECT obrazky_id_obrazku_seq.currval as id FROM dual");
+                result.next();
+                this.obrazek = new Obrazek(result.getInt("id"), nazevObrazku, new Image(blob));
+                obrazky.add(obrazek);
                 Stage stage = (Stage) potvrditBut.getScene().getWindow();
                     stage.close();
             } else {
@@ -121,6 +131,12 @@ public class AkceObrazekController implements Initializable {
         connection = con;
     }
 
+    public void setObrazky(ObservableList<Obrazek> obrazky) {
+        this.obrazky = obrazky;
+    }
+    
+    
+
     private void showError(String message) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Chyba");
@@ -128,5 +144,8 @@ public class AkceObrazekController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    
+    
 
 }

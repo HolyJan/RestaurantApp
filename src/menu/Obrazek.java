@@ -6,6 +6,8 @@
 package menu;
 
 import java.sql.Blob;
+import javafx.scene.image.Image;
+
 
 /**
  *
@@ -14,9 +16,9 @@ import java.sql.Blob;
 public class Obrazek {
     private int idObrazku;
     private String nazev;
-    private Blob obrazek;
+    private Image obrazek;
 
-    public Obrazek(int idObrazku, String nazev, Blob obrazek) {
+    public Obrazek(int idObrazku, String nazev, Image obrazek) {
         this.idObrazku = idObrazku;
         this.nazev = nazev;
         this.obrazek = obrazek;
@@ -30,7 +32,7 @@ public class Obrazek {
         return nazev;
     }
 
-    public Blob getObrazek() {
+    public Image getObrazek() {
         return obrazek;
     }
 
@@ -42,8 +44,13 @@ public class Obrazek {
         this.nazev = nazev;
     }
 
-    public void setObrazek(Blob obrazek) {
+    public void setObrazek(Image obrazek) {
         this.obrazek = obrazek;
+    }
+
+    @Override
+    public String toString() {
+        return nazev;
     }
 
     }
