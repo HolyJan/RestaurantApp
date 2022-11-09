@@ -14,33 +14,15 @@ public class Zamestnanec {
     private String jmeno;
     private String prijmeni;
     private String telefon;
+    private int idPozice;
     private String pozice;
 
-    public Zamestnanec(int id, String jmeno, String prijmeni, String telefon, String pozice) {
+    public Zamestnanec(int id, String jmeno, String prijmeni, String telefon, int idPozice, String pozice) {
         this.id = id;
         this.jmeno = jmeno;
         this.prijmeni = prijmeni;
         this.telefon = telefon;
-        this.pozice = pozice;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setJmeno(String jmeno) {
-        this.jmeno = jmeno;
-    }
-
-    public void setPrijmeni(String prijmeni) {
-        this.prijmeni = prijmeni;
-    }
-
-    public void setTelefon(String telefon) {
-        this.telefon = telefon;
-    }
-
-    public void setPozice(String pozice) {
+        this.idPozice = idPozice;
         this.pozice = pozice;
     }
 
@@ -60,8 +42,37 @@ public class Zamestnanec {
         return telefon;
     }
 
+    public int getIdPozice() {
+        return idPozice;
+    }
+
     public String getPozice() {
         return pozice;
     }
-    
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setJmeno(String jmeno) {
+        this.jmeno = jmeno;
+    }
+
+    public void setPrijmeni(String prijmeni) {
+        this.prijmeni = prijmeni;
+    }
+
+    public void setTelefon(String telefon) {
+        this.telefon = telefon;
+    }
+
+    public void setIdPozice(int idPozice) {
+        this.idPozice = idPozice;
+    }
+
+    public void setPozice(String pozice) {
+        this.pozice = pozice;
+    }
+
+   
 }
