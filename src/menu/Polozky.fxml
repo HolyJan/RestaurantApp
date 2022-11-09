@@ -7,6 +7,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane id="AnchorPane" fx:id="pane" prefHeight="491.0" prefWidth="577.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="menu.PolozkyController">
@@ -17,9 +18,8 @@
             <TableColumn fx:id="cenaCol" minWidth="7.0" prefWidth="97.0" text="Cena" />
          </columns>
       </TableView>
-      <VBox alignment="TOP_CENTER" layoutX="641.0" layoutY="14.0" prefHeight="256.0" prefWidth="100.0" spacing="10.0" AnchorPane.rightAnchor="42.0" AnchorPane.topAnchor="14.0">
+      <VBox alignment="TOP_CENTER" layoutX="384.0" layoutY="198.0" prefHeight="256.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="26.0" AnchorPane.rightAnchor="93.0">
          <children>
-            <ImageView fx:id="imageViewJidlo" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
             <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
             <Button mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />
             <Button mnemonicParsing="false" onAction="#upravitAction" text="Upravit" />
@@ -36,5 +36,10 @@
             </VBox>
          </children>
       </VBox>
+      <HBox alignment="TOP_CENTER" layoutX="334.0" layoutY="26.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.rightAnchor="43.0" AnchorPane.topAnchor="26.0">
+         <children>
+            <ImageView fx:id="imageViewJidlo" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>
