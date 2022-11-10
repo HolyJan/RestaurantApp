@@ -203,8 +203,9 @@ public class AkcePolozkaController implements Initializable {
                 }
                 Stage stage = (Stage) potvrditBut.getScene().getWindow();
                 stage.close();
-                ctrl.updatImageView();
                 ctrl.updateData();
+                ctrl.tableView.getSelectionModel().select(polozka);
+                ctrl.updatImageView();
             } catch (NumberFormatException | SQLException e) {
                 System.out.println(e.getMessage());
             }

@@ -44,6 +44,7 @@ public class AkceObrazekController implements Initializable {
     private String nazevObrazku;
     private String umisteni = "";
     private InputStream blob;
+    private InputStream newImage;
     private String pripona;
     private Label nacteniLabel;
     @FXML
@@ -79,6 +80,7 @@ public class AkceObrazekController implements Initializable {
             try {
                 InputStream image = new FileInputStream(path);
                 blob = new FileInputStream(path);
+                newImage = new FileInputStream(path);
                 umisteni = path;
                 pripona = extension;
                 if (!"".equals(umisteni)) {
@@ -114,7 +116,7 @@ public class AkceObrazekController implements Initializable {
                 result = statement.executeQuery("SELECT obrazky_id_obrazku_seq.currval as id FROM dual");
                 result.next();
                 System.out.println(result.getInt("id"));
-                this.obrazek = new Obrazek(result.getInt("id"), nazevObrazku, new Image(blob));
+                this.obrazek = new Obrazek(result.getInt("id"), nazevObrazku, new Image(newImage));
                 obrazky.add(obrazek);
                 Stage stage = (Stage) potvrditBut.getScene().getWindow();
                     stage.close();

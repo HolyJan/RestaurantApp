@@ -45,7 +45,7 @@ import javax.imageio.ImageIO;
 public class PolozkyController implements Initializable {
 
     @FXML
-    private TableView<Polozka> tableView;
+    public TableView<Polozka> tableView;
     @FXML
     private TableColumn<Polozka, String> nazevCol;
     @FXML
@@ -269,10 +269,6 @@ public class PolozkyController implements Initializable {
     }
     public void updatImageView() {
         Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
-        for (Obrazek obr : obrazky) {
-            if (polozka.getObrazek() == obr) {
-                imageViewJidlo.setImage(obr.getObrazek());
-            }
-        }
+        imageViewJidlo.setImage(polozka.getObrazek().getObrazek());
     }
 }

@@ -12,13 +12,13 @@ import javafx.scene.image.Image;
  * @author jenik
  */
 public class Polozka {
+
     private int idPolozky;
     private String nazevPolozky;
     private int cenaPolozky;
     private Recept recept;
     private Menu menu;
     private Obrazek obrazek;
-    private Image image;
 
     public Polozka(int idPolozky, String nazevPolozky, int cenaPolozky, Recept recept, Menu menu, Obrazek obrazek) {
         this.idPolozky = idPolozky;
@@ -27,7 +27,6 @@ public class Polozka {
         this.recept = recept;
         this.menu = menu;
         this.obrazek = obrazek;
-        this.image = obrazek.getObrazek();
     }
 
     public int getIdPolozky() {
@@ -77,16 +76,4 @@ public class Polozka {
     public void setObrazek(Obrazek obrazek) {
         this.obrazek = obrazek;
     }
-
-    public Image getImage() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    
-
-    
-    }
+}
