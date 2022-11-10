@@ -23,6 +23,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -42,9 +43,9 @@ public class AkcePolozkaController implements Initializable {
     @FXML
     private TextField cenaText;
     @FXML
-    private ComboBox<String> receptCombo;
+    private ComboBox<Recept> receptCombo;
     @FXML
-    private ComboBox<String> menuCombo;
+    private ComboBox<Menu> menuCombo;
     @FXML
     private ComboBox<Obrazek> obrazekCombo;
     int idPolozky = -1;
@@ -60,16 +61,19 @@ public class AkcePolozkaController implements Initializable {
     private Button receptBut;
     boolean init;
     private Polozka polozka;
+    private ObservableList<Polozka> polozky;
     PolozkyController ctrl;
 
-    ObservableList<String> recepty = FXCollections.observableArrayList();
-    ObservableList<String> menu = FXCollections.observableArrayList();
-    ObservableList<String> obrazky = FXCollections.observableArrayList();
+    ObservableList<Recept> recepty = FXCollections.observableArrayList();
+    ObservableList<Menu> menu = FXCollections.observableArrayList();
     ObservableList<Obrazek> obrazkyList;
     @FXML
     private AnchorPane pane;
     @FXML
     private Button potvrditBut;
+    private boolean editObrazek;
+    private boolean editMenu;
+    private boolean editRecept;
 
     /**
      * Initializes the controller class.
@@ -88,18 +92,25 @@ public class AkcePolozkaController implements Initializable {
         });
     }
 
-    public void setData(Polozka polozka, PolozkyController controller) {
+    public void setData(Polozka polozka) {
         this.polozka = polozka;
-        this.ctrl = controller;
         this.idPolozky = polozka.getIdPolozky();
         this.idObrazku = polozka.getObrazek().getIdObrazku();
         nazevText.setText(polozka.getNazevPolozky());
         cenaText.setText(Integer.toString(polozka.getCenaPolozky()));
         this.idReceptu = polozka.getRecept().getId();
-        receptCombo.setValue(polozka.getRecept().getNazev());
+        receptCombo.setValue(polozka.getRecept());
         this.idMenu = polozka.getMenu().getId();
-        menuCombo.setValue(polozka.getMenu().getNazev());
+        menuCombo.setValue(polozka.getMenu());
         obrazekCombo.setValue(polozka.getObrazek());
+    }
+
+    public void setController(PolozkyController controller) {
+        this.ctrl = controller;
+    }
+
+    public void setPolozky(ObservableList<Polozka> polozky) {
+        this.polozky = polozky;
     }
 
     private void openANewView(ActionEvent event, String fileLocation, DatabaseConnection conn) throws IOException {
@@ -120,15 +131,28 @@ public class AkcePolozkaController implements Initializable {
             case "menu/AkceMenu.fxml":
                 AkceMenuController controllerMenu = loader.getController();
                 controllerMenu.setConnection(connection);
+                controllerMenu.setMenu(menu);
+                if (editMenu) {
+                    controllerMenu.setData(menuCombo.getValue());
+                    menuCombo.setItems(menu);
+                }
                 break;
             case "menu/AkceObrazek.fxml":
                 AkceObrazekController controllerObrazek = loader.getController();
                 controllerObrazek.setConnection(connection);
                 controllerObrazek.setObrazky(obrazkyList);
+                if(editObrazek) {
+                    controllerObrazek.setData(obrazekCombo.getValue());
+                }
                 break;
             case "menu/AkceRecept.fxml":
                 AkceReceptController controllerRecept = loader.getController();
                 controllerRecept.setConnection(connection);
+                controllerRecept.setRecepty(recepty);
+                if (editRecept) {
+                    controllerRecept.setData(receptCombo.getValue());
+                    receptCombo.setItems(recepty);
+                }
                 break;
         }
 
@@ -139,16 +163,13 @@ public class AkcePolozkaController implements Initializable {
         try {
             ResultSet result1 = statement.executeQuery("SELECT * FROM RECEPTY_VIEW");
             while (result1.next()) {
-                recepty.add(result1.getString("NAZEV"));
+                recepty.add(new Recept((result1.getInt("ID_RECEPTU")), result1.getString("NAZEV")));
             }
             ResultSet result2 = statement.executeQuery("SELECT * FROM MENU_VIEW");
             while (result2.next()) {
-                menu.add(result2.getString("NAZEV"));
+                menu.add(new Menu(result2.getInt("ID_MENU"), result2.getDate("DATUM"), result2.getString("NAZEV")));
             }
 
-            for(Obrazek o : obrazkyList) {
-                obrazky.add(o.getNazev());
-            }
             receptCombo.setItems(recepty);
             menuCombo.setItems(menu);
             obrazekCombo.setItems(obrazkyList);
@@ -161,18 +182,12 @@ public class AkcePolozkaController implements Initializable {
     @FXML
     private void potvrditAction(ActionEvent event) {
         if (!"".equals(nazevText.getText()) && !"".equals(cenaText.getText())
-                && !"".equals(receptCombo.getValue()) && !"".equals(menuCombo.getValue())
-                && !"".equals(obrazekCombo.getValue())) {
+                && receptCombo.getValue() != null && menuCombo.getValue() != null
+                && obrazekCombo.getValue() != null) {
             Statement statement = connection.createBlockedStatement();
             try {
-                ResultSet result = statement.executeQuery("SELECT * FROM menu_view"
-                        + " WHERE nazev='" + menuCombo.getValue() + "'");
-                result.next();
-                idMenu = result.getInt("ID_MENU");
-                ResultSet result1 = statement.executeQuery("SELECT * FROM recepty_view"
-                        + " WHERE nazev='" + receptCombo.getValue() + "'");
-                result1.next();
-                idReceptu = result1.getInt("ID_RECEPTU");
+                idMenu = menuCombo.getValue().getId();
+                idReceptu = receptCombo.getValue().getId();
 
                 Obrazek novyobrazek = obrazekCombo.getValue();
                 idObrazku = obrazekCombo.getValue().getIdObrazku();
@@ -181,10 +196,16 @@ public class AkcePolozkaController implements Initializable {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozPolozky_menuProc(?,?,?,?,?)}");
                     cstmt.setString(1, nazevText.getText());
                     cstmt.setInt(2, Integer.parseInt(cenaText.getText()));
-                    cstmt.setInt(3, idMenu);
-                    cstmt.setInt(4, idReceptu);
+                    cstmt.setInt(3, idReceptu);
+                    cstmt.setInt(4, idMenu);
                     cstmt.setInt(5, idObrazku);
                     cstmt.execute();
+                    this.polozka = new Polozka(idPolozky, nazevText.getText(),
+                            Integer.parseInt(cenaText.getText()),
+                            receptCombo.getValue(),
+                            menuCombo.getValue(),
+                            obrazekCombo.getValue());
+                    polozky.add(polozka);
                 } else {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call updatePolozky_menuProc(?,?,?,?,?,?)}");
                     cstmt.setInt(1, idPolozky);
@@ -214,16 +235,19 @@ public class AkcePolozkaController implements Initializable {
 
     @FXML
     private void pridatObrazekAction(ActionEvent event) throws IOException {
+        editObrazek = false;
         openANewView(event, "menu/AkceObrazek.fxml", connection);
     }
 
     @FXML
     private void pridatMenuAction(ActionEvent event) throws IOException {
+        editMenu = false;
         openANewView(event, "menu/AkceMenu.fxml", connection);
     }
 
     @FXML
     private void pridatReceptAction(ActionEvent event) throws IOException {
+        editRecept = false;
         openANewView(event, "menu/AkceRecept.fxml", connection);
     }
 
@@ -233,6 +257,47 @@ public class AkcePolozkaController implements Initializable {
 
     public void setObrazkyList(ObservableList<Obrazek> obrazkyList) {
         this.obrazkyList = obrazkyList;
+    }
+
+    @FXML
+    private void editObrazekAc(ActionEvent event) throws IOException {
+        editObrazek = true;
+        if (obrazekCombo.getValue() == null) {
+            showError("Vyberte obrázek, který chcete upravit.");
+        } else {
+            openANewView(event, "menu/AkceObrazek.fxml", connection);
+        }
+
+    }
+
+    @FXML
+    private void editMenuAc(ActionEvent event) throws IOException {
+        editMenu = true;
+        if (menuCombo.getValue() == null) {
+            showError("Vyberte menu, které chcete upravit.");
+        } else {
+            openANewView(event, "menu/AkceMenu.fxml", connection);
+        }
+
+    }
+
+    @FXML
+    private void editReceptAc(ActionEvent event) throws IOException {
+        editRecept = true;
+        if (receptCombo.getValue() == null) {
+            showError("Vyberte recept, který chcete upravit.");
+        } else {
+             openANewView(event, "menu/AkceRecept.fxml", connection);
+        }
+       
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Chyba");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 }

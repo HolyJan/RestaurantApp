@@ -31,6 +31,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
@@ -85,6 +86,7 @@ public class PolozkyController implements Initializable {
                     checkVse.setSelected(true);
                     loadData();
                     updateData();
+                    imageViewJidlo.setImage(new Image("images/meal.png"));
                     init = true;
                 }
             }
@@ -114,10 +116,14 @@ public class PolozkyController implements Initializable {
         AkcePolozkaController controllerAkcePolozky = loader.getController();
         controllerAkcePolozky.setConnection(connection);
         controllerAkcePolozky.setObrazkyList(obrazky);
+        controllerAkcePolozky.setController(this);
+        controllerAkcePolozky.setPolozky(polozkyVse);
+        
         if (edit) {
             Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
             try {
-                controllerAkcePolozky.setData(polozka, this);
+                controllerAkcePolozky.setData(polozka);
+                controllerAkcePolozky.setController(this);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -174,7 +180,11 @@ public class PolozkyController implements Initializable {
     @FXML
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
-        openANewView(event, "menu/AkcePolozka.fxml", connection);
+        if(tableView.getSelectionModel().selectedItemProperty().get() == null) {
+            showError("Vyberte polozku, kterou chcete editovat.");
+        } else {
+            openANewView(event, "menu/AkcePolozka.fxml", connection);
+        }
     }
 
     @FXML
@@ -269,6 +279,16 @@ public class PolozkyController implements Initializable {
     }
     public void updatImageView() {
         Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
+        if(polozka == null) {
+            imageViewJidlo.setImage(new Image("images/meal.png"));
+        }
         imageViewJidlo.setImage(polozka.getObrazek().getObrazek());
+    }
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Chyba");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

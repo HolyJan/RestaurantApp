@@ -53,6 +53,7 @@ public class AkceObrazekController implements Initializable {
     private ObservableList<Obrazek> obrazky;
     @FXML
     private ImageView imageView;
+    private int idObrazku = -1;
 
     /**
      * Initializes the controller class.
@@ -62,12 +63,19 @@ public class AkceObrazekController implements Initializable {
         // TODO
     }
 
+    public void setData(Obrazek obrazek) {
+        this.obrazek = obrazek;
+        this.idObrazku = obrazek.getIdObrazku();
+        this.imageView.setImage(obrazek.getObrazek());
+        this.nazevText.setText(obrazek.getNazev());
+    }
+
     @FXML
     private void nacistObrazAction(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Výběr obrázku");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files","*.jpg"));
+                new FileChooser.ExtensionFilter("Image Files", "*.jpg"));
         File selectedFile = fileChooser.showOpenDialog(DatabaseApplication.mainStage);
         if (selectedFile != null) {
             String path = selectedFile.toString();
@@ -86,7 +94,6 @@ public class AkceObrazekController implements Initializable {
                 if (!"".equals(umisteni)) {
                     imageView.setImage(new Image(image));
                 }
-
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -97,29 +104,41 @@ public class AkceObrazekController implements Initializable {
     @FXML
     private void potvrditAction(ActionEvent event) throws SQLException {
         try {
-
-            if (umisteni != null && !"".equals(umisteni) && !"".equals(nazevObrazku)) {
+            if (blob != null && !"".equals(umisteni) && !"".equals(nazevObrazku)) {
                 Statement statement = connection.createBlockedStatement();
                 ResultSet result = statement.executeQuery("SELECT * FROM obrazky_menu_view WHERE nazev='" + nazevText.getText() + "'");
                 if (!result.next()) {
                     nazevObrazku = nazevText.getText();
+                    if (idObrazku == -1) {
+                        PreparedStatement pstmt = connection.getConnection().prepareStatement("{call vlozObrazekProc(?,?,?,?)}");
+                        pstmt.setBlob(1, blob);
+                        pstmt.setString(2, umisteni);
+                        pstmt.setString(3, pripona);
+                        pstmt.setString(4, nazevObrazku);
+                        pstmt.execute();
+                        result = statement.executeQuery("SELECT obrazky_id_obrazku_seq.currval as id FROM dual");
+                        result.next();
+                        System.out.println(result.getInt("id"));
+                        this.obrazek = new Obrazek(result.getInt("id"), nazevObrazku, new Image(newImage));
+                        obrazky.add(obrazek);
+                    } else {
+                        PreparedStatement pstmt = connection.getConnection().prepareStatement("{call updateObrazekProc(?,?,?,?,?)}");
+                        pstmt.setInt(1, idObrazku);
+                        pstmt.setBlob(2, blob);
+                        pstmt.setString(3, umisteni);
+                        pstmt.setString(4, pripona);
+                        pstmt.setString(5, nazevObrazku);
+                        pstmt.execute();
+                        obrazek.setNazev(nazevObrazku);
+                        obrazek.setObrazek(new Image(newImage));
+                    }
+
                 } else {
                     showError("Tento název má jíž jiný obrázek. Zvolte jiný!");
                     throw new SQLException();
                 }
-                PreparedStatement pstmt = connection.getConnection().prepareStatement("{call vlozObrazekProc(?,?,?,?)}");
-                pstmt.setBlob(1, blob);
-                pstmt.setString(2, umisteni);
-                pstmt.setString(3, pripona);
-                pstmt.setString(4, nazevObrazku);
-                pstmt.execute();
-                result = statement.executeQuery("SELECT obrazky_id_obrazku_seq.currval as id FROM dual");
-                result.next();
-                System.out.println(result.getInt("id"));
-                this.obrazek = new Obrazek(result.getInt("id"), nazevObrazku, new Image(newImage));
-                obrazky.add(obrazek);
                 Stage stage = (Stage) potvrditBut.getScene().getWindow();
-                    stage.close();
+                stage.close();
             } else {
                 showError("Obrázek není načtený nebo název není vyplněn!");
                 throw new SQLException();
@@ -137,8 +156,6 @@ public class AkceObrazekController implements Initializable {
     public void setObrazky(ObservableList<Obrazek> obrazky) {
         this.obrazky = obrazky;
     }
-    
-    
 
     private void showError(String message) {
         Alert alert = new Alert(AlertType.ERROR);
@@ -147,8 +164,5 @@ public class AkceObrazekController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-    
-    
 
 }
