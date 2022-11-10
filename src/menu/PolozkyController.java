@@ -117,7 +117,7 @@ public class PolozkyController implements Initializable {
         if (edit) {
             Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
             try {
-                controllerAkcePolozky.setData(polozka);
+                controllerAkcePolozky.setData(polozka, this);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -229,7 +229,7 @@ public class PolozkyController implements Initializable {
         updateData();
     }
 
-    private void updateData() {
+    public void updateData() {
         polozkySelected.clear();
         tableView.getItems().clear();
         if (checkVse.isSelected()) {
@@ -265,13 +265,14 @@ public class PolozkyController implements Initializable {
 
     @FXML
     private void zableViewClickedAction(MouseEvent event) throws SQLException, IOException {
+        updatImageView();
+    }
+    public void updatImageView() {
         Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
         for (Obrazek obr : obrazky) {
             if (polozka.getObrazek() == obr) {
                 imageViewJidlo.setImage(obr.getObrazek());
             }
         }
-
     }
-
 }

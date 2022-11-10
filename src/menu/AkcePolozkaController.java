@@ -60,6 +60,7 @@ public class AkcePolozkaController implements Initializable {
     private Button receptBut;
     boolean init;
     private Polozka polozka;
+    PolozkyController ctrl;
 
     ObservableList<String> recepty = FXCollections.observableArrayList();
     ObservableList<String> menu = FXCollections.observableArrayList();
@@ -87,8 +88,9 @@ public class AkcePolozkaController implements Initializable {
         });
     }
 
-    public void setData(Polozka polozka) {
+    public void setData(Polozka polozka, PolozkyController controller) {
         this.polozka = polozka;
+        this.ctrl = controller;
         this.idPolozky = polozka.getIdPolozky();
         this.idObrazku = polozka.getObrazek().getIdObrazku();
         nazevText.setText(polozka.getNazevPolozky());
@@ -192,10 +194,17 @@ public class AkcePolozkaController implements Initializable {
                     cstmt.setInt(5, idMenu);
                     cstmt.setInt(6, idObrazku);
                     cstmt.execute();
+                    polozka.setIdPolozky(idPolozky);
+                    polozka.setNazevPolozky(nazevText.getText());
+                    polozka.setCenaPolozky(Integer.parseInt(cenaText.getText()));
+                    polozka.getRecept().setId(idReceptu);
+                    polozka.getMenu().setId(idMenu);
                     polozka.setObrazek(novyobrazek);
                 }
                 Stage stage = (Stage) potvrditBut.getScene().getWindow();
                 stage.close();
+                ctrl.updatImageView();
+                ctrl.updateData();
             } catch (NumberFormatException | SQLException e) {
                 System.out.println(e.getMessage());
             }
