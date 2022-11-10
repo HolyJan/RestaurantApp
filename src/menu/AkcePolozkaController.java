@@ -59,6 +59,7 @@ public class AkcePolozkaController implements Initializable {
     @FXML
     private Button receptBut;
     boolean init;
+    private Polozka polozka;
 
     ObservableList<String> recepty = FXCollections.observableArrayList();
     ObservableList<String> menu = FXCollections.observableArrayList();
@@ -86,17 +87,17 @@ public class AkcePolozkaController implements Initializable {
         });
     }
 
-    public void setData(int idPolozky, String nazevPolozky, int cenaPolozky,
-            int idReceptu, String nazevReceptu, int idMenu, String nazevMenu, Obrazek obrazek) {
-        this.idPolozky = idPolozky;
-        this.idObrazku = idObrazku;
-        nazevText.setText(nazevPolozky);
-        cenaText.setText(Integer.toString(cenaPolozky));
-        this.idReceptu = idReceptu;
-        receptCombo.setValue(nazevReceptu);
-        this.idMenu = idMenu;
-        menuCombo.setValue(nazevMenu);
-        obrazekCombo.setValue(obrazek);
+    public void setData(Polozka polozka) {
+        this.polozka = polozka;
+        this.idPolozky = polozka.getIdPolozky();
+        this.idObrazku = polozka.getObrazek().getIdObrazku();
+        nazevText.setText(polozka.getNazevPolozky());
+        cenaText.setText(Integer.toString(polozka.getCenaPolozky()));
+        this.idReceptu = polozka.getRecept().getId();
+        receptCombo.setValue(polozka.getRecept().getNazev());
+        this.idMenu = polozka.getMenu().getId();
+        menuCombo.setValue(polozka.getMenu().getNazev());
+        obrazekCombo.setValue(polozka.getObrazek());
     }
 
     private void openANewView(ActionEvent event, String fileLocation, DatabaseConnection conn) throws IOException {
@@ -171,14 +172,8 @@ public class AkcePolozkaController implements Initializable {
                 result1.next();
                 idReceptu = result1.getInt("ID_RECEPTU");
 
-                /*ResultSet result2 = statement.executeQuery("SELECT * FROM obrazky_menu_view"
-                        + " WHERE nazev='" + obrazekCombo.getValue() + "'");
-                result2.next();*/
-                for(Obrazek o : obrazkyList) {
-                    if(o.getNazev().equals(obrazekCombo.getValue())) {
-                        idObrazku = o.getIdObrazku();
-                    }
-                }
+                Obrazek novyobrazek = obrazekCombo.getValue();
+                idObrazku = obrazekCombo.getValue().getIdObrazku();
                 if (idPolozky == -1) {
 
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozPolozky_menuProc(?,?,?,?,?)}");
@@ -197,6 +192,7 @@ public class AkcePolozkaController implements Initializable {
                     cstmt.setInt(5, idMenu);
                     cstmt.setInt(6, idObrazku);
                     cstmt.execute();
+                    polozka.setObrazek(novyobrazek);
                 }
                 Stage stage = (Stage) potvrditBut.getScene().getWindow();
                 stage.close();

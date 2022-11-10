@@ -117,20 +117,15 @@ public class PolozkyController implements Initializable {
         if (edit) {
             Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
             try {
-                controllerAkcePolozky.setData(polozka.getIdPolozky(),
-                        polozka.getNazevPolozky(), polozka.getCenaPolozky(),
-                        polozka.getIdReceptu(), polozka.getNazevReceptu(),
-                        polozka.getIdMenu(), polozka.getNazevMenu(),
-                        polozka.getObrazek());
+                controllerAkcePolozky.setData(polozka);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
-
+       
     }
 
     private void loadData() {
-        loadImages();
         polozkyVse.clear();
         Statement statement = connection.createBlockedStatement();
         try {
@@ -153,8 +148,8 @@ public class PolozkyController implements Initializable {
                     }
                 }
                 polozkyVse.add(new Polozka(result.getInt("ID_POLOZKY"), result.getString("NAZEV_POLOZKY"), result.getInt("CENA"),
-                        result.getInt("ID_RECEPTU"), result.getString("NAZEV_RECEPTU"),
-                        result.getInt("ID_MENU"), result.getString("NAZEV_MENU"), obrazek1));
+                        new Recept(result.getInt("ID_RECEPTU"), result.getString("NAZEV_RECEPTU")),
+                        new Menu(result.getInt("ID_MENU"),result.getDate("DATUM_MENU"), result.getString("NAZEV_MENU")), obrazek1));
 
             }
 
@@ -167,6 +162,7 @@ public class PolozkyController implements Initializable {
     @FXML
     private void updateAction(ActionEvent event) {
         loadData();
+        updateData();
     }
 
     @FXML
@@ -233,10 +229,6 @@ public class PolozkyController implements Initializable {
         updateData();
     }
 
-    private void loadImages() {
-
-    }
-
     private void updateData() {
         polozkySelected.clear();
         tableView.getItems().clear();
@@ -245,22 +237,22 @@ public class PolozkyController implements Initializable {
         } else {
             for (Polozka pol : polozkyVse) {
                 if (checkPolevky.isSelected()) {
-                    if (pol.getIdMenu() == 3) {
+                    if (pol.getMenu().getId()== 3) {
                         polozkySelected.add(pol);
                     }
                 }
                 if (checkHlavniJidla.isSelected()) {
-                    if (pol.getIdMenu() == 4) {
+                    if (pol.getMenu().getId() == 4) {
                         polozkySelected.add(pol);
                     }
                 }
                 if (checkDezerty.isSelected()) {
-                    if (pol.getIdMenu() == 2) {
+                    if (pol.getMenu().getId() == 2) {
                         polozkySelected.add(pol);
                     }
                 }
                 if (checkNapoje.isSelected()) {
-                    if (pol.getIdMenu() == 1) {
+                    if (pol.getMenu().getId() == 1) {
                         polozkySelected.add(pol);
                     }
                 }

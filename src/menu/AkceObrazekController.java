@@ -66,7 +66,7 @@ public class AkceObrazekController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Výběr obrázku");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg"));
+                new FileChooser.ExtensionFilter("Image Files","*.jpg"));
         File selectedFile = fileChooser.showOpenDialog(DatabaseApplication.mainStage);
         if (selectedFile != null) {
             String path = selectedFile.toString();
@@ -78,7 +78,7 @@ public class AkceObrazekController implements Initializable {
             }
             try {
                 InputStream image = new FileInputStream(path);
-                blob = image;
+                blob = new FileInputStream(path);
                 umisteni = path;
                 pripona = extension;
                 if (!"".equals(umisteni)) {
@@ -113,6 +113,7 @@ public class AkceObrazekController implements Initializable {
                 pstmt.execute();
                 result = statement.executeQuery("SELECT obrazky_id_obrazku_seq.currval as id FROM dual");
                 result.next();
+                System.out.println(result.getInt("id"));
                 this.obrazek = new Obrazek(result.getInt("id"), nazevObrazku, new Image(blob));
                 obrazky.add(obrazek);
                 Stage stage = (Stage) potvrditBut.getScene().getWindow();
