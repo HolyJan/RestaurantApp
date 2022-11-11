@@ -62,7 +62,7 @@ public class AkceMenuController implements Initializable {
             if (!"".equals(nazevText.getText())) {
                 Statement statement = connection.createBlockedStatement();
                 ResultSet result = statement.executeQuery("SELECT * FROM menu_view WHERE nazev='" + nazevText.getText() + "'");
-                if (!result.next()) {
+                if (!result.next() || nazevText.getText().equals(this.editMenu.getNazev())) {
                     if (idMenu == -1) {
                         CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozMenuProc(?)}");
                         cstmt.setString(1, nazevText.getText());

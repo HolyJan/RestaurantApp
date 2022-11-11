@@ -104,11 +104,11 @@ public class AkceObrazekController implements Initializable {
     @FXML
     private void potvrditAction(ActionEvent event) throws SQLException {
         try {
+            nazevObrazku = nazevText.getText();
             if (blob != null && !"".equals(umisteni) && !"".equals(nazevObrazku)) {
                 Statement statement = connection.createBlockedStatement();
                 ResultSet result = statement.executeQuery("SELECT * FROM obrazky_menu_view WHERE nazev='" + nazevText.getText() + "'");
-                if (!result.next()) {
-                    nazevObrazku = nazevText.getText();
+                if (!result.next() || nazevText.getText().equals(nazevObrazku)) {
                     if (idObrazku == -1) {
                         PreparedStatement pstmt = connection.getConnection().prepareStatement("{call vlozObrazekProc(?,?,?,?)}");
                         pstmt.setBlob(1, blob);

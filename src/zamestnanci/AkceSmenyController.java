@@ -87,7 +87,7 @@ public class AkceSmenyController implements Initializable {
     public void setData(int id, String smena, Date datum, int idZamestn, String jmeno, String prijmeni, String telefon, String pozice) {
         smenaCombo.setValue(smena);
 //        datum = datePicker.setValue(datum.toLocalDate());
-        Zamestnanec zamestan = new Zamestnanec(, jmeno, prijmeni, telefon, id, pozice);
+        //Zamestnanec zamestan = new Zamestnanec(, jmeno, prijmeni, telefon, id, pozice);
 
     }
 }
