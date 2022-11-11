@@ -80,7 +80,9 @@ public class Polozka {
 
     public void setObrazek(Obrazek obrazek) {
         this.obrazek = obrazek;
-        this.imageView.setImage(obrazek.getObrazek());
+        this.imageView = new ImageView(obrazek.getObrazek());
+        this.imageView.setFitHeight(50);
+        this.imageView.setFitWidth(70);
     }
 
     public ImageView getImageView() {

@@ -314,11 +314,11 @@ public class AkcePolozkaController implements Initializable {
                 cstmt.execute();
                 for (Polozka p : polozky) {
                     if (p.getObrazek().getIdObrazku() == obrazekCombo.getValue().getIdObrazku()) {
-                        p.getObrazek().setNazev("Default");
-                        p.getObrazek().setObrazek(new Image("images/meal.png"));
+                        p.setObrazek(new Obrazek(-1, "Default", new Image("images/meal.png")));
                     }
                 }
                 this.obrazkyList.remove(obrazekCombo.getValue());
+                ctrl.updateData();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
