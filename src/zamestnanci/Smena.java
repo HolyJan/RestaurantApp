@@ -20,9 +20,10 @@ public class Smena {
     private String jmeno;
     private String prijmeni;
     private String telefon;
+    private int idPozice;
     private String pozice;
 
-    public Smena(int id, String smena, Date datum, int idZamestnance, String jmeno, String prijmeni, String telefon, String pozice) {
+    public Smena(int id, String smena, Date datum, int idZamestnance, String jmeno, String prijmeni, String telefon, int idPozice, String pozice) {
         this.id = id;
         this.smena = smena;
         this.datum = datum;
@@ -30,6 +31,7 @@ public class Smena {
         this.jmeno = jmeno;
         this.prijmeni = prijmeni;
         this.telefon = telefon;
+        this.idPozice = idPozice;
         this.pozice = pozice;
     }
 
@@ -89,6 +91,14 @@ public class Smena {
         this.telefon = telefon;
     }
 
+    public int getIdPozice() {
+        return idPozice;
+    }
+
+    public void setIdPozice(int idPozice) {
+        this.idPozice = idPozice;
+    }
+
     public String getPozice() {
         return pozice;
     }
@@ -97,4 +107,5 @@ public class Smena {
         this.pozice = pozice;
     }
 
+    
 }

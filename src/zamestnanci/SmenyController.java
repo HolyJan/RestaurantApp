@@ -93,8 +93,8 @@ public class SmenyController implements Initializable {
         try {
             ResultSet result = statement.executeQuery("SELECT * FROM SMENY_VIEW");
             while (result.next()) {
-                smeny.add(new Smena(result.getInt("ID_SMENY"), result.getString("SMENA"), result.getDate("DATUM"),result.getInt("ID_ZAMESTNANCE"),
-                        result.getString("JMENO"),result.getString("PRIJMENI"),result.getString("TELEFON"), result.getString("POZICE")));
+                smeny.add(new Smena(result.getInt("ID_SMENA"), result.getString("SMENA"), result.getDate("DATUM"),result.getInt("ID_ZAMESTNANCE"),
+                        result.getString("JMENO"),result.getString("PRIJMENI"),result.getString("TELEFON"), result.getInt("ID_POZICE"),result.getString("POZICE")));
 
             }
             tableView.getItems().addAll(smeny);
@@ -123,9 +123,9 @@ public class SmenyController implements Initializable {
         if (edit) {
             Smena smena = tableView.getSelectionModel().selectedItemProperty().get();
             try {
-                controllerAkceSmeny.setData(smena.getId(), smena.getSmena(),
+                controllerAkceSmeny.setData(smena.getSmena(),
                         smena.getDatum(), smena.getIdZamestnance(), smena.getJmeno(),
-                        smena.getPrijmeni(), smena.getTelefon(),
+                        smena.getPrijmeni(), smena.getTelefon(), smena.getIdPozice(),
                         smena.getPozice());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -147,11 +147,15 @@ public class SmenyController implements Initializable {
     */
 
     @FXML
-    private void pridatAction(ActionEvent event) {
+    private void pridatAction(ActionEvent event) throws IOException {
+        edit = false;
+        openANewView(event, "zamestnanci/AkceSmeny.fxml", connection);
     }
 
     @FXML
-    private void upravitAction(ActionEvent event) {
+    private void upravitAction(ActionEvent event) throws IOException {
+        edit = false;
+        openANewView(event, "zamestnanci/AkceSmeny.fxml", connection);
     }
 
     @FXML
