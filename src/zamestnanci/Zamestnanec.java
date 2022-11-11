@@ -10,6 +10,7 @@ package zamestnanci;
  * @author jenik
  */
 public class Zamestnanec {
+
     private int id;
     private String jmeno;
     private String prijmeni;
@@ -74,5 +75,9 @@ public class Zamestnanec {
         this.pozice = pozice;
     }
 
-   
+    @Override
+    public String toString() {
+        return jmeno + " " + prijmeni;
+    }
+
 }

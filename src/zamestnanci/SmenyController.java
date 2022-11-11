@@ -6,6 +6,7 @@
 package zamestnanci;
 
 import connection.DatabaseConnection;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -16,11 +17,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import objednavky.AkceObjednavkaController;
+import objednavky.Objednavka;
 
 /**
  * FXML Controller class
@@ -49,6 +57,7 @@ public class SmenyController implements Initializable {
     private TableColumn<Smena, String> telefonCol;
     @FXML
     private TableColumn<Smena, String> poziceCol;
+    boolean edit = false;
 
     /**
      * Initializes the controller class.
@@ -84,7 +93,7 @@ public class SmenyController implements Initializable {
         try {
             ResultSet result = statement.executeQuery("SELECT * FROM SMENY_VIEW");
             while (result.next()) {
-                smeny.add(new Smena(result.getString("SMENA"), result.getDate("DATUM"),
+                smeny.add(new Smena(result.getInt("ID_SMENY"), result.getString("SMENA"), result.getDate("DATUM"),result.getInt("ID_ZAMESTNANCE"),
                         result.getString("JMENO"),result.getString("PRIJMENI"),result.getString("TELEFON"), result.getString("POZICE")));
 
             }
@@ -93,6 +102,36 @@ public class SmenyController implements Initializable {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+    
+     private void openANewView(ActionEvent event, String fileLocation, DatabaseConnection conn) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getClassLoader().getResource(fileLocation));
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        Parent parent = loader.load();
+        sendDataViaController(fileLocation, loader);
+        Scene mainScene = new Scene(parent);
+        stage.setScene(mainScene);
+        stage.show();
+    }
+
+    private void sendDataViaController(String fileLocation, FXMLLoader loader) {
+        loader.setLocation(getClass().getResource(fileLocation));
+        AkceSmenyController controllerAkceSmeny = loader.getController();
+        controllerAkceSmeny.setConnection(connection);
+        if (edit) {
+            Smena smena = tableView.getSelectionModel().selectedItemProperty().get();
+            try {
+                controllerAkceSmeny.setData(smena.getId(), smena.getSmena(),
+                        smena.getDatum(), smena.getIdZamestnance(), smena.getJmeno(),
+                        smena.getPrijmeni(), smena.getTelefon(),
+                        smena.getPozice());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
     }
 
     @FXML
