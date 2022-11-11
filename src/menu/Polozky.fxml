@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="491.0" prefWidth="577.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="menu.PolozkyController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="518.0" prefWidth="577.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="menu.PolozkyController">
    <children>
       <TableView fx:id="tableView" onMouseClicked="#zableViewClickedAction" prefHeight="491.0" prefWidth="290.0">
          <columns>

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="346.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="menu.AkcePolozkaController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="346.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="menu.AkcePolozkaController">
    <children>
       <VBox layoutX="10.0" layoutY="6.0" prefHeight="148.0" prefWidth="321.0" spacing="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="6.0">
          <children>
@@ -66,22 +66,22 @@
             <HBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="321.0" />
          </children>
       </VBox>
-      <HBox alignment="TOP_CENTER" layoutX="2.0" layoutY="156.0" prefHeight="25.0" prefWidth="337.0" spacing="7.0">
+      <HBox alignment="TOP_CENTER" layoutY="195.0" prefHeight="25.0" prefWidth="337.0" spacing="7.0" AnchorPane.bottomAnchor="125.4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Button fx:id="obrazekBut" mnemonicParsing="false" onAction="#pridatObrazekAction" text="Přidat obrázek" />
             <Button fx:id="menuBut" mnemonicParsing="false" onAction="#pridatMenuAction" text="Přidat menu" />
             <Button fx:id="receptBut" mnemonicParsing="false" onAction="#pridatReceptAction" text="Přidat recept" />
          </children>
       </HBox>
-      <HBox alignment="TOP_CENTER" layoutX="2.0" layoutY="188.0" prefHeight="25.0" prefWidth="340.0" spacing="7.0">
+      <HBox alignment="TOP_CENTER" layoutY="225.0" prefHeight="25.0" prefWidth="340.0" spacing="7.0" AnchorPane.bottomAnchor="95.4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Button mnemonicParsing="false" onAction="#editObrazekAc" text="Uprav obrázek" />
             <Button mnemonicParsing="false" onAction="#editMenuAc" text="Uprav menu" />
             <Button mnemonicParsing="false" onAction="#editReceptAc" text="Uprav recept" />
          </children>
       </HBox>
-      <Button fx:id="potvrditBut" layoutX="255.0" layoutY="307.0" mnemonicParsing="false" onAction="#potvrditAction" prefHeight="25.0" prefWidth="71.0" text="Potvrdit" />
-      <HBox alignment="TOP_CENTER" layoutX="-1.0" layoutY="220.0" prefHeight="26.0" prefWidth="342.0" spacing="7.0">
+      <Button fx:id="potvrditBut" layoutX="255.0" layoutY="307.0" mnemonicParsing="false" onAction="#potvrditAction" prefHeight="26.0" prefWidth="102.0" text="Potvrdit" AnchorPane.bottomAnchor="13.0" AnchorPane.rightAnchor="14.0" />
+      <HBox alignment="TOP_CENTER" layoutX="1.0" layoutY="257.0" prefHeight="26.0" prefWidth="342.0" spacing="7.0" AnchorPane.bottomAnchor="62.60000000000002" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Button mnemonicParsing="false" onAction="#deleteObrazekAc" text="Smaž obrázek" />
          </children>
