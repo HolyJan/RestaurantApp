@@ -27,6 +27,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -95,14 +96,18 @@ public class AkcePolozkaController implements Initializable {
     public void setData(Polozka polozka) {
         this.polozka = polozka;
         this.idPolozky = polozka.getIdPolozky();
-        this.idObrazku = polozka.getObrazek().getIdObrazku();
+
         nazevText.setText(polozka.getNazevPolozky());
         cenaText.setText(Integer.toString(polozka.getCenaPolozky()));
         this.idReceptu = polozka.getRecept().getId();
         receptCombo.setValue(polozka.getRecept());
         this.idMenu = polozka.getMenu().getId();
         menuCombo.setValue(polozka.getMenu());
-        obrazekCombo.setValue(polozka.getObrazek());
+
+        if (!polozka.getObrazek().getNazev().equals("Default")) {
+            this.idObrazku = polozka.getObrazek().getIdObrazku();
+            obrazekCombo.setValue(polozka.getObrazek());
+        }
     }
 
     public void setController(PolozkyController controller) {
@@ -141,7 +146,7 @@ public class AkcePolozkaController implements Initializable {
                 AkceObrazekController controllerObrazek = loader.getController();
                 controllerObrazek.setConnection(connection);
                 controllerObrazek.setObrazky(obrazkyList);
-                if(editObrazek) {
+                if (editObrazek) {
                     controllerObrazek.setData(obrazekCombo.getValue());
                 }
                 break;
@@ -287,9 +292,9 @@ public class AkcePolozkaController implements Initializable {
         if (receptCombo.getValue() == null) {
             showError("Vyberte recept, který chcete upravit.");
         } else {
-             openANewView(event, "menu/AkceRecept.fxml", connection);
+            openANewView(event, "menu/AkceRecept.fxml", connection);
         }
-       
+
     }
 
     private void showError(String message) {
@@ -298,6 +303,29 @@ public class AkcePolozkaController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void deleteObrazekAc(ActionEvent event) {
+        if (obrazekCombo.getValue() != null) {
+            try {
+                CallableStatement cstmt = connection.getConnection().prepareCall("{call deleteObrazekProc(?)}");
+                cstmt.setInt(1, obrazekCombo.getValue().getIdObrazku());
+                cstmt.execute();
+                for (Polozka p : polozky) {
+                    if (p.getObrazek().getIdObrazku() == obrazekCombo.getValue().getIdObrazku()) {
+                        p.getObrazek().setNazev("Default");
+                        p.getObrazek().setObrazek(new Image("images/meal.png"));
+                    }
+                }
+                this.obrazkyList.remove(obrazekCombo.getValue());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            showError("Vyber obrázek, který chceš odstranit");
+        }
+
     }
 
 }

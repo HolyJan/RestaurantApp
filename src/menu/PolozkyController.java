@@ -138,20 +138,26 @@ public class PolozkyController implements Initializable {
             ResultSet result2 = statement.executeQuery("SELECT * FROM obrazky_menu_view");
             Obrazek obrazek1 = null;
             while (result2.next()) {
+                if(!result2.getString("NAZEV").equals("Default")) {
                 Blob obrazek = result2.getBlob("OBRAZEK");
                 InputStream is = obrazek.getBinaryStream(1, obrazek.length());
                 Image img = SwingFXUtils.toFXImage(ImageIO.read(is), null);
                 obrazek1 = new Obrazek(result2.getInt("ID_OBRAZKU"), result2.getString("NAZEV"), img);
                 obrazky.add(obrazek1);
+                }
             }
             
             ResultSet result = statement.executeQuery("SELECT * FROM polozky_menu_view");
             while (result.next()) {
                 int idobrazku = result.getInt("ID_OBRAZKU");
+                obrazek1 = null;
                 for(Obrazek o : obrazky) {
                     if(o.getIdObrazku() == idobrazku) {
                         obrazek1 = o;
                     }
+                }
+                if(obrazek1 == null) {
+                    obrazek1 = new Obrazek(-1, "Default", new Image("images/meal.png"));
                 }
                 polozkyVse.add(new Polozka(result.getInt("ID_POLOZKY"), result.getString("NAZEV_POLOZKY"), result.getInt("CENA"),
                         new Recept(result.getInt("ID_RECEPTU"), result.getString("NAZEV_RECEPTU")),
