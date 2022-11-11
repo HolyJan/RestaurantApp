@@ -223,8 +223,8 @@ public class AkcePolozkaController implements Initializable {
                     polozka.setIdPolozky(idPolozky);
                     polozka.setNazevPolozky(nazevText.getText());
                     polozka.setCenaPolozky(Integer.parseInt(cenaText.getText()));
-                    polozka.getRecept().setId(idReceptu);
-                    polozka.getMenu().setId(idMenu);
+                    polozka.setRecept(receptCombo.getValue());
+                    polozka.setMenu(menuCombo.getValue());
                     polozka.setObrazek(novyobrazek);
                 }
                 Stage stage = (Stage) potvrditBut.getScene().getWindow();

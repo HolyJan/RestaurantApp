@@ -6,6 +6,7 @@
 package menu;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  *
@@ -19,6 +20,7 @@ public class Polozka {
     private Recept recept;
     private Menu menu;
     private Obrazek obrazek;
+    private ImageView imageView;
 
     public Polozka(int idPolozky, String nazevPolozky, int cenaPolozky, Recept recept, Menu menu, Obrazek obrazek) {
         this.idPolozky = idPolozky;
@@ -27,6 +29,9 @@ public class Polozka {
         this.recept = recept;
         this.menu = menu;
         this.obrazek = obrazek;
+        this.imageView = new ImageView(obrazek.getObrazek());
+        this.imageView.setFitHeight(50);
+        this.imageView.setFitWidth(70);
     }
 
     public int getIdPolozky() {
@@ -75,5 +80,11 @@ public class Polozka {
 
     public void setObrazek(Obrazek obrazek) {
         this.obrazek = obrazek;
+        this.imageView.setImage(obrazek.getObrazek());
     }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+    
 }

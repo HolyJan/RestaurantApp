@@ -71,6 +71,12 @@ public class PolozkyController implements Initializable {
     private AnchorPane pane;
     @FXML
     private ImageView imageViewJidlo;
+    @FXML
+    private TableColumn<Polozka, Menu> menuCol;
+    @FXML
+    private TableColumn<Polozka, Recept> receptCol;
+    @FXML
+    private TableColumn<Polozka, ImageView> colObrazek;
 
     /**
      * Initializes the controller class.
@@ -93,6 +99,9 @@ public class PolozkyController implements Initializable {
         });
         nazevCol.setCellValueFactory(new PropertyValueFactory<>("nazevPolozky"));
         cenaCol.setCellValueFactory(new PropertyValueFactory<>("cenaPolozky"));
+        menuCol.setCellValueFactory(new PropertyValueFactory<>("menu"));
+        receptCol.setCellValueFactory(new PropertyValueFactory<>("recept"));
+        colObrazek.setCellValueFactory(new PropertyValueFactory<>("imageView"));
     }
 
     public void setConnection(DatabaseConnection con) {
