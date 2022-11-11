@@ -77,6 +77,8 @@ public class PolozkyController implements Initializable {
     private TableColumn<Polozka, Recept> receptCol;
     @FXML
     private TableColumn<Polozka, ImageView> colObrazek;
+    @FXML
+    private CheckBox checkOstatnii;
 
     /**
      * Initializes the controller class.
@@ -213,11 +215,13 @@ public class PolozkyController implements Initializable {
             checkHlavniJidla.setSelected(true);
             checkNapoje.setSelected(true);
             checkPolevky.setSelected(true);
+            checkOstatnii.setSelected(true);
         } else {
             checkDezerty.setSelected(false);
             checkHlavniJidla.setSelected(false);
             checkNapoje.setSelected(false);
             checkPolevky.setSelected(false);
+            checkOstatnii.setSelected(false);
         }
         updateData();
     }
@@ -281,9 +285,15 @@ public class PolozkyController implements Initializable {
                         polozkySelected.add(pol);
                     }
                 }
+                if (checkOstatnii.isSelected()) {
+                    if(pol.getMenu().getId() > 4) {
+                        polozkySelected.add(pol);
+                    }
+                }
 
             }
             tableView.getItems().addAll(polozkySelected);
+            updatImageView();
         }
 
     }
@@ -296,8 +306,10 @@ public class PolozkyController implements Initializable {
         Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
         if(polozka == null) {
             imageViewJidlo.setImage(new Image("images/meal.png"));
+        } else {
+             imageViewJidlo.setImage(polozka.getObrazek().getObrazek());
         }
-        imageViewJidlo.setImage(polozka.getObrazek().getObrazek());
+       
     }
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -305,5 +317,13 @@ public class PolozkyController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void checkOstatniAc(ActionEvent event) {
+        if (!checkOstatnii.isSelected() && checkVse.isSelected()) {
+            checkVse.setSelected(false);
+        }
+        updateData();
     }
 }

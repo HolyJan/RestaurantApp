@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="518.0" prefWidth="818.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="menu.PolozkyController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="573.0" prefWidth="818.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="menu.PolozkyController">
    <children>
-      <TableView fx:id="tableView" onMouseClicked="#zableViewClickedAction" prefHeight="518.0" prefWidth="542.0">
+      <TableView fx:id="tableView" onMouseClicked="#zableViewClickedAction" prefHeight="573.0" prefWidth="542.0">
          <columns>
             <TableColumn fx:id="nazevCol" prefWidth="190.0" text="Název" />
             <TableColumn fx:id="cenaCol" minWidth="7.0" prefWidth="97.0" text="Cena" />
@@ -21,13 +21,13 @@
             <TableColumn fx:id="colObrazek" prefWidth="104.0" text="Obrázek" />
          </columns>
       </TableView>
-      <VBox alignment="TOP_CENTER" layoutX="384.0" layoutY="198.0" prefHeight="256.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="26.0" AnchorPane.rightAnchor="93.0">
+      <VBox alignment="TOP_CENTER" layoutX="625.0" layoutY="203.0" prefHeight="303.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="67.0" AnchorPane.rightAnchor="93.0">
          <children>
             <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
             <Button mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />
             <Button mnemonicParsing="false" onAction="#upravitAction" text="Upravit" />
             <Button mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
-            <VBox prefHeight="114.0" prefWidth="100.0" spacing="5.0">
+            <VBox prefHeight="164.0" prefWidth="100.0" spacing="5.0">
                <children>
                   <Label text="        Zobrazit" />
                   <CheckBox fx:id="checkVse" mnemonicParsing="false" onAction="#checkVseAction" text="Vše" />
@@ -35,6 +35,7 @@
                   <CheckBox fx:id="checkHlavniJidla" mnemonicParsing="false" onAction="#checkHlavniJidlaAction" text="Hlavní jídla" />
                   <CheckBox fx:id="checkDezerty" mnemonicParsing="false" onAction="#checkDezertyAction" text="Dezerty" />
                   <CheckBox fx:id="checkNapoje" mnemonicParsing="false" onAction="#checkNapojeAction" text="Nápoje" />
+                  <CheckBox fx:id="checkOstatnii" mnemonicParsing="false" onAction="#checkOstatniAc" text="Ostatní" />
                </children>
             </VBox>
          </children>
