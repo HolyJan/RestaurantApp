@@ -107,5 +107,14 @@ public class Smena {
         this.pozice = pozice;
     }
 
+    @Override
+    public String toString() {
+        if(datum == null){
+            return smena;
+        }else{
+            return smena + " " + datum;
+        }
+    }
+
     
 }

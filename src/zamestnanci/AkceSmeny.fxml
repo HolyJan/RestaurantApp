@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="107.0" prefWidth="322.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/18" fx:controller="zamestnanci.AkceSmenyController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="154.0" prefWidth="368.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/18" fx:controller="zamestnanci.AkceSmenyController">
    <children>
       <VBox layoutX="14.0" layoutY="14.0" prefHeight="225.0" prefWidth="283.0" spacing="5.0" AnchorPane.bottomAnchor="53.599999999999994" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="24.80000000000001" AnchorPane.topAnchor="14.0">
          <children>
@@ -21,7 +21,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <DatePicker fx:id="datePicker" prefHeight="26.0" prefWidth="150.0" />
+                  <DatePicker fx:id="datePicker" prefHeight="26.0" prefWidth="178.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
@@ -31,7 +31,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="zamestnanecCombo" prefWidth="150.0" />
+                  <ComboBox fx:id="zamestnanecCombo" prefHeight="26.0" prefWidth="177.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
@@ -41,7 +41,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="smenaCombo" prefWidth="150.0" />
+                  <ComboBox fx:id="smenaCombo" prefHeight="26.0" prefWidth="178.0" />
                </children>
             </HBox>
          </children>

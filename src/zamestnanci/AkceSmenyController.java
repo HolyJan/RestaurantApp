@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -44,14 +45,15 @@ public class AkceSmenyController implements Initializable {
     boolean init;
 
     ObservableList<Zamestnanec> zamestnanci = FXCollections.observableArrayList();
-    ObservableList<String> smeny = FXCollections.observableArrayList();
+    ObservableList<Smena> smeny = FXCollections.observableArrayList();
     @FXML
     private DatePicker datePicker;
     @FXML
-    private ComboBox<String> smenaCombo;
+    private ComboBox<Smena> smenaCombo;
     @FXML
     private Button potvrditBut;
     int idZamestnance = -1;
+    int oldIdSmena;
 
     /**
      * Initializes the controller class.
@@ -77,22 +79,39 @@ public class AkceSmenyController implements Initializable {
             if (datePicker.getValue() != null && smenaCombo.getValue() != null && zamestnanecCombo.getValue() != null) {
                 Statement statement = connection.createBlockedStatement();
                 if (idZamestnance == -1) {
-                    CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozSmenuProc(?,?)}");
-                    if ("Ranní".equals(smenaCombo.getValue())) {
-                        cstmt.setInt(1, 1);
+                    SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yy");
+                    java.util.Date utilDate = new java.util.Date(Date.valueOf(datePicker.getValue()).getTime());
+                    CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozSmenu_zamestnProc(?,?)}");
+                    ResultSet result = statement.executeQuery("SELECT * FROM SMENY_VIEW WHERE datum='" + DATE_FORMAT.format(utilDate) + "' "
+                            + "AND smena='" + smenaCombo.getValue() + "'");
+                    if (!result.next()) {
+                        CallableStatement cstmt1 = connection.getConnection().prepareCall("{call vlozSmenuProc(?,?)}");
+                        cstmt1.setString(1, smenaCombo.getValue().getSmena());
+                        cstmt1.setDate(2, Date.valueOf(datePicker.getValue()));
+                        cstmt1.execute();
+
+                        ResultSet result1 = statement.executeQuery("SELECT * FROM smeny WHERE id_smena = (SELECT MAX(id_smena) FROM smeny)");
+                        result1.next();
+                        cstmt.setInt(1, result1.getInt("ID_SMENA"));
+                        cstmt.setInt(2, zamestnanecCombo.getValue().getId());
+                        cstmt.execute();
                     } else {
-                        cstmt.setInt(1, 2);
+                        int idSmeny = result.getInt("ID_SMENA");
+                        result = statement.executeQuery("SELECT * FROM SMENY_ZAMESTN_VIEW WHERE id_smena='" + idSmeny + "' "
+                                + "AND id_zamestnance='" + zamestnanecCombo.getValue().getId() + "'");
+                        if (result.next()) {
+                            showError("Zaměstnanec jíž na této směně zapsaný!");
+                        } else {
+                            cstmt.setInt(1, result.getInt("ID_SMENA"));
+                            cstmt.setInt(2, zamestnanecCombo.getValue().getId());
+                            cstmt.execute();
+                        }
                     }
-                    cstmt.setInt(2, zamestnanecCombo.getValue().getId());
-                    cstmt.execute();
                 } else {
-                    CallableStatement cstmt = connection.getConnection().prepareCall("{call updateSmenuProc(?,?)}");
-                    if ("Ranní".equals(smenaCombo.getValue())) {
-                        cstmt.setInt(1, 1);
-                    } else {
-                        cstmt.setInt(1, 2);
-                    }
-                    cstmt.setInt(2, zamestnanecCombo.getValue().getId());
+                    CallableStatement cstmt = connection.getConnection().prepareCall("{call updateSmenu_zamestnProc(?,?,?)}");
+                    cstmt.setInt(1, oldIdSmena);
+                    cstmt.setInt(2, smenaCombo.getValue().getId());
+                    cstmt.setInt(3, zamestnanecCombo.getValue().getId());
                     cstmt.execute();
                 }
                 Stage stage = (Stage) potvrditBut.getScene().getWindow();
@@ -110,17 +129,25 @@ public class AkceSmenyController implements Initializable {
     private void pripareCombos() {
         Statement statement = connection.createBlockedStatement();
         try {
-            ResultSet result1 = statement.executeQuery("SELECT * FROM ZAMESTNANCI_VIEW");
-            while (result1.next()) {
-                Zamestnanec zamestnanec = new Zamestnanec(result1.getInt("ID_ZAMESTNANCE"), result1.getString("JMENO"),
-                        result1.getString("PRIJMENI"), result1.getString("TELEFON"),
-                        result1.getInt("ID_ZAMESTNANCE"), result1.getString("NAZEV"));
+            ResultSet result = statement.executeQuery("SELECT * FROM ZAMESTNANCI_VIEW");
+            while (result.next()) {
+                Zamestnanec zamestnanec = new Zamestnanec(result.getInt("ID_ZAMESTNANCE"), result.getString("JMENO"),
+                        result.getString("PRIJMENI"), result.getString("TELEFON"),
+                        result.getInt("ID_ZAMESTNANCE"), result.getString("NAZEV"));
 
                 zamestnanci.add(zamestnanec);
             }
-
-            smeny.add("Ranní");
-            smeny.add("Odpolední");
+            if (idZamestnance != -1) {
+                result = statement.executeQuery("SELECT DISTINCT id_smena, smena, datum FROM smeny_view");
+                while (result.next()) {
+                    Smena smena = new Smena(result.getInt("ID_SMENA"), result.getString("SMENA"), result.getDate("DATUM"), 0,
+                            "", "", "", 0, "");
+                    smeny.add(smena);
+                }
+            }else{
+                smeny.add(new Smena(0, "Ranní", null, 0, "", "", "", 0, ""));
+                smeny.add(new Smena(0, "Odpolední", null, 0, "", "", "", 0, ""));
+            }
             zamestnanecCombo.setItems(zamestnanci);
             smenaCombo.setItems(smeny);
 
@@ -133,12 +160,14 @@ public class AkceSmenyController implements Initializable {
         connection = con;
     }
 
-    public void setData(String smena, Date datum, int idZamestn, String jmeno, String prijmeni, String telefon, int idPoz, String pozice) {
+    public void setData(Smena smena, int idZamestn, String jmeno, String prijmeni, String telefon, int idPoz, String pozice) {
         idZamestnance = idZamestn;
         smenaCombo.setValue(smena);
-        datePicker.setValue(datum.toLocalDate());
+        datePicker.setValue(smena.getDatum().toLocalDate());
         Zamestnanec zamestan = new Zamestnanec(idZamestn, jmeno, prijmeni, telefon, idPoz, pozice);
         zamestnanecCombo.setValue(zamestan);
+        datePicker.setDisable(true);
+        oldIdSmena = smena.getId();
 
     }
 

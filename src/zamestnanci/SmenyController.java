@@ -93,9 +93,10 @@ public class SmenyController implements Initializable {
         try {
             ResultSet result = statement.executeQuery("SELECT * FROM SMENY_VIEW");
             while (result.next()) {
-                smeny.add(new Smena(result.getInt("ID_SMENA"), result.getString("SMENA"), result.getDate("DATUM"),result.getInt("ID_ZAMESTNANCE"),
+                if(result.getString("JMENO") != null){
+                    smeny.add(new Smena(result.getInt("ID_SMENA"), result.getString("SMENA"), result.getDate("DATUM"),result.getInt("ID_ZAMESTNANCE"),
                         result.getString("JMENO"),result.getString("PRIJMENI"),result.getString("TELEFON"), result.getInt("ID_POZICE"),result.getString("POZICE")));
-
+                }
             }
             tableView.getItems().addAll(smeny);
 
@@ -123,8 +124,7 @@ public class SmenyController implements Initializable {
         if (edit) {
             Smena smena = tableView.getSelectionModel().selectedItemProperty().get();
             try {
-                controllerAkceSmeny.setData(smena.getSmena(),
-                        smena.getDatum(), smena.getIdZamestnance(), smena.getJmeno(),
+                controllerAkceSmeny.setData(smena, smena.getIdZamestnance(), smena.getJmeno(),
                         smena.getPrijmeni(), smena.getTelefon(), smena.getIdPozice(),
                         smena.getPozice());
             } catch (Exception e) {
@@ -154,7 +154,7 @@ public class SmenyController implements Initializable {
 
     @FXML
     private void upravitAction(ActionEvent event) throws IOException {
-        edit = false;
+        edit = true;
         openANewView(event, "zamestnanci/AkceSmeny.fxml", connection);
     }
 
