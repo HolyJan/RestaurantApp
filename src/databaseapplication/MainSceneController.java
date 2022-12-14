@@ -52,6 +52,8 @@ public class MainSceneController implements Initializable {
     private Label loginLabel;
     @FXML
     private Button menu;
+    @FXML
+    private Button menu1;
 
     /**
      * Initializes the controller class.
@@ -179,6 +181,34 @@ public class MainSceneController implements Initializable {
         loginBtn.setVisible(true);
         logOut.setVisible(false);
         roleId.set(0);
+    }
+
+    @FXML
+    private void uzivateleButAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void obrazkyButAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void aktivityButAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void adresyButAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void poziceButAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void stolyButAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void polozkyMenuButAction(ActionEvent event) {
     }
 
    

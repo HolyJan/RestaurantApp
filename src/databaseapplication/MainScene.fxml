@@ -22,7 +22,7 @@
       <Button fx:id="loginBtn" layoutX="3.0" layoutY="276.0" mnemonicParsing="false" onAction="#loginButAction" prefHeight="26.0" prefWidth="79.0" text="Login" />
       <Button fx:id="logOut" layoutX="6.0" layoutY="276.0" mnemonicParsing="false" onAction="#logoutOnAc" text="logout" visible="false" />
       <Label fx:id="loginLabel" layoutX="12.0" layoutY="253.0" AnchorPane.bottomAnchor="43.0" AnchorPane.leftAnchor="12.0" />
-      <HBox layoutX="6.0" layoutY="49.0" prefHeight="25.0" prefWidth="645.0" spacing="5.0">
+      <HBox layoutX="6.0" layoutY="49.0" prefHeight="25.0" prefWidth="749.0" spacing="5.0">
          <children>
             <Button mnemonicParsing="false" onAction="#uzivateleButAction" prefHeight="26.0" prefWidth="110.0" text="Uživatelé" />
             <Button mnemonicParsing="false" onAction="#obrazkyButAction" prefHeight="26.0" prefWidth="114.0" text="Obrázky" />
