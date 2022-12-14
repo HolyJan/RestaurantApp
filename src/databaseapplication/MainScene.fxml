@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="313.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="databaseapplication.MainSceneController">
+<AnchorPane id="AnchorPane" prefHeight="313.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="databaseapplication.MainSceneController">
    <children>
       <HBox layoutX="6.0" layoutY="14.0" prefHeight="25.0" prefWidth="579.0" spacing="5.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="14.0">
          <children>
@@ -14,13 +14,24 @@
             <Button mnemonicParsing="false" onAction="#objednavkyButAction" prefHeight="26.0" prefWidth="109.0" text="Objednavky" />
             <Button mnemonicParsing="false" onAction="#smenyButAction" prefHeight="26.0" prefWidth="85.0" text="Směny" />
             <Button fx:id="menu" mnemonicParsing="false" onAction="#menuAction" prefHeight="26.0" prefWidth="91.0" text="Menu" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" text="Button" />
-            <Button mnemonicParsing="false" text="Button" />
-            <Button mnemonicParsing="false" text="Button" />
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" text="Rezervace" />
+            <Button mnemonicParsing="false" text="Platby" />
+            <Button mnemonicParsing="false" text="Recepty" />
          </children>
       </HBox>
       <Button fx:id="loginBtn" layoutX="3.0" layoutY="276.0" mnemonicParsing="false" onAction="#loginButAction" prefHeight="26.0" prefWidth="79.0" text="Login" />
       <Button fx:id="logOut" layoutX="6.0" layoutY="276.0" mnemonicParsing="false" onAction="#logoutOnAc" text="logout" visible="false" />
       <Label fx:id="loginLabel" layoutX="12.0" layoutY="253.0" AnchorPane.bottomAnchor="43.0" AnchorPane.leftAnchor="12.0" />
+      <HBox layoutX="6.0" layoutY="49.0" prefHeight="25.0" prefWidth="645.0" spacing="5.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#uzivateleButAction" prefHeight="26.0" prefWidth="110.0" text="Uživatelé" />
+            <Button mnemonicParsing="false" onAction="#obrazkyButAction" prefHeight="26.0" prefWidth="114.0" text="Obrázky" />
+            <Button mnemonicParsing="false" onAction="#aktivityButAction" prefHeight="26.0" prefWidth="109.0" text="Aktivita" />
+            <Button mnemonicParsing="false" onAction="#adresyButAction" prefHeight="26.0" prefWidth="85.0" text="Adresy" />
+            <Button fx:id="menu1" mnemonicParsing="false" onAction="#poziceButAction" prefHeight="26.0" prefWidth="91.0" text="Pozice" />
+            <Button mnemonicParsing="false" onAction="#stolyButAction" prefHeight="26.0" prefWidth="102.0" text="Stoly" />
+            <Button mnemonicParsing="false" onAction="#polozkyMenuButAction" prefHeight="25.0" prefWidth="110.0" text="Polozky menu" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>
