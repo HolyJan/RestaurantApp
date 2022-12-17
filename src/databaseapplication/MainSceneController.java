@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import login.LoginController;
 import menu.PolozkyController;
 import objednavky.ObjednavkyController;
+import uzivatele.UzivateleController;
 import zakaznici.ZakazniciController;
 import zamestnanci.SmenyController;
 import zamestnanci.ZamestnanciController;
@@ -128,8 +129,8 @@ public class MainSceneController implements Initializable {
     private void smenyButAction(ActionEvent event) throws IOException {
         openANewView(event, "zamestnanci/Smeny.fxml", connection);
     }
-    
-     @FXML
+
+    @FXML
     private void menuAction(ActionEvent event) throws IOException {
         openANewView(event, "menu/Polozky.fxml", connection);
     }
@@ -173,6 +174,10 @@ public class MainSceneController implements Initializable {
                 PolozkyController controllerPolozky = loader.getController();
                 controllerPolozky.setConnection(connection);
                 break;
+            case "uzivatele/Uzivatele.fxml":
+                UzivateleController controllerUzivatele = loader.getController();
+                controllerUzivatele.setConnection(connection);
+                break;
         }
     }
 
@@ -184,7 +189,8 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void uzivateleButAction(ActionEvent event) {
+    private void uzivateleButAction(ActionEvent event) throws IOException {
+        openANewView(event, "uzivatele/Uzivatele.fxml", connection);
     }
 
     @FXML
@@ -210,7 +216,5 @@ public class MainSceneController implements Initializable {
     @FXML
     private void polozkyMenuButAction(ActionEvent event) {
     }
-
-   
 
 }

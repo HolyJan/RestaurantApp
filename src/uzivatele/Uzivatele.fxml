@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="400.0" prefWidth="717.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uzivatele.UzivateleController">
+   <children>
+      <TableView fx:id="tableView" prefHeight="400.0" prefWidth="592.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <columns>
+            <TableColumn fx:id="jmenoCol" prefWidth="100.80001831054688" text="Jmeno" />
+            <TableColumn fx:id="prijmeniCol" prefWidth="114.39999389648438" text="Příjmení" />
+            <TableColumn fx:id="loginCol" prefWidth="112.0" text="Login" />
+            <TableColumn fx:id="hesloCol" minWidth="3.0" prefWidth="131.20001220703125" text="Heslo" />
+            <TableColumn fx:id="roleCol" minWidth="3.0" prefWidth="132.79998779296875" text="Role" />
+         </columns>
+      </TableView>
+      <VBox alignment="TOP_CENTER" layoutX="758.0" layoutY="31.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="23.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
+            <Button mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />
+            <Button mnemonicParsing="false" onAction="#upravitAction" text="Upravit" />
+            <Button mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
