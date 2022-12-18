@@ -8,7 +8,9 @@ package zamestnanci;
 import connection.DatabaseConnection;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
@@ -147,7 +149,12 @@ public class ZamestnanciController implements Initializable {
     }
 
     @FXML
-    private void odebratAction(ActionEvent event) {
+    private void odebratAction(ActionEvent event) throws SQLException {
+        Zamestnanec zamestnanec = tableView.getSelectionModel().getSelectedItem();
+        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberZamestnanceProc(?)}");
+        cstmt.setInt(1, zamestnanec.getId());
+        cstmt.execute();
+        loadData();
     }
 
 }

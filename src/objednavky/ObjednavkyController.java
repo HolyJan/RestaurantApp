@@ -176,21 +176,25 @@ public class ObjednavkyController implements Initializable {
     private void pridatAction(ActionEvent event) throws IOException {
         edit = false;
         openANewView(event, "objednavky/akceObjednavka.fxml", connection);
+        loadData();
     }
 
     @FXML
     private void upravitAction(ActionEvent event) throws IOException {
-        edit = true;
-        openANewView(event, "objednavky/akceObjednavka.fxml", connection);
         loadData();
     }
 
     @FXML
     private void odebratAction(ActionEvent event) throws SQLException {
         Objednavka objednavka = tableView.getSelectionModel().getSelectedItem();
-        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberDoruceniProc(?)}");
-        cstmt.setInt(1, objednavka.getIdDoruceni());
+        try {
+            CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberObjednavkuProc(?)}");
+        cstmt.setInt(1, objednavka.getIdObjednavky());
         cstmt.execute();
+        loadData();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
     
     public void PridejAktivitu(Aktivita aktivita) {

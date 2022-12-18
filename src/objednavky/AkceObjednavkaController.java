@@ -141,7 +141,7 @@ public class AkceObjednavkaController implements Initializable {
                 int idDor = result1.getInt("ID_DORUCENI");
 
                 ResultSet result2 = statement.executeQuery("SELECT * FROM polozky_menu_view"
-                        + " WHERE nazev='" + polozkaCombo.getValue() + "'");
+                        + " WHERE nazev_polozky='" + polozkaCombo.getValue() + "'");
                 result2.next();
                 int idPol = result2.getInt("ID_POLOZKY");
 

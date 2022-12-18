@@ -8,7 +8,9 @@ package zakaznici;
 import connection.DatabaseConnection;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,6 +31,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import login.RegistraceController;
+import uzivatele.Uzivatel;
 
 /**
  * FXML Controller class
@@ -170,7 +173,12 @@ public class ZakazniciController implements Initializable {
     }
 
     @FXML
-    private void odebratAction(ActionEvent event) {
+    private void odebratAction(ActionEvent event) throws SQLException {
+        Zakaznik zakaznik = tableView.getSelectionModel().getSelectedItem();
+        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberZakaznikaProc(?)}");
+        cstmt.setInt(1, zakaznik.getId());
+        cstmt.execute();
+        loadData();
     }
 
 }

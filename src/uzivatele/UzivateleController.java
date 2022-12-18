@@ -8,6 +8,7 @@ package uzivatele;
 import connection.DatabaseConnection;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -154,17 +155,12 @@ public class UzivateleController implements Initializable {
     }
 
     @FXML
-    private void odebratAction(ActionEvent event) {
+    private void odebratAction(ActionEvent event) throws SQLException {
         Uzivatel uzivatel = tableView.getSelectionModel().getSelectedItem();
-        Statement statement = connection.createBlockedStatement();
-        try {
-            ResultSet result = statement.executeQuery("DELETE FROM uzivatele WHERE login = '" + uzivatel.getLogin()+"'");
-            if (result.next()) {
-                loadData();
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberUzivateleProc(?)}");
+        cstmt.setInt(1, uzivatel.getIdUzivatele());
+        cstmt.execute();
+        loadData();
     }
 
     public void setConnection(DatabaseConnection con) {
