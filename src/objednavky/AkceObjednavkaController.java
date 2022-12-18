@@ -23,6 +23,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import zakaznici.Adresa;
+import zakaznici.Zakaznik;
 
 /**
  * FXML Controller class
@@ -31,10 +33,6 @@ import javafx.stage.Stage;
  */
 public class AkceObjednavkaController implements Initializable {
 
-    @FXML
-    private TextField jmenoText;
-    @FXML
-    private TextField prijmeniText;
     @FXML
     private ComboBox<String> casObjednaniCombo;
     @FXML
@@ -50,10 +48,13 @@ public class AkceObjednavkaController implements Initializable {
     boolean init;
 
     ObservableList<String> zpusobyVyzvednuti = FXCollections.observableArrayList();
+    ObservableList<Zakaznik> zakaznici = FXCollections.observableArrayList();
     ObservableList<String> polozky = FXCollections.observableArrayList();
     ObservableList<String> casyObjednani = FXCollections.observableArrayList();
     @FXML
     private AnchorPane pane;
+    @FXML
+    private ComboBox<Zakaznik> zakaznikCombo;
 
     /**
      * Initializes the controller class.
@@ -78,11 +79,10 @@ public class AkceObjednavkaController implements Initializable {
         connection = con;
     }
 
-    void setData(int idObjednavky, String jmeno, String prijmeni, int idDoruceni,
+    void setData(int idObjednavky, Zakaznik zakaznik, int idDoruceni,
             String casObjednani, String vyzvednuti, int idPolozky, String nazevPolozky, int cenaPolozky) {
         this.idObjednavky = idObjednavky;
-        jmenoText.setText(jmeno);
-        prijmeniText.setText(prijmeni);
+        zakaznikCombo.setValue(zakaznik);
         this.idDoruceni = idDoruceni;
         casObjednaniCombo.setValue(casObjednani);
         vyzvednutiCombo.setValue(vyzvednuti);
@@ -106,7 +106,16 @@ public class AkceObjednavkaController implements Initializable {
             while (result3.next()) {
                 polozky.add(result3.getString("NAZEV"));
             }
+            
+            ResultSet result2 = statement.executeQuery("SELECT * FROM ZAKAZNICI_VIEW");
+            while (result2.next()) {
+                zakaznici.add(new Zakaznik(result2.getInt("ID_ZAKAZNIKA"), result2.getString("JMENO"), 
+                        result2.getString("PRIJMENI"), result2.getString("TELEFON"), result2.getString("EMAIL"), 
+                        new Adresa(result2.getInt("ID_ADRESA"), result2.getString("ULICE"), 
+                                result2.getString("CISLO_POPISNE"), result2.getString("PSC"), result2.getString("OBEC"))));
+            }
             polozkaCombo.setItems(polozky);
+            zakaznikCombo.setItems(zakaznici);
             casObjednaniCombo.setItems(casyObjednani);
             vyzvednutiCombo.setItems(zpusobyVyzvednuti);
 
@@ -117,13 +126,13 @@ public class AkceObjednavkaController implements Initializable {
 
     @FXML
     private void potvrditAction(ActionEvent event) {
-        if (!"".equals(jmenoText.getText()) && !"".equals(prijmeniText.getText())
+        if (!"".equals(zakaznikCombo.getValue())
                 && !"".equals(casObjednaniCombo.getValue()) && !"".equals(vyzvednutiCombo.getValue())
                 && !"".equals(polozkaCombo.getValue())) {
             Statement statement = connection.createBlockedStatement();
             try {
                 ResultSet result = statement.executeQuery("SELECT * FROM zakaznici_view"
-                        + " WHERE jmeno='" + jmenoText.getText() + "' AND prijmeni='" + prijmeniText.getText() + "'");
+                        + " WHERE jmeno='" + zakaznikCombo.getValue().getJmeno() + "' AND prijmeni='" + zakaznikCombo.getValue().getPrijmeni() + "'");
                 result.next();
                 int idZakaznika = result.getInt("ID_ZAKAZNIKA");
                 ResultSet result1 = statement.executeQuery("SELECT * FROM zpusoby_vyzvednuti_view"
@@ -169,7 +178,7 @@ public class AkceObjednavkaController implements Initializable {
                     cstmt1.setInt(2, idPol);
                     cstmt1.execute();
                 }
-                Stage stage = (Stage) jmenoText.getScene().getWindow();
+                Stage stage = (Stage) zakaznikCombo.getScene().getWindow();
                 stage.close();
             } catch (Exception e) {
                 System.out.println(e.getMessage());

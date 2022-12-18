@@ -11,6 +11,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -62,6 +63,7 @@ public class ZakazniciController implements Initializable {
     private AnchorPane pane;
     boolean init;
     boolean edit = false;
+    private TableView<Adresa> tableViewAdresa;
 
     /**
      * Initializes the controller class.
@@ -86,7 +88,6 @@ public class ZakazniciController implements Initializable {
         cpCol.setCellValueFactory(new PropertyValueFactory<>("cisloPop"));
         pscCol.setCellValueFactory(new PropertyValueFactory<>("psc"));
         mestoCol.setCellValueFactory(new PropertyValueFactory<>("mesto"));
-
     }
 
     public void setConnection(DatabaseConnection con) {
@@ -97,22 +98,20 @@ public class ZakazniciController implements Initializable {
         zakaznici.clear();
         tableView.getItems().clear();
         adresy.clear();
-        //adresyTable.getItems().clear();
         Statement statement = connection.createBlockedStatement();
         try {
             ResultSet result = statement.executeQuery("SELECT * FROM ZAKAZNICI_VIEW");
             while (result.next()) {
-                Adresa adresa = new Adresa(result.getString("ULICE"), result.getString("CISLO_POPISNE"),
+                Adresa adresa = new Adresa(result.getInt("ID_ADRESA"), result.getString("ULICE"), result.getString("CISLO_POPISNE"),
                         result.getString("PSC"), result.getString("OBEC"));
                 zakaznici.add(new Zakaznik(result.getInt("ID_ZAKAZNIKA"), result.getString("JMENO"),
                         result.getString("PRIJMENI"), result.getString("TELEFON"), result.getString("EMAIL"),
-                        result.getInt("ID_ADRESA"), result.getString("ULICE"), result.getString("CISLO_POPISNE"),
-                        result.getString("PSC"), result.getString("OBEC")));
+                        adresa));
                 adresy.add(adresa);
 
             }
             tableView.getItems().addAll(zakaznici);
-            //adresyTable.getItems().addAll(adresy);
+            tableViewAdresa.getItems().addAll(adresy);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -138,12 +137,10 @@ public class ZakazniciController implements Initializable {
         if (edit) {
             Zakaznik zakaznik = tableView.getSelectionModel().selectedItemProperty().get();
             try {
-                    controllerAkceZakaznici.setData(zakaznik.getId(), 
-                            zakaznik.getJmeno(), zakaznik.getPrijmeni(), 
-                            zakaznik.getTelefon(), zakaznik.getEmail(), 
-                            zakaznik.getId_adresy(), zakaznik.getUlice(),
-                            zakaznik.getCisloPop(), zakaznik.getPsc(),
-                            zakaznik.getMesto());
+                controllerAkceZakaznici.setData(zakaznik.getId(),
+                        zakaznik.getJmeno(), zakaznik.getPrijmeni(),
+                        zakaznik.getTelefon(), zakaznik.getEmail(),
+                        zakaznik.getAdresa());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }

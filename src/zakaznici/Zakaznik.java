@@ -16,103 +16,85 @@ public class Zakaznik {
     private String prijmeni;
     private String telefon;
     private String email;
-    private int id_adresy;
-    private String ulice;
-    private String cisloPop;
-    private String psc;
-    private String mesto;
+    private Adresa adresa;
 
-    public Zakaznik(int id, String jmeno, String prijmeni, String telefon, String email, int id_adresy, String ulice, String cisloPop, String psc, String mesto) {
+    public Zakaznik(int id, String jmeno, String prijmeni, String telefon, String email, Adresa adresa) {
         this.id = id;
         this.jmeno = jmeno;
         this.prijmeni = prijmeni;
         this.telefon = telefon;
         this.email = email;
-        this.id_adresy = id_adresy;
-        this.ulice = ulice;
-        this.cisloPop = cisloPop;
-        this.psc = psc;
-        this.mesto = mesto;
+        this.adresa = adresa;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getJmeno() {
-        return jmeno;
-    }
-
-    public String getPrijmeni() {
-        return prijmeni;
-    }
-
-    public String getTelefon() {
-        return telefon;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public int getId_adresy() {
-        return id_adresy;
-    }
-
-    public String getUlice() {
-        return ulice;
-    }
-
-    public String getCisloPop() {
-        return cisloPop;
-    }
-
-    public String getPsc() {
-        return psc;
-    }
-
-    public String getMesto() {
-        return mesto;
-    }
-
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getJmeno() {
+        return jmeno;
     }
 
     public void setJmeno(String jmeno) {
         this.jmeno = jmeno;
     }
 
+    public String getPrijmeni() {
+        return prijmeni;
+    }
+
     public void setPrijmeni(String prijmeni) {
         this.prijmeni = prijmeni;
+    }
+
+    public String getTelefon() {
+        return telefon;
     }
 
     public void setTelefon(String telefon) {
         this.telefon = telefon;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setId_adresy(int id_adresy) {
-        this.id_adresy = id_adresy;
+    public Adresa getAdresa() {
+        return adresa;
     }
 
-    public void setUlice(String ulice) {
-        this.ulice = ulice;
+    public void setAdresa(Adresa adresa) {
+        this.adresa = adresa;
     }
 
-    public void setCisloPop(String cisloPop) {
-        this.cisloPop = cisloPop;
+    public String getUlice() {
+        return adresa.getUlice();
     }
 
-    public void setPsc(String psc) {
-        this.psc = psc;
+    public String getCisloPop() {
+        return adresa.getCisloPop();
     }
 
-    public void setMesto(String mesto) {
-        this.mesto = mesto;
+    public String getPsc() {
+        return adresa.getPsc();
+    }
+
+    public String getMesto() {
+        return adresa.getMesto();
+    }
+   
+
+    @Override
+    public String toString() {
+        return jmeno + " " + prijmeni;
     }
 
     

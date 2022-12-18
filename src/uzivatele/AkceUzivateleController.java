@@ -42,16 +42,14 @@ public class AkceUzivateleController implements Initializable {
     @FXML
     private PasswordField hesloTextField;
     @FXML
-    private ComboBox<String> roleCombo;
-    @FXML
-    private Button registraceButton1;
+    private ComboBox<Role> roleCombo;
     private boolean init;
     @FXML
     private AnchorPane pane;
     private int idUzivatele = -1;
     private DatabaseConnection connection;
 
-    ObservableList<String> role = FXCollections.observableArrayList();
+    ObservableList<Role> role = FXCollections.observableArrayList();
 
     /**
      * Initializes the controller class.
@@ -71,7 +69,7 @@ public class AkceUzivateleController implements Initializable {
     }
 
     void setData(int idUzivatele, String jmeno, String prijmeni, String login,
-            String heslo, String role) {
+            String heslo, Role role) {
         this.idUzivatele = idUzivatele;
         jmenoTextField.setText(jmeno);
         prijmeniTextField.setText(prijmeni);
@@ -89,7 +87,7 @@ public class AkceUzivateleController implements Initializable {
         try {
             ResultSet result1 = statement.executeQuery("SELECT * FROM ROLE");
             while (result1.next()) {
-                role.add(result1.getString("ROLE"));
+                role.add(new Role(result1.getInt("ID_ROLE"), result1.getString("ROLE")));
             }
             roleCombo.setItems(role);
 
@@ -105,11 +103,6 @@ public class AkceUzivateleController implements Initializable {
                 && !"".equals(roleCombo.getValue())) {
             Statement statement = connection.createBlockedStatement();
             try {
-                ResultSet result = statement.executeQuery("SELECT * FROM ROLE"
-                        + " WHERE role='" + roleCombo.getValue() + "'");
-                result.next();
-                int idRole = result.getInt("ID_ROLE");
-
                 if (this.idUzivatele != -1) {
 
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call updateUzivateleProc(?,?,?,?,?,?)}");
@@ -118,7 +111,7 @@ public class AkceUzivateleController implements Initializable {
                     cstmt.setString(3, prijmeniTextField.getText());
                     cstmt.setString(4, loginTextField.getText());
                     cstmt.setString(5, hesloTextField.getText());
-                    cstmt.setInt(6, idRole);
+                    cstmt.setInt(6, roleCombo.getValue().getIdRole());
                     cstmt.execute();
 
                     System.out.println("aktualizace OK");
@@ -128,7 +121,7 @@ public class AkceUzivateleController implements Initializable {
                     cstmt.setString(2, prijmeniTextField.getText());
                     cstmt.setString(3, loginTextField.getText());
                     cstmt.setString(4, hesloTextField.getText());
-                    cstmt.setInt(5, idRole);
+                    cstmt.setInt(5, roleCombo.getValue().getIdRole());
                     cstmt.execute();
 
                 }
@@ -141,9 +134,5 @@ public class AkceUzivateleController implements Initializable {
         }
     }
 
-    @FXML
-    private void zrusitAction(ActionEvent event) {
-        
-    }
 
 }

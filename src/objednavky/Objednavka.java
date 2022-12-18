@@ -5,6 +5,8 @@
  */
 package objednavky;
 
+import zakaznici.Zakaznik;
+
 /**
  *
  * @author jenik
@@ -12,8 +14,7 @@ package objednavky;
 public class Objednavka {
 
     private int idObjednavky;
-    private String jmeno;
-    private String prijmeni;
+    private Zakaznik zakaznik;
     private int idDoruceni;
     private String casObjednani;
     private String vyzvednuti;
@@ -21,10 +22,9 @@ public class Objednavka {
     private String nazevPolozky;
     private int cenaPolozky;
 
-    public Objednavka(int idObjednavky, String jmeno, String prijmeni, int idDoruceni, String casObjednani, String vyzvednuti, int idPolozky, String nazevPolozky, int cenaPolozky) {
+    public Objednavka(int idObjednavky, Zakaznik zakaznik, int idDoruceni, String casObjednani, String vyzvednuti, int idPolozky, String nazevPolozky, int cenaPolozky) {
         this.idObjednavky = idObjednavky;
-        this.jmeno = jmeno;
-        this.prijmeni = prijmeni;
+        this.zakaznik = zakaznik;
         this.idDoruceni = idDoruceni;
         this.casObjednani = casObjednani;
         this.vyzvednuti = vyzvednuti;
@@ -37,73 +37,73 @@ public class Objednavka {
         return idObjednavky;
     }
 
-    public String getJmeno() {
-        return jmeno;
+    public void setIdObjednavky(int idObjednavky) {
+        this.idObjednavky = idObjednavky;
     }
 
-    public String getPrijmeni() {
-        return prijmeni;
+    public Zakaznik getZakaznik() {
+        return zakaznik;
+    }
+
+    public void setZakaznik(Zakaznik zakaznik) {
+        this.zakaznik = zakaznik;
     }
 
     public int getIdDoruceni() {
         return idDoruceni;
     }
 
-    public String getCasObjednani() {
-        return casObjednani;
-    }
-
-    public String getVyzvednuti() {
-        return vyzvednuti;
-    }
-
-    public int getIdPolozky() {
-        return idPolozky;
-    }
-
-    public String getNazevPolozky() {
-        return nazevPolozky;
-    }
-
-    public int getCenaPolozky() {
-        return cenaPolozky;
-    }
-
-    public void setIdObjednavky(int idObjednavky) {
-        this.idObjednavky = idObjednavky;
-    }
-
-    public void setJmeno(String jmeno) {
-        this.jmeno = jmeno;
-    }
-
-    public void setPrijmeni(String prijmeni) {
-        this.prijmeni = prijmeni;
-    }
-
     public void setIdDoruceni(int idDoruceni) {
         this.idDoruceni = idDoruceni;
+    }
+
+    public String getCasObjednani() {
+        return casObjednani;
     }
 
     public void setCasObjednani(String casObjednani) {
         this.casObjednani = casObjednani;
     }
 
+    public String getVyzvednuti() {
+        return vyzvednuti;
+    }
+
     public void setVyzvednuti(String vyzvednuti) {
         this.vyzvednuti = vyzvednuti;
+    }
+
+    public int getIdPolozky() {
+        return idPolozky;
     }
 
     public void setIdPolozky(int idPolozky) {
         this.idPolozky = idPolozky;
     }
 
+    public String getNazevPolozky() {
+        return nazevPolozky;
+    }
+
     public void setNazevPolozky(String nazevPolozky) {
         this.nazevPolozky = nazevPolozky;
+    }
+
+    public int getCenaPolozky() {
+        return cenaPolozky;
     }
 
     public void setCenaPolozky(int cenaPolozky) {
         this.cenaPolozky = cenaPolozky;
     }
 
+    public String getJmeno(){
+        return zakaznik.getJmeno();
+    }
+    
+    public String getPrijmeni(){
+        return zakaznik.getPrijmeni();
+    }
+    
     
 }

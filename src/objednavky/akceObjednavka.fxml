@@ -16,22 +16,12 @@
          <children>
             <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label text="Jméno ">
+                  <Label text="Zákazník ">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="jmenoText" prefHeight="26.0" prefWidth="164.0" />
-               </children>
-            </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label text="Příjmení ">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="prijmeniText" prefHeight="26.0" prefWidth="163.0" />
+                  <ComboBox fx:id="zakaznikCombo" prefHeight="25.0" prefWidth="163.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">

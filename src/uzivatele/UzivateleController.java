@@ -9,6 +9,7 @@ import connection.DatabaseConnection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
@@ -60,6 +61,8 @@ public class UzivateleController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -90,7 +93,7 @@ public class UzivateleController implements Initializable {
             while (result.next()) {
                 if (result.getString("JMENO") != null) {
                     uzivatele.add(new Uzivatel(result.getInt("ID_UZIVATELE"), result.getString("JMENO"), result.getString("PRIJMENI"), result.getString("LOGIN"),
-                            result.getString("HESLO"), result.getString("ROLE")));
+                            result.getString("HESLO"), new Role(result.getInt("ID_ROLE"), result.getString("ROLE"))));
                 }
             }
             tableView.getItems().addAll(uzivatele);
@@ -140,16 +143,28 @@ public class UzivateleController implements Initializable {
     private void pridatAction(ActionEvent event) throws IOException {
         edit = false;
         openANewView(event, "uzivatele/akceUzivatele.fxml", connection);
+        loadData();
     }
 
     @FXML
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
         openANewView(event, "uzivatele/akceUzivatele.fxml", connection);
+        loadData();
     }
 
     @FXML
     private void odebratAction(ActionEvent event) {
+        Uzivatel uzivatel = tableView.getSelectionModel().getSelectedItem();
+        Statement statement = connection.createBlockedStatement();
+        try {
+            ResultSet result = statement.executeQuery("DELETE FROM uzivatele WHERE login = '" + uzivatel.getLogin()+"'");
+            if (result.next()) {
+                loadData();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void setConnection(DatabaseConnection con) {

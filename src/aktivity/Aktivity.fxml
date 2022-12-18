@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="410.0" prefWidth="477.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/18" fx:controller="aktivity.AktivityController">
+   <children>
+      <TableView fx:id="tableView" prefHeight="410.0" prefWidth="461.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <columns>
+            <TableColumn fx:id="uzivatelCol" prefWidth="120.00005799531937" text="Uživatel" />
+            <TableColumn fx:id="tabulkaCol" prefWidth="118.4000244140625" text="Tabulka" />
+            <TableColumn fx:id="akceCol" prefWidth="112.80006408691406" text="Akce" />
+            <TableColumn fx:id="datumCol" minWidth="3.0" prefWidth="122.60000610351562" text="Datum" />
+         </columns>
+      </TableView>
+   </children>
+</AnchorPane>

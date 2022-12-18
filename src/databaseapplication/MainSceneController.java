@@ -5,6 +5,7 @@
  */
 package databaseapplication;
 
+import aktivity.AktivityController;
 import connection.DatabaseConnection;
 import enums.Role;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -46,6 +48,7 @@ public class MainSceneController implements Initializable {
     private Button loginBtn;
     public static BooleanProperty loggedIn;
     public static IntegerProperty roleId;
+    public static String userName;
     public static Role role;
     @FXML
     private Button logOut;
@@ -178,6 +181,10 @@ public class MainSceneController implements Initializable {
                 UzivateleController controllerUzivatele = loader.getController();
                 controllerUzivatele.setConnection(connection);
                 break;
+            case "aktivity/Aktivity.fxml":
+                AktivityController controllerAktivity = loader.getController();
+                controllerAktivity.setConnection(connection);
+                break;
         }
     }
 
@@ -195,26 +202,32 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void obrazkyButAction(ActionEvent event) {
+        
     }
 
     @FXML
-    private void aktivityButAction(ActionEvent event) {
+    private void aktivityButAction(ActionEvent event) throws IOException {
+        openANewView(event, "aktivity/Aktivity.fxml", connection);
     }
 
     @FXML
     private void adresyButAction(ActionEvent event) {
+        
     }
 
     @FXML
     private void poziceButAction(ActionEvent event) {
+        
     }
 
     @FXML
     private void stolyButAction(ActionEvent event) {
+        
     }
 
     @FXML
     private void polozkyMenuButAction(ActionEvent event) {
+        
     }
 
 }

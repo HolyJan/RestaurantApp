@@ -9,13 +9,21 @@ import connection.DatabaseConnection;
 import java.net.URL;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import uzivatele.Role;
 
 /**
  * FXML Controller class
@@ -33,42 +41,42 @@ public class AkceZakaznikController implements Initializable {
     @FXML
     private TextField emailText;
     DatabaseConnection connection;
-    @FXML
-    private TextField uliceText;
-    @FXML
-    private TextField cisPopText;
-    @FXML
-    private TextField pscText;
-    @FXML
-    private TextField ObecText;
-
     private int idZakaznika = -1;
     private int idAdresa;
-
+    @FXML
+    private ComboBox<Adresa> adresaCombo;
+    ObservableList<Adresa> adresy = FXCollections.observableArrayList();
+    private boolean init;
+    @FXML
+    private AnchorPane pane;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        init = false;
+        pane.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if (!init) {
+                    pripareCombos();
+                    init = true;
+                }
+            }
+        });
     }
 
     void setConnection(DatabaseConnection con) {
         connection = con;
     }
 
-    void setData(int id, String jmeno, String prijmeni, String telefon, String email, int idAdresy,
-            String ulice, String cisloPop, String psc, String obec) {
+    void setData(int id, String jmeno, String prijmeni, String telefon, String email, Adresa adresa) {
         idZakaznika = id;
         jmenoText.setText(jmeno);
         prijmeniText.setText(prijmeni);
         telefonText.setText(telefon);
         emailText.setText(email);
-        idAdresa = idAdresy;
-        uliceText.setText(ulice);
-        cisPopText.setText(cisloPop);
-        pscText.setText(psc);
-        ObecText.setText(obec);
+        adresaCombo.setValue(adresa);
     }
 
     @FXML
@@ -89,22 +97,22 @@ public class AkceZakaznikController implements Initializable {
 
                     CallableStatement cstmt1 = connection.getConnection().prepareCall("{call updateAdresuProc(?,?,?,?,?)}");
                     cstmt1.setInt(1, idAdresa);
-                    cstmt1.setString(2, uliceText.getText());
-                    cstmt1.setString(3, cisPopText.getText());
-                    cstmt1.setString(4, pscText.getText());
-                    cstmt1.setString(5, ObecText.getText());
+                    cstmt1.setString(2, adresaCombo.getValue().getUlice());
+                    cstmt1.setString(3, adresaCombo.getValue().getCisloPop());
+                    cstmt1.setString(4, adresaCombo.getValue().getPsc());
+                    cstmt1.setString(5, adresaCombo.getValue().getMesto());
                     cstmt1.execute();
                     System.out.println("aktualizace OK");
                 } else {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozAdresuProc(?,?,?,?)}");
-                    cstmt.setString(1, uliceText.getText());
-                    cstmt.setString(2, cisPopText.getText());
-                    cstmt.setString(3, pscText.getText());
-                    cstmt.setString(4, ObecText.getText());
+                    cstmt.setString(1, adresaCombo.getValue().getUlice());
+                    cstmt.setString(2, adresaCombo.getValue().getCisloPop());
+                    cstmt.setString(3, adresaCombo.getValue().getPsc());
+                    cstmt.setString(4, adresaCombo.getValue().getMesto());
                     cstmt.execute();
 
                     ResultSet result = statement.executeQuery("SELECT * FROM adresy_view"
-                            + " WHERE ulice='"+uliceText.getText()+"' AND psc='"+pscText.getText()+"'");
+                            + " WHERE ulice='" + adresaCombo.getValue().getUlice() + "' AND psc='" + adresaCombo.getValue().getPsc() + "'");
                     int cislo = 1;
                     result.next();
                     CallableStatement cstmt1 = connection.getConnection().prepareCall("{call vlozZakaznikaProc(?,?,?,?,?)}");
@@ -122,5 +130,18 @@ public class AkceZakaznikController implements Initializable {
             }
         }
     }
+private void pripareCombos() {
+        Statement statement = connection.createBlockedStatement();
+        try {
+            ResultSet result1 = statement.executeQuery("SELECT * FROM ADRESY");
+            while (result1.next()) {
+                adresy.add(new Adresa(result1.getInt("ID_ADRESA"), result1.getString("ULICE"), 
+                        result1.getString("CISLO_POPISNE"), result1.getString("PSC"), result1.getString("OBEC")));
+            }
+            adresaCombo.setItems(adresy);
 
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

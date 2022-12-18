@@ -5,11 +5,21 @@
  */
 package objednavky;
 
+import aktivity.Aktivita;
+import aktivity.AktivityController;
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -27,6 +37,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import uzivatele.Uzivatel;
+import zakaznici.Adresa;
 import zakaznici.AkceZakaznikController;
 import zakaznici.Zakaznik;
 
@@ -92,9 +104,25 @@ public class ObjednavkyController implements Initializable {
         tableView.getItems().clear();
         Statement statement = connection.createBlockedStatement();
         try {
+            ResultSet result1 = statement.executeQuery("SELECT * FROM Zakaznici_view");
+            List<Zakaznik> zakaznicci = new ArrayList<>();
+            while(result1.next()){
+                zakaznicci.add(new Zakaznik(result1.getInt("ID_ZAKAZNIKA"), result1.getString("JMENO"),
+                    result1.getString("PRIJMENI"), result1.getString("TELEFON"), result1.getString("EMAIL"),
+                    new Adresa(result1.getInt("ID_ADRESA"), result1.getString("ULICE"),
+                            result1.getString("CISLO_POPISNE"), result1.getString("PSC"), result1.getString("OBEC"))));
+            }
+            
+
             ResultSet result = statement.executeQuery("SELECT * FROM objednavky_view");
             while (result.next()) {
-                objednavky.add(new Objednavka(result.getInt("ID_OBJEDNAVKY"), result.getString("JMENO"), result.getString("PRIJMENI"),
+                Zakaznik zakazik = null;
+                for (Zakaznik zakaznik : zakaznicci) {
+                    if(zakaznik.getId() == result.getInt("ID_ZAKAZNIKA")){
+                        zakazik = zakaznik;
+                    }
+                }
+                objednavky.add(new Objednavka(result.getInt("ID_OBJEDNAVKY"), zakazik,
                         result.getInt("ID_DORUCENI"), result.getString("CAS_OBJEDNANI"),
                         result.getString("DORUCENI"), result.getInt("ID_POLOZKY"),
                         result.getString("NAZEV_POLOZKY"), result.getInt("CENA")));
@@ -127,7 +155,9 @@ public class ObjednavkyController implements Initializable {
             Objednavka objednavka = tableView.getSelectionModel().selectedItemProperty().get();
             try {
                 controllerAkceObjednavky.setData(objednavka.getIdObjednavky(),
-                        objednavka.getJmeno(), objednavka.getPrijmeni(),
+                        new Zakaznik(objednavka.getZakaznik().getId(), objednavka.getZakaznik().getJmeno(),
+                                objednavka.getZakaznik().getPrijmeni(), objednavka.getZakaznik().getTelefon(),
+                                objednavka.getZakaznik().getEmail(), objednavka.getZakaznik().getAdresa()),
                         objednavka.getIdDoruceni(), objednavka.getCasObjednani(),
                         objednavka.getVyzvednuti(), objednavka.getIdPolozky(),
                         objednavka.getNazevPolozky(), objednavka.getCenaPolozky());
@@ -152,10 +182,26 @@ public class ObjednavkyController implements Initializable {
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
         openANewView(event, "objednavky/akceObjednavka.fxml", connection);
+        loadData();
     }
 
     @FXML
-    private void odebratAction(ActionEvent event) {
+    private void odebratAction(ActionEvent event) throws SQLException {
+        Objednavka objednavka = tableView.getSelectionModel().getSelectedItem();
+        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberDoruceniProc(?)}");
+        cstmt.setInt(1, objednavka.getIdDoruceni());
+        cstmt.execute();
     }
-
+    
+    public void PridejAktivitu(Aktivita aktivita) {
+        Statement statement = connection.createBlockedStatement();
+        try {
+            ResultSet result = statement.executeQuery("INSERT INTO AKTIVITY (Username, Tabulka, Akce, Datum) VALUES ('"
+                    + aktivita.getUzivatel() + "','" + aktivita.getTabulka() + "','" + aktivita.getAkce() + ""
+                    + "','" + aktivita.getDatum() + "')");
+            result.next();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
