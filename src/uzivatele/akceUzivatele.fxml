@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -8,16 +9,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="166.0" prefWidth="247.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="login.RegistraceController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="247.0" prefWidth="269.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uzivatele.AkceUzivateleController">
    <children>
-      <HBox layoutX="20.0" layoutY="14.0" prefHeight="115.0" prefWidth="194.0" spacing="10.0">
+      <HBox layoutX="20.0" layoutY="14.0" prefHeight="115.0" prefWidth="194.0" spacing="10.0" AnchorPane.bottomAnchor="85.80000000000001" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="32.599999999999994" AnchorPane.topAnchor="14.0">
          <children>
-            <VBox alignment="TOP_RIGHT" prefHeight="115.0" prefWidth="80.0" spacing="5.0">
+            <VBox alignment="TOP_RIGHT" prefHeight="115.0" prefWidth="80.0" spacing="13.0">
                <children>
                   <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Jméno" />
                   <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Příjmení" />
                   <Label alignment="TOP_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Login" />
                   <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Heslo" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Role" />
                </children>
             </VBox>
             <VBox prefHeight="115.0" prefWidth="167.0" spacing="5.0">
@@ -26,10 +28,12 @@
                   <TextField fx:id="prijmeniTextField" />
                   <TextField fx:id="loginTextField" />
                   <PasswordField fx:id="hesloTextField" />
+                  <ComboBox fx:id="roleCombo" prefWidth="150.0" />
                </children>
             </VBox>
          </children>
       </HBox>
-      <Button fx:id="registraceButton" layoutX="79.0" layoutY="139.0" mnemonicParsing="false" onAction="#registrovatAction" text="Registrovat" />
+      <Button layoutX="63.0" layoutY="207.0" mnemonicParsing="false" onAction="#PotvrditAction" text="Potvrdit" AnchorPane.bottomAnchor="14.399999999999999" AnchorPane.leftAnchor="63.0" />
+      <Button fx:id="registraceButton1" layoutX="136.0" layoutY="207.0" mnemonicParsing="false" onAction="#zrusitAction" text="Zrušit" AnchorPane.bottomAnchor="14.399999999999999" AnchorPane.rightAnchor="60.0" />
    </children>
 </AnchorPane>

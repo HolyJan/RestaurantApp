@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="166.0" prefWidth="247.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="login.RegistraceController">
+<AnchorPane id="AnchorPane" prefHeight="166.0" prefWidth="247.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="login.RegistraceController">
    <children>
       <HBox layoutX="20.0" layoutY="14.0" prefHeight="115.0" prefWidth="194.0" spacing="10.0">
          <children>
@@ -31,6 +30,6 @@
             </VBox>
          </children>
       </HBox>
-      <Button fx:id="registraceButton" layoutX="79.0" layoutY="134.0" mnemonicParsing="false" onAction="#registrovatAction" text="Registrovat" />
+      <Button fx:id="registraceButton" layoutX="79.0" layoutY="139.0" mnemonicParsing="false" onAction="#registrovatAction" text="Registrovat" />
    </children>
 </AnchorPane>
