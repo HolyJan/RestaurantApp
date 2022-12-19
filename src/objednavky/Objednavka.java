@@ -104,6 +104,11 @@ public class Objednavka {
     public String getPrijmeni(){
         return zakaznik.getPrijmeni();
     }
+
+    @Override
+    public String toString() {
+        return zakaznik + ", vyzvednuti: " + vyzvednuti + ", " + nazevPolozky + ", " + cenaPolozky + " Kč";
+    }
     
     
 }

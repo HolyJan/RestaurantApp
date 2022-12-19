@@ -15,7 +15,7 @@
             <Button mnemonicParsing="false" onAction="#smenyButAction" prefHeight="26.0" prefWidth="85.0" text="Směny" />
             <Button fx:id="menu" mnemonicParsing="false" onAction="#menuAction" prefHeight="26.0" prefWidth="91.0" text="Menu" />
             <Button mnemonicParsing="false" onAction="#rezervaceButAction" prefHeight="26.0" prefWidth="102.0" text="Rezervace" />
-            <Button mnemonicParsing="false" text="Platby" />
+            <Button mnemonicParsing="false" onAction="#platbyButAction" text="Platby" />
             <Button mnemonicParsing="false" text="Recepty" />
          </children>
       </HBox>

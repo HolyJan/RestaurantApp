@@ -31,6 +31,7 @@ import javafx.stage.Stage;
 import login.LoginController;
 import menu.PolozkyController;
 import objednavky.ObjednavkyController;
+import objednavky.PlatbyController;
 import rezervace.RezervaceController;
 import rezervace.StolyController;
 import uzivatele.UzivateleController;
@@ -205,6 +206,10 @@ public class MainSceneController implements Initializable {
                 RezervaceController controllerRezervace = loader.getController();
                 controllerRezervace.setConnection(connection);
                 break;
+            case "objednavky/Platby.fxml":
+                PlatbyController controllerPlatby = loader.getController();
+                controllerPlatby.setConnection(connection);
+                break;
         }
     }
 
@@ -253,6 +258,11 @@ public class MainSceneController implements Initializable {
     @FXML
     private void rezervaceButAction(ActionEvent event) throws IOException {
         openANewView(event, "rezervace/Rezervace.fxml", connection);
+    }
+
+    @FXML
+    private void platbyButAction(ActionEvent event) throws IOException {
+        openANewView(event, "objednavky/Platby.fxml", connection);
     }
 
 }
