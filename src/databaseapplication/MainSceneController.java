@@ -31,6 +31,8 @@ import javafx.stage.Stage;
 import login.LoginController;
 import menu.PolozkyController;
 import objednavky.ObjednavkyController;
+import rezervace.RezervaceController;
+import rezervace.StolyController;
 import uzivatele.UzivateleController;
 import zakaznici.AdresyController;
 import zakaznici.ZakazniciController;
@@ -195,6 +197,14 @@ public class MainSceneController implements Initializable {
                 PoziceController controllerPozice = loader.getController();
                 controllerPozice.setConnection(connection);
                 break;
+            case "rezervace/Stoly.fxml":
+                StolyController controllerStoly = loader.getController();
+                controllerStoly.setConnection(connection);
+                break;
+            case "rezervace/Rezervace.fxml":
+                RezervaceController controllerRezervace = loader.getController();
+                controllerRezervace.setConnection(connection);
+                break;
         }
     }
 
@@ -231,13 +241,18 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void stolyButAction(ActionEvent event) {
-        
+    private void stolyButAction(ActionEvent event) throws IOException {
+        openANewView(event, "rezervace/Stoly.fxml", connection);
     }
 
     @FXML
     private void polozkyMenuButAction(ActionEvent event) {
         
+    }
+
+    @FXML
+    private void rezervaceButAction(ActionEvent event) throws IOException {
+        openANewView(event, "rezervace/Rezervace.fxml", connection);
     }
 
 }

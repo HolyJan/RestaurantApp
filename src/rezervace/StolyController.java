@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package uzivatele;
+package rezervace;
 
 import connection.DatabaseConnection;
 import java.io.IOException;
@@ -26,44 +26,35 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import objednavky.AkceObjednavkaController;
-import objednavky.Objednavka;
-import zamestnanci.Smena;
+import uzivatele.AkceUzivateleController;
+import uzivatele.Role;
+import uzivatele.Uzivatel;
 
 /**
  * FXML Controller class
  *
  * @author Notebook
  */
-public class UzivateleController implements Initializable {
+public class StolyController implements Initializable {
 
     @FXML
-    private TableView<Uzivatel> tableView;
-    @FXML
-    private TableColumn<Uzivatel, String> jmenoCol;
-    @FXML
-    private TableColumn<Uzivatel, String> prijmeniCol;
-    @FXML
-    private TableColumn<Uzivatel, String> loginCol;
-    @FXML
-    private TableColumn<Uzivatel, String> hesloCol;
-    @FXML
-    private TableColumn<Uzivatel, String> roleCol;
-    private boolean init;
-    DatabaseConnection connection;
-    boolean edit = false;
-    @FXML
     private AnchorPane pane;
-    ObservableList<Uzivatel> uzivatele = FXCollections.observableArrayList();
+    @FXML
+    private TableView<Stul> tableView;
+    @FXML
+    private TableColumn<Stul, String> cisloStoluCol;
+    @FXML
+    private TableColumn<Stul, String> pocetMistCol;
+    ObservableList<Stul> stoly = FXCollections.observableArrayList();
+    private boolean init;
+    private boolean edit = false;
+    DatabaseConnection connection;
 
     /**
      * Initializes the controller class.
-     * @param url
-     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -78,27 +69,23 @@ public class UzivateleController implements Initializable {
                 }
             }
         });
-        jmenoCol.setCellValueFactory(new PropertyValueFactory<>("jmeno"));
-        prijmeniCol.setCellValueFactory(new PropertyValueFactory<>("prijmeni"));
-        loginCol.setCellValueFactory(new PropertyValueFactory<>("login"));
-        hesloCol.setCellValueFactory(new PropertyValueFactory<>("heslo"));
-        roleCol.setCellValueFactory(new PropertyValueFactory<>("role"));
+        cisloStoluCol.setCellValueFactory(new PropertyValueFactory<>("cisloStolu"));
+        pocetMistCol.setCellValueFactory(new PropertyValueFactory<>("pocetMist"));
     }
 
     private void loadData() {
-        uzivatele.clear();
+        stoly.clear();
         tableView.getItems().clear();
         Statement statement = connection.createBlockedStatement();
         try {
-            ResultSet result = statement.executeQuery("SELECT * FROM UZIVATELE_VIEW");
+            ResultSet result = statement.executeQuery("SELECT * FROM STOLY_VIEW");
             while (result.next()) {
-                if (result.getString("JMENO") != null) {
-                    uzivatele.add(new Uzivatel(result.getInt("ID_UZIVATELE"), result.getString("JMENO"), result.getString("PRIJMENI"), result.getString("LOGIN"),
-                            result.getString("HESLO"), new Role(result.getInt("ID_ROLE"), result.getString("ROLE"))));
+                if (result.getInt("POCET_MIST") != 0) {
+                    stoly.add(new Stul(result.getInt("ID_STUL"), result.getInt("CISLO_STOLU"), result.getInt("POCET_MIST")));
                 }
             }
-            tableView.getItems().addAll(uzivatele);
-        } catch (Exception e) {
+            tableView.getItems().addAll(stoly);
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -117,15 +104,13 @@ public class UzivateleController implements Initializable {
 
     private void sendDataViaController(String fileLocation, FXMLLoader loader) {
         loader.setLocation(getClass().getResource(fileLocation));
-        AkceUzivateleController controllerAkceUzivatele = loader.getController();
-        controllerAkceUzivatele.setConnection(connection);
+        AkceStolyController controllerAkceStoly = loader.getController();
+        controllerAkceStoly.setConnection(connection);
         if (edit) {
-            Uzivatel uzivatel = tableView.getSelectionModel().selectedItemProperty().get();
+            Stul stul = tableView.getSelectionModel().selectedItemProperty().get();
             try {
-                controllerAkceUzivatele.setData(uzivatel.getIdUzivatele(),
-                        uzivatel.getJmeno(), uzivatel.getPrijmeni(),
-                        uzivatel.getLogin(), uzivatel.getHeslo(),
-                        uzivatel.getRole());
+                controllerAkceStoly.setData(stul.getIdStolu(),
+                        stul.getCisloStolu(), stul.getPocetMist());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -133,36 +118,36 @@ public class UzivateleController implements Initializable {
 
     }
 
+    public void setConnection(DatabaseConnection con) {
+        connection = con;
+    }
+
     @FXML
     private void updateAction(ActionEvent event) {
         loadData();
-
     }
 
     @FXML
     private void pridatAction(ActionEvent event) throws IOException {
         edit = false;
-        openANewView(event, "uzivatele/akceUzivatele.fxml", connection);
+        openANewView(event, "rezervace/AkceStoly.fxml", connection);
         loadData();
     }
 
     @FXML
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
-        openANewView(event, "uzivatele/akceUzivatele.fxml", connection);
+        openANewView(event, "rezervace/AkceStoly.fxml", connection);
         loadData();
     }
 
     @FXML
     private void odebratAction(ActionEvent event) throws SQLException {
-        Uzivatel uzivatel = tableView.getSelectionModel().getSelectedItem();
-        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberUzivateleProc(?)}");
-        cstmt.setInt(1, uzivatel.getIdUzivatele());
+        Stul stul = tableView.getSelectionModel().getSelectedItem();
+        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberStulProc(?)}");
+        cstmt.setInt(1, stul.getIdStolu());
         cstmt.execute();
         loadData();
     }
 
-    public void setConnection(DatabaseConnection con) {
-        connection = con;
-    }
 }

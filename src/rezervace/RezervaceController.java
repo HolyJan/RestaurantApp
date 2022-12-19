@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package uzivatele;
+package rezervace;
 
 import connection.DatabaseConnection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,49 +27,49 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import objednavky.AkceObjednavkaController;
-import objednavky.Objednavka;
-import zamestnanci.Smena;
+import uzivatele.AkceUzivateleController;
+import uzivatele.Role;
+import uzivatele.Uzivatel;
+import zakaznici.Zakaznik;
 
 /**
  * FXML Controller class
  *
  * @author Notebook
  */
-public class UzivateleController implements Initializable {
+public class RezervaceController implements Initializable {
 
     @FXML
-    private TableView<Uzivatel> tableView;
-    @FXML
-    private TableColumn<Uzivatel, String> jmenoCol;
-    @FXML
-    private TableColumn<Uzivatel, String> prijmeniCol;
-    @FXML
-    private TableColumn<Uzivatel, String> loginCol;
-    @FXML
-    private TableColumn<Uzivatel, String> hesloCol;
-    @FXML
-    private TableColumn<Uzivatel, String> roleCol;
-    private boolean init;
-    DatabaseConnection connection;
-    boolean edit = false;
-    @FXML
     private AnchorPane pane;
-    ObservableList<Uzivatel> uzivatele = FXCollections.observableArrayList();
+    @FXML
+    private TableView<Rezervace> tableView;
+    @FXML
+    private TableColumn<Rezervace, String> casCol;
+    @FXML
+    private TableColumn<Rezervace, String> datumCol;
+    @FXML
+    private TableColumn<Rezervace, String> jmenoCol;
+    @FXML
+    private TableColumn<Rezervace, String> prijmeniCol;
+    @FXML
+    private TableColumn<Rezervace, String> cisloStoluCol;
+    private boolean init;
+    private boolean edit = false;
+    DatabaseConnection connection;
+
+    ObservableList<Rezervace> rezervace = FXCollections.observableArrayList();
+    ObservableList<Stul> stoly = FXCollections.observableArrayList();
+    ObservableList<Zakaznik> zakaznici = FXCollections.observableArrayList();
 
     /**
      * Initializes the controller class.
-     * @param url
-     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
-
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -78,26 +79,47 @@ public class UzivateleController implements Initializable {
                 }
             }
         });
+        casCol.setCellValueFactory(new PropertyValueFactory<>("cas"));
+        datumCol.setCellValueFactory(new PropertyValueFactory<>("datum"));
         jmenoCol.setCellValueFactory(new PropertyValueFactory<>("jmeno"));
         prijmeniCol.setCellValueFactory(new PropertyValueFactory<>("prijmeni"));
-        loginCol.setCellValueFactory(new PropertyValueFactory<>("login"));
-        hesloCol.setCellValueFactory(new PropertyValueFactory<>("heslo"));
-        roleCol.setCellValueFactory(new PropertyValueFactory<>("role"));
+        cisloStoluCol.setCellValueFactory(new PropertyValueFactory<>("cisloStolu"));
     }
 
     private void loadData() {
-        uzivatele.clear();
+        rezervace.clear();
         tableView.getItems().clear();
+        zakaznici.clear();
+        stoly.clear();
         Statement statement = connection.createBlockedStatement();
         try {
-            ResultSet result = statement.executeQuery("SELECT * FROM UZIVATELE_VIEW");
+
+            ResultSet result1 = statement.executeQuery("SELECT * FROM ZAKAZNICI_VIEW");
+            while (result1.next()) {
+                zakaznici.add(new Zakaznik(result1.getInt("ID_ZAKAZNIKA"), result1.getString("JMENO"),
+                        result1.getString("PRIJMENI"), result1.getString("TELEFON"), result1.getString("EMAIL"), null));
+            }
+
+            ResultSet result2 = statement.executeQuery("SELECT * FROM STOLY_VIEW");
+            while (result2.next()) {
+                stoly.add(new Stul(result2.getInt("ID_STUL"), result2.getInt("CISLO_STOLU"),
+                        result2.getInt("POCET_MIST")));
+            }
+
+            ResultSet result = statement.executeQuery("SELECT * FROM REZERVACE_VIEW");
             while (result.next()) {
-                if (result.getString("JMENO") != null) {
-                    uzivatele.add(new Uzivatel(result.getInt("ID_UZIVATELE"), result.getString("JMENO"), result.getString("PRIJMENI"), result.getString("LOGIN"),
-                            result.getString("HESLO"), new Role(result.getInt("ID_ROLE"), result.getString("ROLE"))));
+                for (Zakaznik zakaznik : zakaznici) {
+                    if (result.getInt("ID_ZAKAZNIKA") == zakaznik.getId()) {
+                        for (Stul stul : stoly) {
+                            if (result.getInt("CISLO_STOLU") == stul.getCisloStolu()) {
+                                rezervace.add(new Rezervace(result.getInt("ID_REZERVACE"),
+                                        result.getString("CAS"), result.getDate("DATUM"), zakaznik, stul));
+                            }
+                        }
+                    }
                 }
             }
-            tableView.getItems().addAll(uzivatele);
+            tableView.getItems().addAll(rezervace);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -117,15 +139,12 @@ public class UzivateleController implements Initializable {
 
     private void sendDataViaController(String fileLocation, FXMLLoader loader) {
         loader.setLocation(getClass().getResource(fileLocation));
-        AkceUzivateleController controllerAkceUzivatele = loader.getController();
-        controllerAkceUzivatele.setConnection(connection);
+        AkceRezervaceController controllerAkceRezervace = loader.getController();
+        controllerAkceRezervace.setConnection(connection);
         if (edit) {
-            Uzivatel uzivatel = tableView.getSelectionModel().selectedItemProperty().get();
+            Rezervace rezervace = tableView.getSelectionModel().selectedItemProperty().get();
             try {
-                controllerAkceUzivatele.setData(uzivatel.getIdUzivatele(),
-                        uzivatel.getJmeno(), uzivatel.getPrijmeni(),
-                        uzivatel.getLogin(), uzivatel.getHeslo(),
-                        uzivatel.getRole());
+                controllerAkceRezervace.setData(rezervace);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -133,36 +152,36 @@ public class UzivateleController implements Initializable {
 
     }
 
+    public void setConnection(DatabaseConnection con) {
+        connection = con;
+    }
+
     @FXML
     private void updateAction(ActionEvent event) {
         loadData();
-
     }
 
     @FXML
     private void pridatAction(ActionEvent event) throws IOException {
         edit = false;
-        openANewView(event, "uzivatele/akceUzivatele.fxml", connection);
-        loadData();
+        openANewView(event, "rezervace/AkceRezervace.fxml", connection);
+
     }
 
     @FXML
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
-        openANewView(event, "uzivatele/akceUzivatele.fxml", connection);
-        loadData();
+        openANewView(event, "rezervace/AkceRezervace.fxml", connection);
+
     }
 
     @FXML
     private void odebratAction(ActionEvent event) throws SQLException {
-        Uzivatel uzivatel = tableView.getSelectionModel().getSelectedItem();
-        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberUzivateleProc(?)}");
-        cstmt.setInt(1, uzivatel.getIdUzivatele());
+        Rezervace rezervace = tableView.getSelectionModel().getSelectedItem();
+        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberRezervaciProc(?)}");
+        cstmt.setInt(1, rezervace.getIdRezervace());
         cstmt.execute();
         loadData();
     }
 
-    public void setConnection(DatabaseConnection con) {
-        connection = con;
-    }
 }
