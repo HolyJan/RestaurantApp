@@ -62,15 +62,11 @@ public class AkceReceptController implements Initializable {
                         CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozReceptProc(?)}");
                         cstmt.setString(1, nazevText.getText());
                         cstmt.execute();
-                        result = statement.executeQuery("SELECT recepty_id_receptu_seq.currval as id FROM dual");
-                        result.next();
-                        recepty.add(new Recept(result.getInt("id"), nazevText.getText()));
                     } else {
                         CallableStatement cstmt = connection.getConnection().prepareCall("{call updateReceptProc(?,?)}");
                         cstmt.setInt(1, idReceptu);
                         cstmt.setString(2, nazevText.getText());
                         cstmt.execute();
-                        recept.setNazev(nazevText.getText());
                     }
                     Stage stage = (Stage) potvrditBut.getScene().getWindow();
                     stage.close();

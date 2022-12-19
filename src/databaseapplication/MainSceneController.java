@@ -30,6 +30,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import login.LoginController;
 import menu.PolozkyController;
+import menu.ReceptyController;
 import objednavky.ObjednavkyController;
 import objednavky.PlatbyController;
 import rezervace.RezervaceController;
@@ -210,6 +211,10 @@ public class MainSceneController implements Initializable {
                 PlatbyController controllerPlatby = loader.getController();
                 controllerPlatby.setConnection(connection);
                 break;
+            case "menu/Recepty.fxml":
+                ReceptyController controllerRecepty = loader.getController();
+                controllerRecepty.setConnection(connection);
+                break;
         }
     }
 
@@ -263,6 +268,11 @@ public class MainSceneController implements Initializable {
     @FXML
     private void platbyButAction(ActionEvent event) throws IOException {
         openANewView(event, "objednavky/Platby.fxml", connection);
+    }
+
+    @FXML
+    private void receptButAction(ActionEvent event) throws IOException {
+        openANewView(event, "menu/Recepty.fxml", connection);
     }
 
 }
