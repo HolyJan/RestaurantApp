@@ -126,7 +126,7 @@ public class AkcePlatbyController implements Initializable {
                     }
                 }
             }
-            boolean nalezeno = false;
+            boolean nalezeno;
             for (Objednavka objednavka : objednavkyVse) {
                 nalezeno = false;
                 for (Platba platba : platby) {
@@ -152,8 +152,8 @@ public class AkcePlatbyController implements Initializable {
 
     @FXML
     private void potvrditAction(ActionEvent event) {
-        if (!"".equals(objednavkaCombo.getValue())
-                && !"".equals(typPlatbyCombo.getValue()) && !"".equals(datumDatePicker.getValue())) {
+        if (objednavkaCombo.getValue() != null
+                && (typPlatbyCombo.getValue()) != null && !"".equals(datumDatePicker.getValue())) {
             Statement statement = connection.createBlockedStatement();
             try {
                 if ("Kartou".equals(typPlatbyCombo.getValue())) {
