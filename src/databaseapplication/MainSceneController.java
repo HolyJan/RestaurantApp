@@ -32,6 +32,7 @@ import login.LoginController;
 import menu.PolozkyController;
 import objednavky.ObjednavkyController;
 import uzivatele.UzivateleController;
+import zakaznici.AdresyController;
 import zakaznici.ZakazniciController;
 import zamestnanci.SmenyController;
 import zamestnanci.ZamestnanciController;
@@ -185,6 +186,10 @@ public class MainSceneController implements Initializable {
                 AktivityController controllerAktivity = loader.getController();
                 controllerAktivity.setConnection(connection);
                 break;
+            case "zakaznici/Adresy.fxml":
+                AdresyController controllerAdresy = loader.getController();
+                controllerAdresy.setConnection(connection);
+                break;
         }
     }
 
@@ -211,8 +216,8 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void adresyButAction(ActionEvent event) {
-        
+    private void adresyButAction(ActionEvent event) throws IOException {
+        openANewView(event, "zakaznici/Adresy.fxml", connection);
     }
 
     @FXML

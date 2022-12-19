@@ -66,7 +66,6 @@ public class ZakazniciController implements Initializable {
     private AnchorPane pane;
     boolean init;
     boolean edit = false;
-    private TableView<Adresa> tableViewAdresa;
 
     /**
      * Initializes the controller class.
@@ -114,7 +113,6 @@ public class ZakazniciController implements Initializable {
 
             }
             tableView.getItems().addAll(zakaznici);
-            tableViewAdresa.getItems().addAll(adresy);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

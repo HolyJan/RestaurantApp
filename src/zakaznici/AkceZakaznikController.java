@@ -104,23 +104,12 @@ public class AkceZakaznikController implements Initializable {
                     cstmt1.execute();
                     System.out.println("aktualizace OK");
                 } else {
-                    CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozAdresuProc(?,?,?,?)}");
-                    cstmt.setString(1, adresaCombo.getValue().getUlice());
-                    cstmt.setString(2, adresaCombo.getValue().getCisloPop());
-                    cstmt.setString(3, adresaCombo.getValue().getPsc());
-                    cstmt.setString(4, adresaCombo.getValue().getMesto());
-                    cstmt.execute();
-
-                    ResultSet result = statement.executeQuery("SELECT * FROM adresy_view"
-                            + " WHERE ulice='" + adresaCombo.getValue().getUlice() + "' AND psc='" + adresaCombo.getValue().getPsc() + "'");
-                    int cislo = 1;
-                    result.next();
                     CallableStatement cstmt1 = connection.getConnection().prepareCall("{call vlozZakaznikaProc(?,?,?,?,?)}");
                     cstmt1.setString(1, jmenoText.getText());
                     cstmt1.setString(2, prijmeniText.getText());
                     cstmt1.setString(3, telefonText.getText());
                     cstmt1.setString(4, emailText.getText());
-                    cstmt1.setInt(5, result.getInt("ID_ADRESA"));
+                    cstmt1.setInt(5, adresaCombo.getValue().getIdAdresy());
                     cstmt1.execute();
                 }
                 Stage stage = (Stage) jmenoText.getScene().getWindow();
