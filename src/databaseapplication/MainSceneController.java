@@ -15,7 +15,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -33,6 +32,7 @@ import menu.PolozkyController;
 import menu.ReceptyController;
 import objednavky.ObjednavkyController;
 import objednavky.PlatbyController;
+import obrazky.ObrazkyController;
 import rezervace.RezervaceController;
 import rezervace.StolyController;
 import uzivatele.UzivateleController;
@@ -215,6 +215,10 @@ public class MainSceneController implements Initializable {
                 ReceptyController controllerRecepty = loader.getController();
                 controllerRecepty.setConnection(connection);
                 break;
+            case "obrazky/Obrazky.fxml":
+                ObrazkyController controllerObrazky = loader.getController();
+                controllerObrazky.setConnection(connection);
+                break;
         }
     }
 
@@ -231,8 +235,8 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void obrazkyButAction(ActionEvent event) {
-        
+    private void obrazkyButAction(ActionEvent event) throws IOException {
+        openANewView(event, "obrazky/Obrazky.fxml", connection);
     }
 
     @FXML
