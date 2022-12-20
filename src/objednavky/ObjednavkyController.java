@@ -6,18 +6,13 @@
 package objednavky;
 
 import aktivity.Aktivita;
-import aktivity.AktivityController;
 import connection.DatabaseConnection;
-import databaseapplication.MainSceneController;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.CallableStatement;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -37,9 +32,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import uzivatele.Uzivatel;
 import zakaznici.Adresa;
-import zakaznici.AkceZakaznikController;
 import zakaznici.Zakaznik;
 
 /**

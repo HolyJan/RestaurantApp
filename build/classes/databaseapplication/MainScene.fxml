@@ -30,7 +30,7 @@
             <Button mnemonicParsing="false" onAction="#adresyButAction" prefHeight="26.0" prefWidth="85.0" text="Adresy" />
             <Button fx:id="menu1" mnemonicParsing="false" onAction="#poziceButAction" prefHeight="26.0" prefWidth="91.0" text="Pozice" />
             <Button mnemonicParsing="false" onAction="#stolyButAction" prefHeight="26.0" prefWidth="102.0" text="Stoly" />
-            <Button mnemonicParsing="false" onAction="#polozkyMenuButAction" prefHeight="26.0" prefWidth="111.0" text="Polozky menu" />
+            <Button mnemonicParsing="false" onAction="#polozkyMenuButAction" prefHeight="26.0" prefWidth="138.0" text="Polozky menu" />
          </children>
       </HBox>
    </children>
