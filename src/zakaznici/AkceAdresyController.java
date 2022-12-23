@@ -6,8 +6,10 @@
 package zakaznici;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,17 +40,18 @@ public class AkceAdresyController implements Initializable {
     private TextField pscText;
     @FXML
     private TextField mestoText;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
 
     @FXML
     private void potvrditAction(ActionEvent event) {
-        if (!"".equals(uliceText.getText()) && !"".equals(uliceText.getText()) && !"".equals(mestoText.getText())&& !"".equals(cisloPopText.getText())) {
+        if (!"".equals(uliceText.getText()) && !"".equals(uliceText.getText()) && !"".equals(mestoText.getText()) && !"".equals(cisloPopText.getText())) {
             Statement statement = connection.createBlockedStatement();
 
             try {
@@ -60,6 +63,8 @@ public class AkceAdresyController implements Initializable {
                     cstmt.setString(4, pscText.getText());
                     cstmt.setString(5, mestoText.getText());
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "ADRESY", "UPDATE", new Date(System.currentTimeMillis()));
 
                     System.out.println("aktualizace OK");
                 } else {
@@ -69,6 +74,8 @@ public class AkceAdresyController implements Initializable {
                     cstmt.setString(3, pscText.getText());
                     cstmt.setString(4, mestoText.getText());
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "ADRESY", "INSERT", new Date(System.currentTimeMillis()));
                     System.out.println("vložení OK");
                 }
                 Stage stage = (Stage) uliceText.getScene().getWindow();
@@ -82,7 +89,7 @@ public class AkceAdresyController implements Initializable {
     void setConnection(DatabaseConnection connection) {
         this.connection = connection;
     }
-    
+
     void setData(Adresa adresa) {
         idAdresy = adresa.getIdAdresy();
         uliceText.setText(adresa.getUlice());
@@ -90,5 +97,5 @@ public class AkceAdresyController implements Initializable {
         pscText.setText(adresa.getPsc());
         mestoText.setText(adresa.getMesto());
     }
-    
+
 }

@@ -6,8 +6,10 @@
 package rezervace;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
@@ -64,6 +66,8 @@ public class AkceStolyController implements Initializable {
                     cstmt.setInt(2, Integer.parseInt(pocetMistTextField.getText()));
                     cstmt.setInt(3, Integer.parseInt(cisloStoluTextField.getText()));
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "STOLY", "UPDATE", new Date(System.currentTimeMillis()));
 
                     System.out.println("aktualizace OK");
                 } else {
@@ -71,6 +75,8 @@ public class AkceStolyController implements Initializable {
                     cstmt.setInt(1, Integer.parseInt(pocetMistTextField.getText()));
                     cstmt.setInt(2, Integer.parseInt(cisloStoluTextField.getText()));
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "STOLY", "INSERT", new Date(System.currentTimeMillis()));
 
                 }
                 Stage stage = (Stage) cisloStoluTextField.getScene().getWindow();

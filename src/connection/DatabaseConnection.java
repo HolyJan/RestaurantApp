@@ -64,7 +64,7 @@ public class DatabaseConnection extends Thread {
         while (!connectionStatus.getConnectionStatusBoolean()) {
             try {
                 //Class.forName("oracle.jdbc.driver.OracleDriver");  
-                this.setConnection(DriverManager.getConnection("jdbc:oracle:thin:@fei-sql1.upceucebny.cz:1521:IDAS", this.getUser(), this.getPassword()));
+                this.setConnection(DriverManager.getConnection("jdbc:oracle:thin:@fei-sql3.upceucebny.cz:1521:BDAS", this.getUser(), this.getPassword()));
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
                 throw new DatabaseException("");

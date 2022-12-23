@@ -7,9 +7,11 @@ package objednavky;
 
 import aktivity.Aktivita;
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -99,19 +101,18 @@ public class ObjednavkyController implements Initializable {
         try {
             ResultSet result1 = statement.executeQuery("SELECT * FROM Zakaznici_view");
             List<Zakaznik> zakaznicci = new ArrayList<>();
-            while(result1.next()){
+            while (result1.next()) {
                 zakaznicci.add(new Zakaznik(result1.getInt("ID_ZAKAZNIKA"), result1.getString("JMENO"),
-                    result1.getString("PRIJMENI"), result1.getString("TELEFON"), result1.getString("EMAIL"),
-                    new Adresa(result1.getInt("ID_ADRESA"), result1.getString("ULICE"),
-                            result1.getString("CISLO_POPISNE"), result1.getString("PSC"), result1.getString("OBEC"))));
+                        result1.getString("PRIJMENI"), result1.getString("TELEFON"), result1.getString("EMAIL"),
+                        new Adresa(result1.getInt("ID_ADRESA"), result1.getString("ULICE"),
+                                result1.getString("CISLO_POPISNE"), result1.getString("PSC"), result1.getString("OBEC"))));
             }
-            
 
             ResultSet result = statement.executeQuery("SELECT * FROM objednavky_view");
             while (result.next()) {
                 Zakaznik zakazik = null;
                 for (Zakaznik zakaznik : zakaznicci) {
-                    if(zakaznik.getId() == result.getInt("ID_ZAKAZNIKA")){
+                    if (zakaznik.getId() == result.getInt("ID_ZAKAZNIKA")) {
                         zakazik = zakaznik;
                     }
                 }
@@ -184,14 +185,16 @@ public class ObjednavkyController implements Initializable {
         Objednavka objednavka = tableView.getSelectionModel().getSelectedItem();
         try {
             CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberObjednavkuProc(?)}");
-        cstmt.setInt(1, objednavka.getIdObjednavky());
-        cstmt.execute();
-        loadData();
+            cstmt.setInt(1, objednavka.getIdObjednavky());
+            cstmt.execute();
+            MainSceneController msc = new MainSceneController();
+            msc.aktivita(connection, MainSceneController.userName.get(), "OBJEDNAVKY", "DELETE", new Date(System.currentTimeMillis()));
+            loadData();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    
+
     public void PridejAktivitu(Aktivita aktivita) {
         Statement statement = connection.createBlockedStatement();
         try {

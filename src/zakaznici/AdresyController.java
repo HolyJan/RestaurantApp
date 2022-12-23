@@ -6,9 +6,11 @@
 package zakaznici;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -105,8 +107,10 @@ public class AdresyController implements Initializable {
         cstmt.setInt(1, adresa.getIdAdresy());
         cstmt.execute();
         loadData();
+        MainSceneController msc = new MainSceneController();
+        msc.aktivita(connection, MainSceneController.userName.get(), "ADRESY", "DELETE", new Date(System.currentTimeMillis()));
     }
-    
+
     private void openANewView(ActionEvent event, String fileLocation, DatabaseConnection conn) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource(fileLocation));

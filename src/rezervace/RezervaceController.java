@@ -6,6 +6,7 @@
 package rezervace;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.CallableStatement;
@@ -182,6 +183,8 @@ public class RezervaceController implements Initializable {
         cstmt.setInt(1, rezervace.getIdRezervace());
         cstmt.execute();
         loadData();
+        MainSceneController msc = new MainSceneController();
+        msc.aktivita(connection, MainSceneController.userName.get(), "REZERVACE", "DELETE", new Date(System.currentTimeMillis()));
     }
 
 }

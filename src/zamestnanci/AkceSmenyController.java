@@ -6,6 +6,7 @@
 package zamestnanci;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
 import java.sql.Date;
@@ -89,12 +90,15 @@ public class AkceSmenyController implements Initializable {
                         cstmt1.setString(1, smenaCombo.getValue().getSmena());
                         cstmt1.setDate(2, Date.valueOf(datePicker.getValue()));
                         cstmt1.execute();
+                        MainSceneController msc = new MainSceneController();
+                        msc.aktivita(connection, MainSceneController.userName.get(), "SMENY", "INSERT", new Date(System.currentTimeMillis()));
 
                         ResultSet result1 = statement.executeQuery("SELECT * FROM smeny WHERE id_smena = (SELECT MAX(id_smena) FROM smeny)");
                         result1.next();
                         cstmt.setInt(1, result1.getInt("ID_SMENA"));
                         cstmt.setInt(2, zamestnanecCombo.getValue().getId());
                         cstmt.execute();
+                        msc.aktivita(connection, MainSceneController.userName.get(), "SMENY_ZAMESTN", "INSERT", new Date(System.currentTimeMillis()));
                     } else {
                         int idSmeny = result.getInt("ID_SMENA");
                         result = statement.executeQuery("SELECT * FROM SMENY_ZAMESTN_VIEW WHERE id_smena='" + idSmeny + "' "
@@ -105,6 +109,8 @@ public class AkceSmenyController implements Initializable {
                             cstmt.setInt(1, result.getInt("ID_SMENA"));
                             cstmt.setInt(2, zamestnanecCombo.getValue().getId());
                             cstmt.execute();
+                            MainSceneController msc = new MainSceneController();
+                            msc.aktivita(connection, MainSceneController.userName.get(), "SMENY_ZAMESTN", "INSERT", new Date(System.currentTimeMillis()));
                         }
                     }
                 } else {
@@ -113,6 +119,8 @@ public class AkceSmenyController implements Initializable {
                     cstmt.setInt(2, smenaCombo.getValue().getId());
                     cstmt.setInt(3, zamestnanecCombo.getValue().getId());
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "SMENY_ZAMESTN", "UPDATE", new Date(System.currentTimeMillis()));
                 }
                 Stage stage = (Stage) potvrditBut.getScene().getWindow();
                 stage.close();
@@ -144,7 +152,7 @@ public class AkceSmenyController implements Initializable {
                             "", "", "", 0, "");
                     smeny.add(smena);
                 }
-            }else{
+            } else {
                 smeny.add(new Smena(0, "Ranní", null, 0, "", "", "", 0, ""));
                 smeny.add(new Smena(0, "Odpolední", null, 0, "", "", "", 0, ""));
             }

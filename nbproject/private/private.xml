@@ -2,22 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/menu/AkceObrazekController.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/zamestnanci/AkceSmenyController.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/menu/Polozka.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/menu/AkceMenuController.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/enums/ConnectionStatus.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/menu/Recept.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/menu/Menu.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/menu/PolozkyController.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/login/RegistraceController.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/menu/AkceReceptController.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/enums/Role.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/login/LoginController.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/databaseapplication/MainSceneController.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/menu/AkcePolozkaController.java</file>
-            <file>file:/E:/UPCE/BDAS/RestaurantApp/src/objednavky/ObjednavkyController.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

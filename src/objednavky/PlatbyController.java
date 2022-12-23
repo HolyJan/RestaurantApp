@@ -6,9 +6,11 @@
 package objednavky;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -190,6 +192,8 @@ public class PlatbyController implements Initializable {
             CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberPlatbuProc(?)}");
             cstmt.setInt(1, platba.getIdPlatby());
             cstmt.execute();
+            MainSceneController msc = new MainSceneController();
+            msc.aktivita(connection, MainSceneController.userName.get(), "PLATBY", "DELETE", new Date(System.currentTimeMillis()));
             loadData();
         } catch (Exception e) {
             System.out.println(e.getMessage());

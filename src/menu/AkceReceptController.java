@@ -6,8 +6,10 @@
 package menu;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -62,11 +64,15 @@ public class AkceReceptController implements Initializable {
                         CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozReceptProc(?)}");
                         cstmt.setString(1, nazevText.getText());
                         cstmt.execute();
+                        MainSceneController msc = new MainSceneController();
+                        msc.aktivita(connection, MainSceneController.userName.get(), "RECEPTY", "INSERT", new Date(System.currentTimeMillis()));
                     } else {
                         CallableStatement cstmt = connection.getConnection().prepareCall("{call updateReceptProc(?,?)}");
                         cstmt.setInt(1, idReceptu);
                         cstmt.setString(2, nazevText.getText());
                         cstmt.execute();
+                        MainSceneController msc = new MainSceneController();
+                        msc.aktivita(connection, MainSceneController.userName.get(), "RECEPTY", "UPDATE", new Date(System.currentTimeMillis()));
                     }
                     Stage stage = (Stage) potvrditBut.getScene().getWindow();
                     stage.close();

@@ -6,9 +6,11 @@
 package uzivatele;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -62,6 +64,7 @@ public class UzivateleController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -160,6 +163,8 @@ public class UzivateleController implements Initializable {
         cstmt.setInt(1, uzivatel.getIdUzivatele());
         cstmt.execute();
         loadData();
+        MainSceneController msc = new MainSceneController();
+        msc.aktivita(connection, MainSceneController.userName.get(), "UZIVATELE", "INSERT", new Date(System.currentTimeMillis()));
     }
 
     public void setConnection(DatabaseConnection con) {

@@ -6,9 +6,11 @@
 package menu;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -205,6 +207,8 @@ public class AkcePolozkaController implements Initializable {
                     cstmt.setInt(4, idMenu);
                     cstmt.setInt(5, idObrazku);
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "POLOZKY_MENU", "INSERT", new Date(System.currentTimeMillis()));
                     this.polozka = new Polozka(idPolozky, nazevText.getText(),
                             Integer.parseInt(cenaText.getText()),
                             receptCombo.getValue(),
@@ -220,6 +224,8 @@ public class AkcePolozkaController implements Initializable {
                     cstmt.setInt(5, idMenu);
                     cstmt.setInt(6, idObrazku);
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "POLOZKY_MENU", "UPDATE", new Date(System.currentTimeMillis()));
                     polozka.setIdPolozky(idPolozky);
                     polozka.setNazevPolozky(nazevText.getText());
                     polozka.setCenaPolozky(Integer.parseInt(cenaText.getText()));

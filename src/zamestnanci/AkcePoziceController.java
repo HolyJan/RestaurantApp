@@ -6,8 +6,10 @@
 package zamestnanci;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -50,18 +52,22 @@ public class AkcePoziceController implements Initializable {
                 Statement statement = connection.createBlockedStatement();
                 if (idPozice == -1) {
                     ResultSet result = statement.executeQuery("SELECT * FROM pozice_view WHERE nazev ='" + poziceText.getText() + "'");
-                    if(result.next()){
+                    if (result.next()) {
                         throw new Exception("Tato pozice je jíž v tabulce!");
                     }
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozPoziciProc(?)}");
                     cstmt.setString(1, poziceText.getText());
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "POZICE", "INSERT", new Date(System.currentTimeMillis()));
 
                 } else {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call updatePoziciProc(?,?)}");
                     cstmt.setInt(1, idPozice);
                     cstmt.setString(2, poziceText.getText());
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "POZICE", "UPDATE", new Date(System.currentTimeMillis()));
                 }
                 Stage stage = (Stage) poziceText.getScene().getWindow();
                 stage.close();

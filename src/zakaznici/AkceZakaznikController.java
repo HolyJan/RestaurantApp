@@ -6,8 +6,10 @@
 package zakaznici;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -49,6 +51,7 @@ public class AkceZakaznikController implements Initializable {
     private boolean init;
     @FXML
     private AnchorPane pane;
+
     /**
      * Initializes the controller class.
      */
@@ -94,6 +97,8 @@ public class AkceZakaznikController implements Initializable {
                     cstmt.setString(5, emailText.getText());
                     cstmt.setInt(6, idAdresa);
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "ZAKAZNICI", "UPDATE", new Date(System.currentTimeMillis()));
 
                     CallableStatement cstmt1 = connection.getConnection().prepareCall("{call updateAdresuProc(?,?,?,?,?)}");
                     cstmt1.setInt(1, idAdresa);
@@ -102,6 +107,7 @@ public class AkceZakaznikController implements Initializable {
                     cstmt1.setString(4, adresaCombo.getValue().getPsc());
                     cstmt1.setString(5, adresaCombo.getValue().getMesto());
                     cstmt1.execute();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "ADRESY", "UPDATE", new Date(System.currentTimeMillis()));
                     System.out.println("aktualizace OK");
                 } else {
                     CallableStatement cstmt1 = connection.getConnection().prepareCall("{call vlozZakaznikaProc(?,?,?,?,?)}");
@@ -111,6 +117,8 @@ public class AkceZakaznikController implements Initializable {
                     cstmt1.setString(4, emailText.getText());
                     cstmt1.setInt(5, adresaCombo.getValue().getIdAdresy());
                     cstmt1.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "ZAKAZNICI", "INSERT", new Date(System.currentTimeMillis()));
                 }
                 Stage stage = (Stage) jmenoText.getScene().getWindow();
                 stage.close();
@@ -119,12 +127,13 @@ public class AkceZakaznikController implements Initializable {
             }
         }
     }
-private void pripareCombos() {
+
+    private void pripareCombos() {
         Statement statement = connection.createBlockedStatement();
         try {
             ResultSet result1 = statement.executeQuery("SELECT * FROM ADRESY");
             while (result1.next()) {
-                adresy.add(new Adresa(result1.getInt("ID_ADRESA"), result1.getString("ULICE"), 
+                adresy.add(new Adresa(result1.getInt("ID_ADRESA"), result1.getString("ULICE"),
                         result1.getString("CISLO_POPISNE"), result1.getString("PSC"), result1.getString("OBEC")));
             }
             adresaCombo.setItems(adresy);

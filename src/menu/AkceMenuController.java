@@ -6,6 +6,7 @@
 package menu;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
 import java.sql.Date;
@@ -71,11 +72,16 @@ public class AkceMenuController implements Initializable {
                         result.next();
                         System.out.println(result.getInt("id"));
                         menu.add(new Menu(result.getInt("id"), new java.sql.Date(System.currentTimeMillis()), nazevText.getText()));
+                        Date Date;
+                        MainSceneController msc = new MainSceneController();
+                        msc.aktivita(connection, MainSceneController.userName.get(), "MENU", "INSERT", new Date(System.currentTimeMillis()));
                     } else {
                         CallableStatement cstmt = connection.getConnection().prepareCall("{call updateMenuProc(?,?)}");
                         cstmt.setInt(1, idMenu);
                         cstmt.setString(2, nazevText.getText());
                         cstmt.execute();
+                        MainSceneController msc = new MainSceneController();
+                        msc.aktivita(connection, MainSceneController.userName.get(), "MENU", "UPDATE", new Date(System.currentTimeMillis()));
                         editMenu.setDatum(new java.sql.Date(System.currentTimeMillis()));
                         editMenu.setNazev(nazevText.getText());
                     }

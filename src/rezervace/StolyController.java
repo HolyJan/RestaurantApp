@@ -6,9 +6,11 @@
 package rezervace;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -148,6 +150,8 @@ public class StolyController implements Initializable {
         cstmt.setInt(1, stul.getIdStolu());
         cstmt.execute();
         loadData();
+        MainSceneController msc = new MainSceneController();
+        msc.aktivita(connection, MainSceneController.userName.get(), "STOLY", "DELETE", new Date(System.currentTimeMillis()));
     }
 
 }

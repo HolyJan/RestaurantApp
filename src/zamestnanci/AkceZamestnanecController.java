@@ -6,8 +6,10 @@
 package zamestnanci;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -98,6 +100,8 @@ public class AkceZamestnanecController implements Initializable {
                     cstmt.setString(4, telefonText.getText());
                     cstmt.setInt(5, idPoz);
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "ZAMESTNANCI", "UPDATE", new Date(System.currentTimeMillis()));
 
                     System.out.println("aktualizace OK");
                 } else {
@@ -107,6 +111,8 @@ public class AkceZamestnanecController implements Initializable {
                     cstmt.setString(3, telefonText.getText());
                     cstmt.setInt(4, idPoz);
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "ZAMESTNANCI", "INSERT", new Date(System.currentTimeMillis()));
 
                 }
                 Stage stage = (Stage) jmenoText.getScene().getWindow();

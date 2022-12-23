@@ -10,11 +10,16 @@ import connection.DatabaseConnection;
 import enums.Role;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -54,7 +59,7 @@ public class MainSceneController implements Initializable {
     private Button loginBtn;
     public static BooleanProperty loggedIn;
     public static IntegerProperty roleId;
-    public static String userName;
+    public static StringProperty userName;
     public static Role role;
     @FXML
     private Button logOut;
@@ -73,6 +78,7 @@ public class MainSceneController implements Initializable {
         loginLabel.setText("Neregistrovaný");
         loggedIn = new SimpleBooleanProperty(false);
         roleId = new SimpleIntegerProperty();
+        userName = new SimpleStringProperty();
         loggedIn.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -261,7 +267,7 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void polozkyMenuButAction(ActionEvent event) {
-        
+
     }
 
     @FXML
@@ -277,6 +283,18 @@ public class MainSceneController implements Initializable {
     @FXML
     private void receptButAction(ActionEvent event) throws IOException {
         openANewView(event, "menu/Recepty.fxml", connection);
+    }
+
+    public void aktivita(DatabaseConnection connection, String username, String tabulka, String akce, Date datum) throws SQLException {
+        PreparedStatement pstmt = connection.getConnection().prepareStatement("{call vlozAktivituProc(?,?,?,?)}");
+        if(username == null){
+            username = "Neregistrovany";
+        }
+        pstmt.setString(1, username);
+        pstmt.setString(2, tabulka);
+        pstmt.setString(3, akce);
+        pstmt.setDate(4, datum);
+        pstmt.execute();
     }
 
 }

@@ -6,8 +6,10 @@
 package uzivatele;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -113,6 +115,8 @@ public class AkceUzivateleController implements Initializable {
                     cstmt.setString(5, hesloTextField.getText());
                     cstmt.setInt(6, roleCombo.getValue().getIdRole());
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "UZIVATELE", "UPDATE", new Date(System.currentTimeMillis()));
 
                     System.out.println("aktualizace OK");
                 } else {
@@ -123,6 +127,8 @@ public class AkceUzivateleController implements Initializable {
                     cstmt.setString(4, hesloTextField.getText());
                     cstmt.setInt(5, roleCombo.getValue().getIdRole());
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "UZIVATELE", "INSERT", new Date(System.currentTimeMillis()));
 
                 }
                 Stage stage = (Stage) jmenoTextField.getScene().getWindow();
@@ -133,6 +139,5 @@ public class AkceUzivateleController implements Initializable {
 
         }
     }
-
 
 }

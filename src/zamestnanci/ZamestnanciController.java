@@ -6,9 +6,11 @@
 package zamestnanci;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -66,7 +68,7 @@ public class ZamestnanciController implements Initializable {
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if(!init) {
+                if (!init) {
                     loadData();
                     init = true;
                 }
@@ -90,7 +92,7 @@ public class ZamestnanciController implements Initializable {
             ResultSet result = statement.executeQuery("SELECT * FROM ZAMESTNANCI_VIEW");
             while (result.next()) {
                 zamestnanci.add(new Zamestnanec(result.getInt("ID_ZAMESTNANCE"), result.getString("JMENO"),
-                        result.getString("PRIJMENI"), result.getString("TELEFON"), result.getInt("ID_POZICE"),result.getString("NAZEV")));
+                        result.getString("PRIJMENI"), result.getString("TELEFON"), result.getInt("ID_POZICE"), result.getString("NAZEV")));
 
             }
             tableView.getItems().addAll(zamestnanci);
@@ -99,7 +101,7 @@ public class ZamestnanciController implements Initializable {
             System.out.println(e.getMessage());
         }
     }
-    
+
     private void openANewView(ActionEvent event, String fileLocation, DatabaseConnection conn) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource(fileLocation));
@@ -130,7 +132,6 @@ public class ZamestnanciController implements Initializable {
 
     }
 
-
     @FXML
     private void updateAction(ActionEvent event) {
         loadData();
@@ -154,6 +155,8 @@ public class ZamestnanciController implements Initializable {
         CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberZamestnanceProc(?)}");
         cstmt.setInt(1, zamestnanec.getId());
         cstmt.execute();
+        MainSceneController msc = new MainSceneController();
+        msc.aktivita(connection, MainSceneController.userName.get(), "ZAMESTNANCI", "DELETE", new Date(System.currentTimeMillis()));
         loadData();
     }
 

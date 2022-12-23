@@ -6,8 +6,10 @@
 package objednavky;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -106,12 +108,12 @@ public class AkceObjednavkaController implements Initializable {
             while (result3.next()) {
                 polozky.add(result3.getString("NAZEV"));
             }
-            
+
             ResultSet result2 = statement.executeQuery("SELECT * FROM ZAKAZNICI_VIEW");
             while (result2.next()) {
-                zakaznici.add(new Zakaznik(result2.getInt("ID_ZAKAZNIKA"), result2.getString("JMENO"), 
-                        result2.getString("PRIJMENI"), result2.getString("TELEFON"), result2.getString("EMAIL"), 
-                        new Adresa(result2.getInt("ID_ADRESA"), result2.getString("ULICE"), 
+                zakaznici.add(new Zakaznik(result2.getInt("ID_ZAKAZNIKA"), result2.getString("JMENO"),
+                        result2.getString("PRIJMENI"), result2.getString("TELEFON"), result2.getString("EMAIL"),
+                        new Adresa(result2.getInt("ID_ADRESA"), result2.getString("ULICE"),
                                 result2.getString("CISLO_POPISNE"), result2.getString("PSC"), result2.getString("OBEC"))));
             }
             polozkaCombo.setItems(polozky);
@@ -154,11 +156,14 @@ public class AkceObjednavkaController implements Initializable {
                     cstmt.setInt(4, idDor);
                     cstmt.setInt(5, 3);
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "OBJEDNAVKY", "UPDATE", new Date(System.currentTimeMillis()));
 
                     CallableStatement cstmt1 = connection.getConnection().prepareCall("{call updateObjednavky_polozkyProc(?,?)}");
                     cstmt1.setInt(1, idObjednavky);
                     cstmt1.setInt(2, idPol);
                     cstmt1.execute();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "OBJEDNAVKY_POLOZKY", "UPDATE", new Date(System.currentTimeMillis()));
 
                     System.out.println("aktualizace OK");
                 } else {
@@ -168,6 +173,8 @@ public class AkceObjednavkaController implements Initializable {
                     cstmt.setInt(3, idDor);
                     cstmt.setInt(4, 3);
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "OBJEDNAVKY", "INSERT", new Date(System.currentTimeMillis()));
 
                     ResultSet result3 = statement.executeQuery("SELECT * FROM objednavky WHERE id_objednavky = (SELECT MAX(id_objednavky) FROM objednavky)");
                     result3.next();
@@ -177,6 +184,7 @@ public class AkceObjednavkaController implements Initializable {
                     cstmt1.setInt(1, idObjedn);
                     cstmt1.setInt(2, idPol);
                     cstmt1.execute();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "OBJEDNAVKY_POLOZKY", "INSERT", new Date(System.currentTimeMillis()));
                 }
                 Stage stage = (Stage) zakaznikCombo.getScene().getWindow();
                 stage.close();

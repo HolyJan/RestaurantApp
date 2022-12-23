@@ -6,6 +6,7 @@
 package rezervace;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
 import java.sql.Date;
@@ -100,6 +101,8 @@ public class AkceRezervaceController implements Initializable {
                     cstmt.setInt(4, zakaznikCombo.getValue().getId());
                     cstmt.setInt(5, stulCombo.getValue().getIdStolu());
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "REZERVACE", "UPDATE", new Date(System.currentTimeMillis()));
 
                     System.out.println("aktualizace OK");
                 } else {
@@ -109,6 +112,8 @@ public class AkceRezervaceController implements Initializable {
                     cstmt.setInt(3, zakaznikCombo.getValue().getId());
                     cstmt.setInt(4, stulCombo.getValue().getIdStolu());
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "REZERVACE", "INSERT", new Date(System.currentTimeMillis()));
 
                 }
                 Stage stage = (Stage) zakaznikCombo.getScene().getWindow();

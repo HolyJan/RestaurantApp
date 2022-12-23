@@ -7,11 +7,13 @@ package menu;
 
 import connection.DatabaseConnection;
 import databaseapplication.DatabaseApplication;
+import databaseapplication.MainSceneController;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.Blob;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -116,6 +118,8 @@ public class AkceObrazekController implements Initializable {
                         pstmt.setString(3, pripona);
                         pstmt.setString(4, nazevObrazku);
                         pstmt.execute();
+                        MainSceneController msc = new MainSceneController();
+                        msc.aktivita(connection, MainSceneController.userName.get(), "OBRAZKY_MENU", "INSERT", new Date(System.currentTimeMillis()));
                         result = statement.executeQuery("SELECT obrazky_id_obrazku_seq.currval as id FROM dual");
                         result.next();
                         System.out.println(result.getInt("id"));
@@ -129,6 +133,8 @@ public class AkceObrazekController implements Initializable {
                         pstmt.setString(4, pripona);
                         pstmt.setString(5, nazevObrazku);
                         pstmt.execute();
+                        MainSceneController msc = new MainSceneController();
+                        msc.aktivita(connection, MainSceneController.userName.get(), "OBRAZKY_MENU", "UPDATE", new Date(System.currentTimeMillis()));
                         obrazek.setNazev(nazevObrazku);
                         obrazek.setObrazek(new Image(newImage));
                     }

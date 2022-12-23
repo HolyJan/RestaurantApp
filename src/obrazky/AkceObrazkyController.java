@@ -7,12 +7,14 @@ package obrazky;
 
 import connection.DatabaseConnection;
 import databaseapplication.DatabaseApplication;
+import databaseapplication.MainSceneController;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.Blob;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -97,10 +99,9 @@ public class AkceObrazkyController implements Initializable {
         pripony.add("png");
     }
 
-
     @FXML
     private void potvrditAction(ActionEvent event) throws FileNotFoundException {
-            try {
+        try {
             if (!"".equals(nazevText.getText()) && !"".equals(umisteniText.getText())) {
                 Statement statement = connection.createBlockedStatement();
                 ResultSet result = statement.executeQuery("SELECT * FROM obrazky_menu_view WHERE nazev='" + nazevText.getText() + "'");
@@ -112,6 +113,8 @@ public class AkceObrazkyController implements Initializable {
                         pstmt.setString(3, priponaText.getText());
                         pstmt.setString(4, nazevText.getText());
                         pstmt.execute();
+                        MainSceneController msc = new MainSceneController();
+                        msc.aktivita(connection, MainSceneController.userName.get(), "OBRAZKY_MENU", "INSERT", new Date(System.currentTimeMillis()));
                         result = statement.executeQuery("SELECT obrazky_id_obrazku_seq.currval as id FROM dual");
                         result.next();
                         System.out.println(result.getInt("id"));
@@ -123,6 +126,8 @@ public class AkceObrazkyController implements Initializable {
                         pstmt.setString(4, priponaText.getText());
                         pstmt.setString(5, nazevText.getText());
                         pstmt.execute();
+                        MainSceneController msc = new MainSceneController();
+                        msc.aktivita(connection, MainSceneController.userName.get(), "OBRAZKY_MENU", "UPDATE", new Date(System.currentTimeMillis()));
                     }
 
                 } else {
@@ -136,8 +141,7 @@ public class AkceObrazkyController implements Initializable {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        
-        
+
     }
 
     @FXML

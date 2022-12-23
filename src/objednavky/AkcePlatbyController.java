@@ -6,6 +6,7 @@
 package objednavky;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
 import java.sql.Date;
@@ -172,6 +173,8 @@ public class AkcePlatbyController implements Initializable {
                     cstmt.setString(5, typPlatbyCombo.getValue());
                     cstmt.setString(6, cisloKartyText.getText());
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "PLATBY", "UPDATE", new Date(System.currentTimeMillis()));
 
                     System.out.println("aktualizace OK");
                 } else {
@@ -182,6 +185,8 @@ public class AkcePlatbyController implements Initializable {
                     cstmt.setString(4, typPlatbyCombo.getValue());
                     cstmt.setString(5, cisloKartyText.getText());
                     cstmt.execute();
+                    MainSceneController msc = new MainSceneController();
+                    msc.aktivita(connection, MainSceneController.userName.get(), "PLATBY", "INSERT", new Date(System.currentTimeMillis()));
 
                 }
                 Stage stage = (Stage) objednavkaCombo.getScene().getWindow();
