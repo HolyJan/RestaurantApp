@@ -206,4 +206,40 @@ public class ObjednavkyController implements Initializable {
             System.out.println(e.getMessage());
         }
     }
+
+    @FXML
+    private void objednavkyPredemDomuAction(ActionEvent event) {
+        objednavky.clear();
+        tableView.getItems().clear();
+        Statement statement = connection.createBlockedStatement();
+        try {
+            ResultSet result1 = statement.executeQuery("SELECT * FROM Zakaznici_view");
+            List<Zakaznik> zakazniciPom = new ArrayList<>();
+            while (result1.next()) {
+                zakazniciPom.add(new Zakaznik(result1.getInt("ID_ZAKAZNIKA"), result1.getString("JMENO"),
+                        result1.getString("PRIJMENI"), result1.getString("TELEFON"), result1.getString("EMAIL"),
+                        new Adresa(result1.getInt("ID_ADRESA"), result1.getString("ULICE"),
+                                result1.getString("CISLO_POPISNE"), result1.getString("PSC"), result1.getString("OBEC"))));
+            }
+
+            ResultSet result = statement.executeQuery("SELECT * FROM objednavky_predem_domu");
+            while (result.next()) {
+                Zakaznik zakazik = null;
+                for (Zakaznik zakaznik : zakazniciPom) {
+                    if (zakaznik.getId() == result.getInt("ID_ZAKAZNIKA")) {
+                        zakazik = zakaznik;
+                    }
+                }
+                objednavky.add(new Objednavka(result.getInt("ID_OBJEDNAVKY"), zakazik,
+                        result.getInt("ID_DORUCENI"), result.getString("CAS_OBJEDNANI"),
+                        result.getString("DORUCENI"), result.getInt("ID_POLOZKY"),
+                        result.getString("NAZEV_POLOZKY"), result.getInt("CENA")));
+
+            }
+            tableView.getItems().addAll(objednavky);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
