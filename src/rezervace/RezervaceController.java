@@ -14,6 +14,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -62,6 +63,7 @@ public class RezervaceController implements Initializable {
     DatabaseConnection connection;
 
     ObservableList<Rezervace> rezervace = FXCollections.observableArrayList();
+    ObservableList<Rezervace> rezervace1 = FXCollections.observableArrayList();
     ObservableList<Stul> stoly = FXCollections.observableArrayList();
     ObservableList<Zakaznik> zakaznici = FXCollections.observableArrayList();
 
@@ -185,6 +187,71 @@ public class RezervaceController implements Initializable {
         loadData();
         MainSceneController msc = new MainSceneController();
         msc.aktivita(connection, MainSceneController.userName.get(), "REZERVACE", "DELETE", new Date(System.currentTimeMillis()));
+    }
+
+    @FXML
+    private void nadchazejiciRezervaceAction(ActionEvent event) {
+        rezervace.clear();
+        rezervace1.clear();
+        tableView.getItems().clear();
+        zakaznici.clear();
+        stoly.clear();
+        Statement statement = connection.createBlockedStatement();
+        try {
+
+            ResultSet result1 = statement.executeQuery("SELECT * FROM ZAKAZNICI_VIEW");
+            while (result1.next()) {
+                zakaznici.add(new Zakaznik(result1.getInt("ID_ZAKAZNIKA"), result1.getString("JMENO"),
+                        result1.getString("PRIJMENI"), result1.getString("TELEFON"), result1.getString("EMAIL"), null));
+            }
+
+            ResultSet result2 = statement.executeQuery("SELECT * FROM STOLY_VIEW");
+            while (result2.next()) {
+                stoly.add(new Stul(result2.getInt("ID_STUL"), result2.getInt("CISLO_STOLU"),
+                        result2.getInt("POCET_MIST")));
+            }
+
+            ResultSet result = statement.executeQuery("SELECT * FROM REZERVACE_VIEW");
+            while (result.next()) {
+                for (Zakaznik zakaznik : zakaznici) {
+                    if (result.getInt("ID_ZAKAZNIKA") == zakaznik.getId()) {
+                        for (Stul stul : stoly) {
+                            if (result.getInt("CISLO_STOLU") == stul.getCisloStolu()) {
+                                rezervace.add(new Rezervace(result.getInt("ID_REZERVACE"),
+                                        result.getString("CAS"), result.getDate("DATUM"), zakaznik, stul));
+                            }
+                        }
+                    }
+                }
+            }
+            ResultSet result3 = statement.executeQuery("SELECT * FROM zakaznici_rezervace_stul ");
+            while (result3.next()) {
+                for (Rezervace rezervace2 : rezervace) {
+                    String cas = result3.getString("CAS");
+                    String jmeno = result3.getString("JMENO");
+                    String prijmeni = result3.getString("PRIJMENI");
+                    Date datum = result3.getDate("DATUM");
+                    int cisloStolu = result3.getInt("CISLO_STOLU");
+                    SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+                    if (result3.getString("CAS").equals(rezervace2.getCas()) && 
+                            f.format(result3.getDate("DATUM")).equals(f.format(rezervace2.getDatum()))) {
+                        for (Zakaznik zakaznik : zakaznici) {
+                            if (result3.getString("PRIJMENI").equals(zakaznik.getPrijmeni()) && result3.getString("JMENO").equals(zakaznik.getJmeno())) {
+                                for (Stul stul : stoly) {
+                                    if (result3.getInt("CISLO_STOLU") == stul.getCisloStolu()) {
+                                        rezervace1.add(new Rezervace(rezervace2.getIdRezervace(),
+                                                rezervace2.getCas(), rezervace2.getDatum(), zakaznik, stul));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            tableView.getItems().addAll(rezervace1);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }

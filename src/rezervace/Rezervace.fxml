@@ -17,12 +17,13 @@
             <TableColumn fx:id="cisloStoluCol" minWidth="3.0" prefWidth="88.39996337890625" text="Číslo stolu" />
          </columns>
       </TableView>
-      <VBox alignment="TOP_CENTER" layoutX="607.0" layoutY="29.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="29.0">
+      <VBox alignment="TOP_CENTER" layoutX="607.0" layoutY="29.0" prefHeight="222.0" prefWidth="100.0" spacing="10.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="29.0">
          <children>
             <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
             <Button mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />
             <Button mnemonicParsing="false" onAction="#upravitAction" text="Upravit" />
             <Button mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
+            <Button mnemonicParsing="false" onAction="#nadchazejiciRezervaceAction" prefHeight="70.0" prefWidth="88.0" text="Zobraz nadcházející rezervace" wrapText="true" />
          </children>
       </VBox>
    </children>

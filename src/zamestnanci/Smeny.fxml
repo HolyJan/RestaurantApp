@@ -18,12 +18,13 @@
             <TableColumn fx:id="poziceCol" minWidth="3.0" prefWidth="143.2000732421875" text="Pozice" />
          </columns>
       </TableView>
-      <VBox alignment="TOP_CENTER" layoutX="750.0" layoutY="23.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="23.0">
+      <VBox alignment="TOP_CENTER" layoutX="750.0" layoutY="23.0" prefHeight="232.0" prefWidth="100.0" spacing="10.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="23.0">
          <children>
             <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
             <Button mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />
             <Button mnemonicParsing="false" onAction="#upravitAction" text="Upravit" />
             <Button mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
+            <Button mnemonicParsing="false" onAction="#zamestnanciSmenyAction" text="Zobraz Zaměstnance na nejbližší směny" textAlignment="CENTER" wrapText="true" />
          </children>
       </VBox>
    </children>

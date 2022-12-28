@@ -143,13 +143,6 @@ public class SmenyController implements Initializable {
         loadData();
     }
 
-    /*
-    CREATE or REPLACE view smeny_view AS
-    SELECT s.id_smena, s.nazev, s.datum, z.jmeno, z.prijmeni
-    FROM smeny s LEFT JOIN smeny_zamestn sz ON sz.id_smena = s.id_smena
-    LEFT JOIN zamestnanci z ON z.id_zamestnance = sz.id_zamestnance AND sz.id_smena = z.id_smena;
-    
-     */
     @FXML
     private void pridatAction(ActionEvent event) throws IOException {
         edit = false;
@@ -172,6 +165,26 @@ public class SmenyController implements Initializable {
         MainSceneController msc = new MainSceneController();
         msc.aktivita(connection, MainSceneController.userName.get(), "SMENY", "DELETE", new Date(System.currentTimeMillis()));
 
+    }
+
+    @FXML
+    private void zamestnanciSmenyAction(ActionEvent event) {
+        smeny.clear();
+        tableView.getItems().clear();
+        Statement statement = connection.createBlockedStatement();
+        try {
+            ResultSet result = statement.executeQuery("SELECT * FROM zamestnanci_pozice_smena");
+            while (result.next()) {
+                if (result.getString("JMENO") != null) {
+                    smeny.add(new Smena(result.getInt("ID_SMENA"), result.getString("NAZEVSMENY"), result.getDate("DATUM"), result.getInt("ID_ZAMESTNANCE"),
+                            result.getString("JMENO"), result.getString("PRIJMENI"), result.getString("TELEFON"), result.getInt("ID_POZICE"), result.getString("NAZEVPOZICE")));
+                }
+            }
+            tableView.getItems().addAll(smeny);
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }
