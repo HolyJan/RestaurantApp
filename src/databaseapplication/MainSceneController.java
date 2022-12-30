@@ -60,15 +60,40 @@ public class MainSceneController implements Initializable {
     public static BooleanProperty loggedIn;
     public static IntegerProperty roleId;
     public static StringProperty userName;
+    public static StringProperty roleName;
     public static Role role;
     @FXML
     private Button logOut;
     @FXML
     private Label loginLabel;
     @FXML
-    private Button menu;
+    private Button zakazniciBtn;
     @FXML
-    private Button menu1;
+    private Button zamestnanciBtn;
+    @FXML
+    private Button objednavkyBtn;
+    @FXML
+    private Button smenyBtn;
+    @FXML
+    private Button menuBtn;
+    @FXML
+    private Button rezervaceBtn;
+    @FXML
+    private Button platbyBtn;
+    @FXML
+    private Button receptyBtn;
+    @FXML
+    private Button uzivateleBtn;
+    @FXML
+    private Button obrazkyBtn;
+    @FXML
+    private Button aktivitaBtn;
+    @FXML
+    private Button adresyBtn;
+    @FXML
+    private Button poziceBtn;
+    @FXML
+    private Button stolyBtn;
 
     /**
      * Initializes the controller class.
@@ -79,6 +104,9 @@ public class MainSceneController implements Initializable {
         loggedIn = new SimpleBooleanProperty(false);
         roleId = new SimpleIntegerProperty();
         userName = new SimpleStringProperty();
+        roleName = new SimpleStringProperty();
+        roleId.set(0);
+        setVisible();
         loggedIn.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -99,15 +127,31 @@ public class MainSceneController implements Initializable {
                 switch (role) {
                     case ADMIN:
                         loginLabel.setText("Admin");
+                        roleName.set("Admin");
+                        setVisible();
+                        loginBtn.setVisible(false);
+                        logOut.setVisible(true);
                         break;
                     case NEREGISTROVANY:
                         loginLabel.setText("Neregistrovaný");
+                        roleName.set("Neregistrovany");
+                        setVisible();
+                        loginBtn.setVisible(true);
+                        logOut.setVisible(false);
                         break;
                     case ZAKAZNIK:
                         loginLabel.setText("Zákazník");
+                        roleName.set("Zakaznik");
+                        setVisible();
+                        loginBtn.setVisible(false);
+                        logOut.setVisible(true);
                         break;
                     case ZAMESTNANEC:
                         loginLabel.setText("Zaměstnanec");
+                        roleName.set("Zamestnanec");
+                        setVisible();
+                        loginBtn.setVisible(false);
+                        logOut.setVisible(true);
                         break;
                 }
             }
@@ -233,6 +277,7 @@ public class MainSceneController implements Initializable {
         loginBtn.setVisible(true);
         logOut.setVisible(false);
         roleId.set(0);
+        setVisible();
     }
 
     @FXML
@@ -266,11 +311,6 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void polozkyMenuButAction(ActionEvent event) {
-
-    }
-
-    @FXML
     private void rezervaceButAction(ActionEvent event) throws IOException {
         openANewView(event, "rezervace/Rezervace.fxml", connection);
     }
@@ -287,7 +327,7 @@ public class MainSceneController implements Initializable {
 
     public void aktivita(DatabaseConnection connection, String username, String tabulka, String akce, Date datum) throws SQLException {
         PreparedStatement pstmt = connection.getConnection().prepareStatement("{call vlozAktivituProc(?,?,?,?)}");
-        if(username == null){
+        if (username == null) {
             username = "Neregistrovany";
         }
         pstmt.setString(1, username);
@@ -295,6 +335,75 @@ public class MainSceneController implements Initializable {
         pstmt.setString(3, akce);
         pstmt.setDate(4, datum);
         pstmt.execute();
+    }
+
+    private void setVisible() {
+        switch (roleId.get()) {
+            case 3:
+                zakazniciBtn.setVisible(true);
+                zamestnanciBtn.setVisible(true);
+                objednavkyBtn.setVisible(true);
+                smenyBtn.setVisible(true);
+                menuBtn.setVisible(true);
+                rezervaceBtn.setVisible(true);
+                platbyBtn.setVisible(true);
+                receptyBtn.setVisible(true);
+                uzivateleBtn.setVisible(true);
+                obrazkyBtn.setVisible(true);
+                aktivitaBtn.setVisible(true);
+                adresyBtn.setVisible(true);
+                poziceBtn.setVisible(true);
+                stolyBtn.setVisible(true);
+                break;
+            case 0:
+                zakazniciBtn.setVisible(false);
+                zamestnanciBtn.setVisible(false);
+                objednavkyBtn.setVisible(false);
+                smenyBtn.setVisible(false);
+                menuBtn.setVisible(true);
+                rezervaceBtn.setVisible(false);
+                platbyBtn.setVisible(false);
+                receptyBtn.setVisible(false);
+                uzivateleBtn.setVisible(false);
+                obrazkyBtn.setVisible(false);
+                aktivitaBtn.setVisible(false);
+                adresyBtn.setVisible(false);
+                poziceBtn.setVisible(false);
+                stolyBtn.setVisible(false);
+                break;
+            case 1:
+                zakazniciBtn.setVisible(false);
+                zamestnanciBtn.setVisible(false);
+                objednavkyBtn.setVisible(true);
+                smenyBtn.setVisible(false);
+                menuBtn.setVisible(true);
+                rezervaceBtn.setVisible(true);
+                platbyBtn.setVisible(true);
+                receptyBtn.setVisible(false);
+                uzivateleBtn.setVisible(false);
+                obrazkyBtn.setVisible(false);
+                aktivitaBtn.setVisible(false);
+                adresyBtn.setVisible(true);
+                poziceBtn.setVisible(false);
+                stolyBtn.setVisible(true);
+                break;
+            case 2:
+                zakazniciBtn.setVisible(true);
+                zamestnanciBtn.setVisible(false);
+                objednavkyBtn.setVisible(true);
+                smenyBtn.setVisible(false);
+                menuBtn.setVisible(true);
+                rezervaceBtn.setVisible(true);
+                platbyBtn.setVisible(true);
+                receptyBtn.setVisible(true);
+                uzivateleBtn.setVisible(false);
+                obrazkyBtn.setVisible(true);
+                aktivitaBtn.setVisible(false);
+                adresyBtn.setVisible(true);
+                poziceBtn.setVisible(false);
+                stolyBtn.setVisible(true);
+                break;
+        }
     }
 
 }
