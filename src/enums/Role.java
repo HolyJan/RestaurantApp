@@ -16,7 +16,7 @@ public enum Role {
     NEREGISTROVANY(0), ZAKAZNIK(1), ZAMESTNANEC(2), ADMIN(3);
     private int value;
     private static Map map = new HashMap<>();
-
+    
     private Role(int value) {
         this.value = value;
     }

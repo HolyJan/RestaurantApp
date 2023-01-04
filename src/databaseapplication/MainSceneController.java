@@ -109,6 +109,7 @@ public class MainSceneController implements Initializable {
         roleId = new SimpleIntegerProperty();
         userName = new SimpleStringProperty();
         roleName = new SimpleStringProperty();
+        roleName.set("Neregistrovaný");
         roleId.set(0);
         setVisible();
         loggedIn.addListener(new ChangeListener<Boolean>() {
@@ -281,6 +282,7 @@ public class MainSceneController implements Initializable {
         loginBtn.setVisible(true);
         logOut.setVisible(false);
         roleId.set(0);
+        roleName.set("Neregistrovaný");
         emulation = false;
         setVisible();
     }
@@ -437,7 +439,7 @@ public class MainSceneController implements Initializable {
         roleId.set(3);
         emulationBtn.setVisible(false);
     }
-    
+
     public static void showDialog(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("POZOR");

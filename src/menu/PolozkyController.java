@@ -7,6 +7,8 @@ package menu;
 
 import connection.DatabaseConnection;
 import databaseapplication.MainSceneController;
+import static databaseapplication.MainSceneController.role;
+import enums.Role;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -33,6 +35,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -93,6 +96,14 @@ public class PolozkyController implements Initializable {
     private TextField tfRecept;
     @FXML
     private ComboBox<Obrazek> cbObrazek;
+    @FXML
+    private Button updateButton;
+    @FXML
+    private Button pridatButton;
+    @FXML
+    private Button upravitButton;
+    @FXML
+    private Button odebratButton;
 
     /**
      * Initializes the controller class.
@@ -100,6 +111,13 @@ public class PolozkyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        String roleName = MainSceneController.roleName.get();
+        if(roleName == "Neregistrovaný"){
+            updateButton.setVisible(false);
+            pridatButton.setVisible(false);
+            upravitButton.setVisible(false);
+            odebratButton.setVisible(false);                
+        }
         tfCena.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -219,7 +237,7 @@ public class PolozkyController implements Initializable {
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
         if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
-            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!");;
         } else {
             openANewView(event, "menu/AkcePolozka.fxml", connection);
         }
@@ -353,7 +371,7 @@ public class PolozkyController implements Initializable {
 
     @FXML
     private void filtruj(ActionEvent event) {
-       
+
     }
 
     @FXML
