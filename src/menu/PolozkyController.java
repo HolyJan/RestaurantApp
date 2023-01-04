@@ -6,6 +6,7 @@
 package menu;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -218,7 +219,7 @@ public class PolozkyController implements Initializable {
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
         if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
-            showError("Vyberte polozku, kterou chcete editovat.");
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
         } else {
             openANewView(event, "menu/AkcePolozka.fxml", connection);
         }

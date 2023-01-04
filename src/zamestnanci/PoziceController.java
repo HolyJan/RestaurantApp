@@ -131,8 +131,12 @@ public class PoziceController implements Initializable {
     @FXML
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
-        openANewView(event, "zamestnanci/AkcePozice.fxml", connection);
-
+        if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!");;
+        } else {
+            openANewView(event, "zamestnanci/AkcePozice.fxml", connection);
+        }
+        loadData();
     }
 
     @FXML

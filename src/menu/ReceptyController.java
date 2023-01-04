@@ -6,6 +6,7 @@
 package menu;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.CallableStatement;
@@ -134,7 +135,11 @@ public class ReceptyController implements Initializable {
     @FXML
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
-        openANewView(event, "menu/AkceRecept.fxml", connection);
+        if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+        } else {
+            openANewView(event, "menu/AkceRecept.fxml", connection);
+        }
 
     }
 

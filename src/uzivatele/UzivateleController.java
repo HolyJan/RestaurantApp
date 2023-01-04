@@ -168,7 +168,11 @@ public class UzivateleController implements Initializable {
     @FXML
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
-        openANewView(event, "uzivatele/akceUzivatele.fxml", connection);
+        if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+        } else {
+            openANewView(event, "uzivatele/akceUzivatele.fxml", connection);
+        }
         loadData();
     }
 

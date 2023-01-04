@@ -124,7 +124,11 @@ public class AdresyController implements Initializable {
     @FXML
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
-        openANewView(event, "zakaznici/AkceAdresy.fxml", connection);
+        if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+        } else {
+            openANewView(event, "zakaznici/AkceAdresy.fxml", connection);
+        }
         loadData();
     }
 

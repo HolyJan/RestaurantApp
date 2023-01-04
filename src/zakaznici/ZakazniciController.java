@@ -183,7 +183,11 @@ public class ZakazniciController implements Initializable {
     @FXML
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
-        openANewView(event, "zakaznici/akceZakaznik.fxml", connection);
+        if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+        } else {
+            openANewView(event, "zakaznici/akceZakaznik.fxml", connection);
+        }
         loadData();
 
     }

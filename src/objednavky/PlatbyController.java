@@ -210,7 +210,11 @@ public class PlatbyController implements Initializable {
     @FXML
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
-        openANewView(event, "objednavky/AkcePlatby.fxml", connection);
+        if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+        } else {
+            openANewView(event, "objednavky/AkcePlatby.fxml", connection);
+        }
         loadData();
 
     }
