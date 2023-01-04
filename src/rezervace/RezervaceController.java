@@ -137,7 +137,7 @@ public class RezervaceController implements Initializable {
         sendDataViaController(fileLocation, loader);
         Scene mainScene = new Scene(parent);
         stage.setScene(mainScene);
-        stage.show();
+        stage.showAndWait();
     }
 
     private void sendDataViaController(String fileLocation, FXMLLoader loader) {

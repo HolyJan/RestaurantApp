@@ -26,9 +26,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -54,6 +57,7 @@ public class ZakazniciController implements Initializable {
     DatabaseConnection connection;
     ObservableList<Zakaznik> zakaznici = FXCollections.observableArrayList();
     ObservableList<Adresa> adresy = FXCollections.observableArrayList();
+    ObservableList<Zakaznik> zakazniciFiltr = FXCollections.observableArrayList();
     @FXML
     private TableView<Zakaznik> tableView;
     @FXML
@@ -68,6 +72,16 @@ public class ZakazniciController implements Initializable {
     private AnchorPane pane;
     boolean init;
     boolean edit = false;
+    @FXML
+    private TextField tfJmeno;
+    @FXML
+    private TextField tfPrijmeni;
+    @FXML
+    private TextField tfTelefon;
+    @FXML
+    private TextField tfEmail;
+    @FXML
+    private ComboBox<Adresa> tfAdresa;
 
     /**
      * Initializes the controller class.
@@ -114,7 +128,9 @@ public class ZakazniciController implements Initializable {
                 adresy.add(adresa);
 
             }
+            
             tableView.getItems().addAll(zakaznici);
+            tfAdresa.getItems().addAll(adresy);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -130,7 +146,7 @@ public class ZakazniciController implements Initializable {
         sendDataViaController(fileLocation, loader);
         Scene mainScene = new Scene(parent);
         stage.setScene(mainScene);
-        stage.show();
+        stage.showAndWait();
     }
 
     private void sendDataViaController(String fileLocation, FXMLLoader loader) {
@@ -181,6 +197,72 @@ public class ZakazniciController implements Initializable {
         loadData();
         MainSceneController msc = new MainSceneController();
         msc.aktivita(connection, MainSceneController.userName.get(), "ZAKAZNICI", "DELETE", new Date(System.currentTimeMillis()));
+    }
+
+    @FXML
+    private void filtrujJmeno(KeyEvent event) {
+        
+     
+        
+    }
+
+    @FXML
+    private void filtrujPrijmeni(KeyEvent event) {
+    }
+
+    @FXML
+    private void filtrujTelefon(KeyEvent event) {
+    }
+
+    @FXML
+    private void filtrujEmail(KeyEvent event) {
+    }
+
+    @FXML
+    private void filtrujAdresa(ActionEvent event) {
+    }
+
+    @FXML
+    private void filtruj(ActionEvent event) {
+        zakazniciFiltr.clear();
+        for(Zakaznik z: zakaznici) {
+            zakazniciFiltr.add(z);
+        }
+        for(Zakaznik z : zakaznici) {
+            if(tfJmeno.getText() != "") {
+                if(!z.getJmeno().contains(tfJmeno.getText())) {
+                    zakazniciFiltr.remove(z);
+                }
+            }
+            if(tfPrijmeni.getText() != "") {
+                if(!z.getPrijmeni().contains(tfPrijmeni.getText()) && zakazniciFiltr.contains(z)) {
+                    zakazniciFiltr.remove(z);
+                }
+            }
+            if(tfTelefon.getText() != "") {
+                if(!z.getTelefon().contains(tfTelefon.getText()) && zakazniciFiltr.contains(z)) {
+                    zakazniciFiltr.remove(z);
+                }
+            }
+            if(tfEmail.getText() != "") {
+                if(!z.getEmail().contains(tfEmail.getText()) && zakazniciFiltr.contains(z)) {
+                    zakazniciFiltr.remove(z);
+                }
+            }
+            if(tfAdresa.getSelectionModel().getSelectedItem() != null) {
+                if(z.getAdresa().getIdAdresy() != tfAdresa.getSelectionModel().getSelectedItem().getIdAdresy() && zakazniciFiltr.contains(z)) {
+                    zakazniciFiltr.remove(z);
+                }
+            }
+        }
+        tableView.getItems().clear();
+        tableView.getItems().addAll(zakazniciFiltr);
+    }
+
+    @FXML
+    private void zobrazVse(ActionEvent event) {
+        tableView.getItems().clear();
+        tableView.getItems().addAll(zakaznici);
     }
 
 }

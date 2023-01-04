@@ -6,11 +6,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="313.0" prefWidth="818.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="databaseapplication.MainSceneController">
+<AnchorPane id="AnchorPane" prefHeight="313.0" prefWidth="818.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="databaseapplication.MainSceneController">
    <children>
       <Button fx:id="loginBtn" layoutX="3.0" layoutY="276.0" mnemonicParsing="false" onAction="#loginButAction" prefHeight="26.0" prefWidth="79.0" text="Login" />
       <Button fx:id="logOut" layoutX="6.0" layoutY="276.0" mnemonicParsing="false" onAction="#logoutOnAc" text="logout" visible="false" />
       <Label fx:id="loginLabel" layoutX="12.0" layoutY="253.0" AnchorPane.bottomAnchor="43.0" AnchorPane.leftAnchor="12.0" />
+      <Button fx:id="emulationBtn" layoutX="92.0" layoutY="276.0" mnemonicParsing="false" onAction="#emulationOnAc" prefHeight="26.0" prefWidth="110.0" text="Ukončit emulaci" visible="false" />
       <VBox layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="796.0" spacing="10.0">
          <children>
             <HBox prefHeight="26.0" prefWidth="807.0" spacing="5.0">

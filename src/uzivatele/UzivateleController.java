@@ -6,6 +6,7 @@
 package uzivatele;
 
 import connection.DatabaseConnection;
+import connection.DatabaseException;
 import databaseapplication.MainSceneController;
 import java.io.IOException;
 import java.net.URL;
@@ -25,6 +26,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -61,6 +64,8 @@ public class UzivateleController implements Initializable {
     @FXML
     private AnchorPane pane;
     ObservableList<Uzivatel> uzivatele = FXCollections.observableArrayList();
+    @FXML
+    private Button emulationBtn;
 
     /**
      * Initializes the controller class.
@@ -115,7 +120,7 @@ public class UzivateleController implements Initializable {
         sendDataViaController(fileLocation, loader);
         Scene mainScene = new Scene(parent);
         stage.setScene(mainScene);
-        stage.show();
+        stage.showAndWait();
     }
 
     private void sendDataViaController(String fileLocation, FXMLLoader loader) {
@@ -169,5 +174,25 @@ public class UzivateleController implements Initializable {
 
     public void setConnection(DatabaseConnection con) {
         connection = con;
+    }
+
+    @FXML
+    private void emulationBtn(ActionEvent event) {
+        Uzivatel uzivatel = tableView.getSelectionModel().getSelectedItem();
+        try {
+            if (uzivatel == null) {
+                throw new DatabaseException("Please select a user");
+            }
+            MainSceneController.emulation = true;
+            MainSceneController.userName.set(uzivatel.getLogin());
+            MainSceneController.roleId.set(uzivatel.getRole().getIdRole());
+            Stage stage1 = (Stage) tableView.getScene().getWindow();
+            stage1.close();
+        } catch (DatabaseException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
     }
 }

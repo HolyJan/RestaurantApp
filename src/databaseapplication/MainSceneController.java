@@ -61,6 +61,7 @@ public class MainSceneController implements Initializable {
     public static IntegerProperty roleId;
     public static StringProperty userName;
     public static StringProperty roleName;
+    public static boolean emulation = false;
     public static Role role;
     @FXML
     private Button logOut;
@@ -94,6 +95,8 @@ public class MainSceneController implements Initializable {
     private Button poziceBtn;
     @FXML
     private Button stolyBtn;
+    @FXML
+    private Button emulationBtn;
 
     /**
      * Initializes the controller class.
@@ -277,6 +280,7 @@ public class MainSceneController implements Initializable {
         loginBtn.setVisible(true);
         logOut.setVisible(false);
         roleId.set(0);
+        emulation = false;
         setVisible();
     }
 
@@ -354,6 +358,11 @@ public class MainSceneController implements Initializable {
                 adresyBtn.setVisible(true);
                 poziceBtn.setVisible(true);
                 stolyBtn.setVisible(true);
+                if (emulation) {
+                    emulationBtn.setVisible(true);
+                } else {
+                    emulationBtn.setVisible(false);
+                }
                 break;
             case 0:
                 zakazniciBtn.setVisible(false);
@@ -370,6 +379,11 @@ public class MainSceneController implements Initializable {
                 adresyBtn.setVisible(false);
                 poziceBtn.setVisible(false);
                 stolyBtn.setVisible(false);
+                if (emulation) {
+                    emulationBtn.setVisible(true);
+                } else {
+                    emulationBtn.setVisible(false);
+                }
                 break;
             case 1:
                 zakazniciBtn.setVisible(false);
@@ -386,6 +400,11 @@ public class MainSceneController implements Initializable {
                 adresyBtn.setVisible(true);
                 poziceBtn.setVisible(false);
                 stolyBtn.setVisible(true);
+                if (emulation) {
+                    emulationBtn.setVisible(true);
+                } else {
+                    emulationBtn.setVisible(false);
+                }
                 break;
             case 2:
                 zakazniciBtn.setVisible(true);
@@ -402,8 +421,20 @@ public class MainSceneController implements Initializable {
                 adresyBtn.setVisible(true);
                 poziceBtn.setVisible(false);
                 stolyBtn.setVisible(true);
+                if (emulation) {
+                    emulationBtn.setVisible(true);
+                } else {
+                    emulationBtn.setVisible(false);
+                }
                 break;
         }
+    }
+
+    @FXML
+    private void emulationOnAc(ActionEvent event) {
+        emulation = false;
+        roleId.set(3);
+        emulationBtn.setVisible(false);
     }
 
 }
