@@ -134,6 +134,8 @@ public class AkceZakaznikController implements Initializable {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
+        }else{
+            MainSceneController.showError("Vyplňte všechna pole!");
         }
     }
 
