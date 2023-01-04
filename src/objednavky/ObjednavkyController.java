@@ -30,6 +30,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -65,6 +66,18 @@ public class ObjednavkyController implements Initializable {
     boolean edit = false;
     @FXML
     private AnchorPane pane;
+    @FXML
+    private TextField tfJmeno;
+    @FXML
+    private TextField tfPrijmeni;
+    @FXML
+    private TextField tfCasObjednani;
+    @FXML
+    private TextField tfVyzvednuti;
+    @FXML
+    private TextField tfNazevPolozky;
+    @FXML
+    private TextField tfCena;
 
     /**
      * Initializes the controller class.
@@ -72,6 +85,15 @@ public class ObjednavkyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        tfCena.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    tfCena.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -241,5 +263,15 @@ public class ObjednavkyController implements Initializable {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @FXML
+    private void filtruj(ActionEvent event) {
+    }
+
+    @FXML
+    private void zobrazVse(ActionEvent event) {
+        tableView.getItems().clear();
+        tableView.getItems().addAll(objednavky);
     }
 }

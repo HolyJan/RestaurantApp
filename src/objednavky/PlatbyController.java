@@ -26,8 +26,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -64,6 +66,16 @@ public class PlatbyController implements Initializable {
     private DatabaseConnection connection;
     ObservableList<Platba> platby = FXCollections.observableArrayList();
     ObservableList<Objednavka> objednavky = FXCollections.observableArrayList();
+    @FXML
+    private TextField tfCastka;
+    @FXML
+    private DatePicker dpDatum;
+    @FXML
+    private TextField tfTypPlatby;
+    @FXML
+    private TextField tfCisloKarty;
+    @FXML
+    private TextField tfNazevPolozky;
 
     /**
      * Initializes the controller class.
@@ -71,6 +83,24 @@ public class PlatbyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        tfCastka.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    tfCastka.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+        tfCisloKarty.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    tfCisloKarty.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -198,6 +228,16 @@ public class PlatbyController implements Initializable {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @FXML
+    private void filtruj(ActionEvent event) {
+    }
+
+    @FXML
+    private void zobrazVse(ActionEvent event) {
+        tableView.getItems().clear();
+        tableView.getItems().addAll(platby);
     }
 
 }

@@ -32,6 +32,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
@@ -64,6 +66,7 @@ public class PolozkyController implements Initializable {
     boolean init;
     ObservableList<Polozka> polozkyVse = FXCollections.observableArrayList();
     ObservableList<Polozka> polozkySelected = FXCollections.observableArrayList();
+    ObservableList<Polozka> polozkyFiltr = FXCollections.observableArrayList();
     ObservableList<Obrazek> obrazky = FXCollections.observableArrayList();
     boolean edit = false;
     DatabaseConnection connection;
@@ -79,6 +82,16 @@ public class PolozkyController implements Initializable {
     private TableColumn<Polozka, ImageView> colObrazek;
     @FXML
     private CheckBox checkOstatnii;
+    @FXML
+    private TextField tfNazev;
+    @FXML
+    private TextField tfCena;
+    @FXML
+    private TextField tfMenu;
+    @FXML
+    private TextField tfRecept;
+    @FXML
+    private ComboBox<Obrazek> cbObrazek;
 
     /**
      * Initializes the controller class.
@@ -86,7 +99,15 @@ public class PolozkyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
-
+        tfCena.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    tfCena.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -129,7 +150,7 @@ public class PolozkyController implements Initializable {
         controllerAkcePolozky.setObrazkyList(obrazky);
         controllerAkcePolozky.setController(this);
         controllerAkcePolozky.setPolozky(polozkyVse);
-        
+
         if (edit) {
             Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
             try {
@@ -139,7 +160,7 @@ public class PolozkyController implements Initializable {
                 System.out.println(e.getMessage());
             }
         }
-       
+
     }
 
     private void loadData() {
@@ -149,34 +170,33 @@ public class PolozkyController implements Initializable {
             ResultSet result2 = statement.executeQuery("SELECT * FROM obrazky_menu_view");
             Obrazek obrazek1 = null;
             while (result2.next()) {
-                if(!result2.getString("NAZEV").equals("Default")) {
-                Blob obrazek = result2.getBlob("OBRAZEK");
-                InputStream is = obrazek.getBinaryStream(1, obrazek.length());
-                Image img = SwingFXUtils.toFXImage(ImageIO.read(is), null);
-                obrazek1 = new Obrazek(result2.getInt("ID_OBRAZKU"), result2.getString("NAZEV"), img);
-                obrazky.add(obrazek1);
+                if (!result2.getString("NAZEV").equals("Default")) {
+                    Blob obrazek = result2.getBlob("OBRAZEK");
+                    InputStream is = obrazek.getBinaryStream(1, obrazek.length());
+                    Image img = SwingFXUtils.toFXImage(ImageIO.read(is), null);
+                    obrazek1 = new Obrazek(result2.getInt("ID_OBRAZKU"), result2.getString("NAZEV"), img);
+                    obrazky.add(obrazek1);
                 }
             }
-            
+
             ResultSet result = statement.executeQuery("SELECT * FROM polozky_menu_view");
             while (result.next()) {
                 int idobrazku = result.getInt("ID_OBRAZKU");
                 obrazek1 = null;
-                for(Obrazek o : obrazky) {
-                    if(o.getIdObrazku() == idobrazku) {
+                for (Obrazek o : obrazky) {
+                    if (o.getIdObrazku() == idobrazku) {
                         obrazek1 = o;
                     }
                 }
-                if(obrazek1 == null) {
+                if (obrazek1 == null) {
                     obrazek1 = new Obrazek(-1, "Default", new Image("images/meal.png"));
                 }
                 polozkyVse.add(new Polozka(result.getInt("ID_POLOZKY"), result.getString("NAZEV_POLOZKY"), result.getInt("CENA"),
                         new Recept(result.getInt("ID_RECEPTU"), result.getString("NAZEV_RECEPTU")),
-                        new Menu(result.getInt("ID_MENU"),result.getDate("DATUM_MENU"), result.getString("NAZEV_MENU")), obrazek1));
+                        new Menu(result.getInt("ID_MENU"), result.getDate("DATUM_MENU"), result.getString("NAZEV_MENU")), obrazek1));
 
             }
 
-            
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -197,7 +217,7 @@ public class PolozkyController implements Initializable {
     @FXML
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
-        if(tableView.getSelectionModel().selectedItemProperty().get() == null) {
+        if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
             showError("Vyberte polozku, kterou chcete editovat.");
         } else {
             openANewView(event, "menu/AkcePolozka.fxml", connection);
@@ -206,6 +226,7 @@ public class PolozkyController implements Initializable {
 
     @FXML
     private void odebratAction(ActionEvent event) {
+
     }
 
     @FXML
@@ -266,7 +287,7 @@ public class PolozkyController implements Initializable {
         } else {
             for (Polozka pol : polozkyVse) {
                 if (checkPolevky.isSelected()) {
-                    if (pol.getMenu().getId()== 3) {
+                    if (pol.getMenu().getId() == 3) {
                         polozkySelected.add(pol);
                     }
                 }
@@ -286,7 +307,7 @@ public class PolozkyController implements Initializable {
                     }
                 }
                 if (checkOstatnii.isSelected()) {
-                    if(pol.getMenu().getId() > 4) {
+                    if (pol.getMenu().getId() > 4) {
                         polozkySelected.add(pol);
                     }
                 }
@@ -302,15 +323,17 @@ public class PolozkyController implements Initializable {
     private void zableViewClickedAction(MouseEvent event) throws SQLException, IOException {
         updatImageView();
     }
+
     public void updatImageView() {
         Polozka polozka = tableView.getSelectionModel().selectedItemProperty().get();
-        if(polozka == null) {
+        if (polozka == null) {
             imageViewJidlo.setImage(new Image("images/meal.png"));
         } else {
-             imageViewJidlo.setImage(polozka.getObrazek().getObrazek());
+            imageViewJidlo.setImage(polozka.getObrazek().getObrazek());
         }
-       
+
     }
+
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Chyba");
@@ -325,5 +348,21 @@ public class PolozkyController implements Initializable {
             checkVse.setSelected(false);
         }
         updateData();
+    }
+
+    @FXML
+    private void filtruj(ActionEvent event) {
+       
+    }
+
+    @FXML
+    private void zobrazVse(ActionEvent event) {
+        tableView.getItems().clear();
+        tableView.getItems().addAll(polozkyVse);
+        tfCena.clear();
+        tfMenu.clear();
+        tfNazev.clear();
+        tfRecept.clear();
+        cbObrazek.setValue(null);
     }
 }

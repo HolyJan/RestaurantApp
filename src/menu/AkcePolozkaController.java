@@ -84,6 +84,15 @@ public class AkcePolozkaController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        cenaText.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    cenaText.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {

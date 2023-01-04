@@ -29,6 +29,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -64,6 +65,14 @@ public class ObrazkyController implements Initializable {
     ObservableList<Obrazek> obrazky = FXCollections.observableArrayList();
     boolean init;
     boolean edit = false;
+    @FXML
+    private TextField tfNazev;
+    @FXML
+    private TextField tfTyp;
+    @FXML
+    private TextField tfUmisteni;
+    @FXML
+    private TextField tfPripona;
 
     /**
      * Initializes the controller class.
@@ -170,5 +179,15 @@ public class ObrazkyController implements Initializable {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @FXML
+    private void filtruj(ActionEvent event) {
+    }
+
+    @FXML
+    private void zobrazVse(ActionEvent event) {
+        tableView.getItems().clear();
+        tableView.getItems().addAll(obrazky);
     }
 }

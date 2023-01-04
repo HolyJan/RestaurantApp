@@ -8,9 +8,11 @@ package aktivity;
 import connection.DatabaseConnection;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -22,8 +24,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -31,6 +35,7 @@ import javafx.stage.Stage;
 import uzivatele.AkceUzivateleController;
 import uzivatele.Role;
 import uzivatele.Uzivatel;
+import zakaznici.Zakaznik;
 
 /**
  * FXML Controller class
@@ -54,6 +59,15 @@ public class AktivityController implements Initializable {
     private boolean init;
     private DatabaseConnection connection;
     ObservableList<Aktivita> aktivity = FXCollections.observableArrayList();
+    ObservableList<Aktivita> aktivityFiltr = FXCollections.observableArrayList();
+    @FXML
+    private TextField tfUzivatel;
+    @FXML
+    private TextField tfTabulka;
+    @FXML
+    private TextField tfAkce;
+    @FXML
+    private DatePicker dpDatum;
 
     /**
      * Initializes the controller class.
@@ -110,6 +124,45 @@ public class AktivityController implements Initializable {
 
     public void setConnection(DatabaseConnection con) {
         connection = con;
+    }
+
+    @FXML
+    private void filtruj(ActionEvent event) {
+        /*aktivityFiltr.clear();
+        for (Aktivita z : aktivity) {
+            aktivityFiltr.add(z);
+        }
+        for (Aktivita z : aktivity) {
+            if (tfUzivatel.getText() != "") {
+                if (!z.getUzivatel().contains(tfUzivatel.getText())) {
+                    aktivityFiltr.remove(z);
+                }
+            }
+            if (tfTabulka.getText() != "") {
+                if (!z.getTabulka().contains(tfTabulka.getText()) && aktivityFiltr.contains(z)) {
+                    aktivityFiltr.remove(z);
+                }
+            }
+            if (tfAkce.getText() != "") {
+                if (!z.getAkce().contains(tfAkce.getText()) && aktivityFiltr.contains(z)) {
+                    aktivityFiltr.remove(z);
+                }
+            }
+            if (dpDatum.getValue() != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                if (!z.getDatum().toString().equals(sdf.format(Date.valueOf(dpDatum.getValue()))) && aktivityFiltr.contains(z)) {
+                    aktivityFiltr.remove(z);
+                }
+            }
+        }
+        tableView.getItems().clear();
+        tableView.getItems().addAll(aktivityFiltr);*/
+    }
+
+    @FXML
+    private void zobrazVse(ActionEvent event) {
+        tableView.getItems().clear();
+        tableView.getItems().addAll(aktivity);
     }
 
 }

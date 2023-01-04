@@ -27,6 +27,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -54,6 +55,10 @@ public class StolyController implements Initializable {
     private boolean init;
     private boolean edit = false;
     DatabaseConnection connection;
+    @FXML
+    private TextField tfCisloStolu;
+    @FXML
+    private TextField tfPocetMist;
 
     /**
      * Initializes the controller class.
@@ -61,7 +66,24 @@ public class StolyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
-
+        tfCisloStolu.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    tfCisloStolu.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+        tfPocetMist.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    tfPocetMist.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -152,6 +174,16 @@ public class StolyController implements Initializable {
         loadData();
         MainSceneController msc = new MainSceneController();
         msc.aktivita(connection, MainSceneController.userName.get(), "STOLY", "DELETE", new Date(System.currentTimeMillis()));
+    }
+
+    @FXML
+    private void filtruj(ActionEvent event) {
+    }
+
+    @FXML
+    private void zobrazVse(ActionEvent event) {
+        tableView.getItems().clear();
+        tableView.getItems().addAll(stoly);
     }
 
 }

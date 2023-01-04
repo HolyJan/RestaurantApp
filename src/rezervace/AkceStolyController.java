@@ -13,6 +13,8 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -42,7 +44,24 @@ public class AkceStolyController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        cisloStoluTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    cisloStoluTextField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+        pocetMistTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    pocetMistTextField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
     }
 
     public void setConnection(DatabaseConnection con) {

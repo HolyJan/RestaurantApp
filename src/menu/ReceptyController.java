@@ -25,6 +25,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -49,6 +50,8 @@ public class ReceptyController implements Initializable {
     private boolean edit = false;
     private DatabaseConnection connection;
     ObservableList<Recept> recepty = FXCollections.observableArrayList();
+    @FXML
+    private TextField tfRecept;
 
     /**
      * Initializes the controller class.
@@ -143,6 +146,16 @@ public class ReceptyController implements Initializable {
         cstmt.execute();
         loadData();
 
+    }
+
+    @FXML
+    private void filtruj(ActionEvent event) {
+    }
+
+    @FXML
+    private void zobrazVse(ActionEvent event) {
+        tableView.getItems().clear();
+        tableView.getItems().addAll(recepty);
     }
 
 }

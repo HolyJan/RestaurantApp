@@ -27,6 +27,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -55,6 +56,14 @@ public class AdresyController implements Initializable {
     private boolean init;
     private boolean edit = false;
     ObservableList<Adresa> adresy = FXCollections.observableArrayList();
+    @FXML
+    private TextField tfUlice;
+    @FXML
+    private TextField tfCisloPop;
+    @FXML
+    private TextField tfPSC;
+    @FXML
+    private TextField tfObec;
 
     /**
      * Initializes the controller class.
@@ -62,6 +71,25 @@ public class AdresyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        tfCisloPop.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    tfCisloPop.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+        tfPSC.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    tfPSC.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -156,5 +184,15 @@ public class AdresyController implements Initializable {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @FXML
+    private void filtruj(ActionEvent event) {
+    }
+
+    @FXML
+    private void zobrazVse(ActionEvent event) {
+        tableView.getItems().clear();
+        tableView.getItems().addAll(adresy);
     }
 }

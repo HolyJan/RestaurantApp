@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="473.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zakaznici.ZakazniciController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="473.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zakaznici.ZakazniciController">
    <children>
       <TableView fx:id="tableView" layoutX="8.0" layoutY="5.0" prefHeight="400.0" prefWidth="891.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <columns>
@@ -41,42 +41,42 @@
                   <Font size="17.0" />
                </font>
             </Label>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="10.0">
+            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Jméno" />
-                  <TextField fx:id="tfJmeno" alignment="TOP_RIGHT" onKeyPressed="#filtrujJmeno" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="tfJmeno" alignment="TOP_RIGHT" prefHeight="25.0" prefWidth="80.0" />
                </children>
                <VBox.margin>
                   <Insets />
                </VBox.margin>
             </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="15.0">
+            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Příjmení" />
-                  <TextField fx:id="tfPrijmeni" onKeyPressed="#filtrujPrijmeni" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="tfPrijmeni" prefHeight="25.0" prefWidth="80.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Telefon" />
-                  <TextField fx:id="tfTelefon" onKeyPressed="#filtrujTelefon" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="tfTelefon" prefHeight="25.0" prefWidth="80.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Email" />
-                  <TextField fx:id="tfEmail" onKeyPressed="#filtrujEmail" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="tfEmail" prefHeight="25.0" prefWidth="80.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Adresa" />
-                  <ComboBox fx:id="tfAdresa" onAction="#filtrujAdresa" prefHeight="25.0" prefWidth="80.0" />
+                  <ComboBox fx:id="tfAdresa" prefHeight="25.0" prefWidth="80.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="25.0" prefWidth="46.0" text="Filtruj" />
+                  <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="26.0" prefWidth="60.0" text="Filtruj" />
                   <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="25.0" prefWidth="74.0" text="Zobraz vše" />
                </children>
             </HBox>

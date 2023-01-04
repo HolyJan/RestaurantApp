@@ -30,6 +30,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -66,6 +67,16 @@ public class UzivateleController implements Initializable {
     ObservableList<Uzivatel> uzivatele = FXCollections.observableArrayList();
     @FXML
     private Button emulationBtn;
+    @FXML
+    private TextField tfJmeno;
+    @FXML
+    private TextField tfPrijmeni;
+    @FXML
+    private TextField tfLogin;
+    @FXML
+    private TextField tfHeslo;
+    @FXML
+    private TextField tfRole;
 
     /**
      * Initializes the controller class.
@@ -194,5 +205,15 @@ public class UzivateleController implements Initializable {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
+    }
+
+    @FXML
+    private void filtruj(ActionEvent event) {
+    }
+
+    @FXML
+    private void zobrazVse(ActionEvent event) {
+        tableView.getItems().clear();
+        tableView.getItems().addAll(uzivatele);
     }
 }

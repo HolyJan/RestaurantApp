@@ -199,32 +199,12 @@ public class ZakazniciController implements Initializable {
         msc.aktivita(connection, MainSceneController.userName.get(), "ZAKAZNICI", "DELETE", new Date(System.currentTimeMillis()));
     }
 
-    @FXML
-    private void filtrujJmeno(KeyEvent event) {
-        
-     
-        
-    }
 
-    @FXML
-    private void filtrujPrijmeni(KeyEvent event) {
-    }
-
-    @FXML
-    private void filtrujTelefon(KeyEvent event) {
-    }
-
-    @FXML
-    private void filtrujEmail(KeyEvent event) {
-    }
-
-    @FXML
-    private void filtrujAdresa(ActionEvent event) {
-    }
 
     @FXML
     private void filtruj(ActionEvent event) {
-        zakazniciFiltr.clear();
+        
+/*        zakazniciFiltr.clear();
         for(Zakaznik z: zakaznici) {
             zakazniciFiltr.add(z);
         }
@@ -256,7 +236,7 @@ public class ZakazniciController implements Initializable {
             }
         }
         tableView.getItems().clear();
-        tableView.getItems().addAll(zakazniciFiltr);
+        tableView.getItems().addAll(zakazniciFiltr);*/
     }
 
     @FXML

@@ -66,6 +66,15 @@ public class AkcePlatbyController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
         castkaText.setDisable(true);
+        cisloKartyText.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    cisloKartyText.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
