@@ -144,9 +144,9 @@ public class AktivityController implements Initializable {
             }
             CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_AKTIVITY_SEARCH.PRO_RETURN_AKTIVITY(?,?,?,?,?)}");
             cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
-            cs.setString("novyUzivatel", null);
-            cs.setString("novaTabulka", null);
-            cs.setString("novaAkce", null);
+            cs.setString("novyUzivatel", tfUzivatel.getText());
+            cs.setString("novaTabulka", tfTabulka.getText());
+            cs.setString("novaAkce", cbAkce.getValue());
             cs.setString("noveDatum", date);
             cs.execute();
             ResultSet result = (ResultSet) cs.getObject("o_cursor");
