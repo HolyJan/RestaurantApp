@@ -63,13 +63,12 @@ public class LoginController implements Initializable {
                 if (!result.next()) {
                     showError("Chyba přihlášení. Login nebo heslo je špatně!");
                 }else{
-                    System.out.println("Přihlášení proběhlo úspěšně");
+                    MainSceneController.userName.set(result.getString("LOGIN"));
                     MainSceneController.roleId.set(result.getInt("ID_ROLE"));
                     MainSceneController.jmenoName.set(result.getString("JMENO"));
                     MainSceneController.prijmeniName.set(result.getString("PRIJMENI"));
                     MainSceneController.telefon.set(result.getString("TELEFON"));
                     MainSceneController.loggedIn.set(true);
-                    MainSceneController.userName.set(usernameTextField.getText());
                     Stage stage = (Stage) passwordTextField.getScene().getWindow();
                     stage.close();
                 }

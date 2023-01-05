@@ -71,7 +71,6 @@ public class MainSceneController implements Initializable {
     public static Role role;
     @FXML
     private Button logOut;
-    @FXML
     private Label loginLabel;
     @FXML
     private Button zakazniciBtn;
@@ -101,15 +100,18 @@ public class MainSceneController implements Initializable {
     private Button poziceBtn;
     @FXML
     private Button stolyBtn;
-    @FXML
     private Button emulationBtn;
+    @FXML
+    private Button emulationBtn1;
+    @FXML
+    private Label loginLabel1;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        loginLabel.setText("Neregistrovaný");
+        loginLabel1.setText("Přihlášen jako: Neregistrovaný");
         loggedIn = new SimpleBooleanProperty(false);
         roleId = new SimpleIntegerProperty();
         userName = new SimpleStringProperty();
@@ -118,7 +120,7 @@ public class MainSceneController implements Initializable {
         prijmeniName = new SimpleStringProperty();
         roleName = new SimpleStringProperty();
         roleName.set("Neregistrovaný");
-        roleId.set(3);
+        roleId.set(0);
         setVisible();
         loggedIn.addListener(new ChangeListener<Boolean>() {
             @Override
@@ -132,35 +134,40 @@ public class MainSceneController implements Initializable {
                 }
             }
         });
+        userName.addListener(new ChangeListener<Object>() {
+            @Override
+            public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
+                loginLabel1.setText("Přihlášen jako: " + userName.get());
+            }
+        });
         roleId.addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 role = Role.valueOf((int) newValue);
-                System.out.println(role);
                 switch (role) {
                     case ADMIN:
-                        loginLabel.setText("Admin");
+                        loginLabel1.setText("Přihlášen jako: " + userName.get());
                         roleName.set("Admin");
                         setVisible();
                         loginBtn.setVisible(false);
                         logOut.setVisible(true);
                         break;
                     case NEREGISTROVANY:
-                        loginLabel.setText("Neregistrovaný");
+                        loginLabel1.setText("Přihlášen jako: Neregistrovaný");
                         roleName.set("Neregistrovany");
                         setVisible();
                         loginBtn.setVisible(true);
                         logOut.setVisible(false);
                         break;
                     case ZAKAZNIK:
-                        loginLabel.setText("Zákazník");
+                        loginLabel1.setText("Přihlášen jako: " + userName.get());
                         roleName.set("Zakaznik");
                         setVisible();
                         loginBtn.setVisible(false);
                         logOut.setVisible(true);
                         break;
                     case ZAMESTNANEC:
-                        loginLabel.setText("Zaměstnanec");
+                        loginLabel1.setText("Přihlášen jako: " + userName.get());
                         roleName.set("Zamestnanec");
                         setVisible();
                         loginBtn.setVisible(false);
@@ -359,9 +366,9 @@ public class MainSceneController implements Initializable {
                 poziceBtn.setVisible(true);
                 stolyBtn.setVisible(true);
                 if (emulation) {
-                    emulationBtn.setVisible(true);
+                    emulationBtn1.setVisible(true);
                 } else {
-                    emulationBtn.setVisible(false);
+                    emulationBtn1.setVisible(false);
                 }
                 break;
             case 0: //Neregistrovany
@@ -380,9 +387,9 @@ public class MainSceneController implements Initializable {
                 poziceBtn.setVisible(false);
                 stolyBtn.setVisible(false);
                 if (emulation) {
-                    emulationBtn.setVisible(true);
+                    emulationBtn1.setVisible(true);
                 } else {
-                    emulationBtn.setVisible(false);
+                    emulationBtn1.setVisible(false);
                 }
                 break;
             case 1: //Zakaznik
@@ -401,9 +408,9 @@ public class MainSceneController implements Initializable {
                 poziceBtn.setVisible(false);
                 stolyBtn.setVisible(true);
                 if (emulation) {
-                    emulationBtn.setVisible(true);
+                    emulationBtn1.setVisible(true);
                 } else {
-                    emulationBtn.setVisible(false);
+                    emulationBtn1.setVisible(false);
                 }
                 break;
             case 2: //Zamestnanec
@@ -422,9 +429,9 @@ public class MainSceneController implements Initializable {
                 poziceBtn.setVisible(false);
                 stolyBtn.setVisible(true);
                 if (emulation) {
-                    emulationBtn.setVisible(true);
+                    emulationBtn1.setVisible(true);
                 } else {
-                    emulationBtn.setVisible(false);
+                    emulationBtn1.setVisible(false);
                 }
                 break;
         }
@@ -434,7 +441,8 @@ public class MainSceneController implements Initializable {
     private void emulationOnAc(ActionEvent event) {
         emulation = false;
         roleId.set(3);
-        emulationBtn.setVisible(false);
+        userName.set("admin");
+        emulationBtn1.setVisible(false);
     }
 
     public static void showDialog(String message) {

@@ -231,6 +231,7 @@ public class PolozkyController implements Initializable {
     private void pridatAction(ActionEvent event) throws IOException {
         edit = false;
         openANewView(event, "menu/AkcePolozka.fxml", connection);
+        loadData();
     }
 
     @FXML
@@ -241,6 +242,7 @@ public class PolozkyController implements Initializable {
         } else {
             openANewView(event, "menu/AkcePolozka.fxml", connection);
         }
+        loadData();
     }
 
     @FXML

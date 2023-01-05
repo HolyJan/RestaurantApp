@@ -341,4 +341,39 @@ public class AkcePolozkaController implements Initializable {
 
     }
 
+    @FXML
+    private void deleteMenuOnAc(ActionEvent event) {
+        if (menuCombo.getValue() != null) {
+            try {
+                CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberMenuProc(?)}");
+                cstmt.setInt(1, menuCombo.getValue().getId());
+                cstmt.execute();
+                this.menu.remove(menuCombo.getValue());
+                ctrl.updateData();
+            } catch (Exception e) {
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
+            }
+        } else {
+            showError("Vyber menu, které chceš odstranit");
+        }
+    }
+    
+
+    @FXML
+    private void deleteReceptOnAc(ActionEvent event) {
+        if (receptCombo.getValue() != null) {
+            try {
+                CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberReceptProc(?)}");
+                cstmt.setInt(1, receptCombo.getValue().getId());
+                cstmt.execute();
+                this.recepty.remove(receptCombo.getValue());
+                ctrl.updateData();
+            } catch (Exception e) {
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
+            }
+        } else {
+            showError("Vyber menu, které chceš odstranit");
+        }
+    }
+
 }
