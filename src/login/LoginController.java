@@ -65,6 +65,8 @@ public class LoginController implements Initializable {
                 }else{
                     System.out.println("Přihlášení proběhlo úspěšně");
                     MainSceneController.roleId.set(result.getInt("ID_ROLE"));
+                    MainSceneController.jmenoName.set(result.getString("JMENO"));
+                    MainSceneController.prijmeniName.set(result.getString("PRIJMENI"));
                     MainSceneController.loggedIn.set(true);
                     MainSceneController.userName.set(usernameTextField.getText());
                     Stage stage = (Stage) passwordTextField.getScene().getWindow();

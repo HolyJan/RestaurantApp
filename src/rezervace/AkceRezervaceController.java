@@ -53,6 +53,9 @@ public class AkceRezervaceController implements Initializable {
     private ComboBox<Stul> stulCombo;
     ObservableList<Stul> stoly = FXCollections.observableArrayList();
     ObservableList<Zakaznik> zakaznici = FXCollections.observableArrayList();
+    Date datum;
+    String cas;
+    int cisloStolu;
 
     /**
      * Initializes the controller class.
@@ -81,6 +84,9 @@ public class AkceRezervaceController implements Initializable {
         stulCombo.setValue(rezervace.getStul());
         datumDatePicker.setValue(rezervace.getDatum().toLocalDate());
         casTextField.setText(rezervace.getCas());
+        datum = rezervace.getDatum();
+        cas = rezervace.getCas();
+        cisloStolu = rezervace.getCisloStolu();
     }
 
     @FXML
@@ -90,10 +96,24 @@ public class AkceRezervaceController implements Initializable {
                 && !"".equals(casTextField.getText())) {
             Statement statement = connection.createBlockedStatement();
             try {
-                if (idRezervace != -1) {
-//                    SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yy");
-//                    java.util.Date utilDate = new java.util.Date(Date.valueOf(datumDatePicker.getValue()).getTime());
-//                    DATE_FORMAT.format(utilDate);
+                boolean podminka = false;
+                ResultSet result = statement.executeQuery("SELECT * FROM REZERVACE_VIEW");
+                while (result.next()) {
+                    if (result.getString("CAS").equals(casTextField.getText())
+                            && result.getDate("DATUM").compareTo(Date.valueOf(datumDatePicker.getValue())) == 0
+                            && result.getInt("CISLO_STOLU") == stulCombo.getValue().getCisloStolu()) {
+                        podminka = true;
+                        if(result.getString("CAS").equals(cas)
+                            && result.getDate("DATUM").compareTo(datum) == 0
+                            && result.getInt("CISLO_STOLU") == cisloStolu){
+                            podminka = false;
+                        }
+                        
+                    }
+                }
+                if(!podminka){
+                    if (idRezervace != -1) {
+
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call updateRezervaciProc(?,?,?,?,?)}");
                     cstmt.setInt(1, idRezervace);
                     cstmt.setString(2, casTextField.getText());
@@ -115,6 +135,9 @@ public class AkceRezervaceController implements Initializable {
                     MainSceneController msc = new MainSceneController();
                     msc.aktivita(connection, MainSceneController.userName.get(), "REZERVACE", "INSERT", new Date(System.currentTimeMillis()));
 
+                }
+                }else{
+                    MainSceneController.showError("V tento čas je jíž stůl obsazen!");
                 }
                 Stage stage = (Stage) zakaznikCombo.getScene().getWindow();
                 stage.close();

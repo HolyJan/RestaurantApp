@@ -15,8 +15,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -32,14 +30,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import menu.Recept;
-import objednavky.AkceObjednavkaController;
-import objednavky.Objednavka;
 import oracle.jdbc.OracleTypes;
 
 /**
@@ -220,7 +214,11 @@ public class SmenyController implements Initializable {
 
     @FXML
     private void zobrazZamestnAction(ActionEvent event) throws IOException {
-        openANewView2(event, "zamestnanci/ZamestnanciSmeny.fxml", connection);
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            openANewView2(event, "zamestnanci/ZamestnanciSmeny.fxml", connection);
+        }else{
+            MainSceneController.showDialog("Vyberte směnu, ve které chcete zobrazit zaměstnance!");
+        }
 
     }
 

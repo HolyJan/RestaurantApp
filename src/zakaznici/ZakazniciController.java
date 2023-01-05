@@ -112,7 +112,9 @@ public class ZakazniciController implements Initializable {
     private void loadData() {
         zakaznici.clear();
         tableView.getItems().clear();
+        ObservableList<Zakaznik> zakazniciPom = FXCollections.observableArrayList();
         adresy.clear();
+
         tfAdresa.getItems().clear();
         Statement statement = connection.createBlockedStatement();
         try {
@@ -124,6 +126,9 @@ public class ZakazniciController implements Initializable {
                 zakaznici.add(new Zakaznik(result.getInt("ID_ZAKAZNIKA"), result.getString("JMENO"),
                         result.getString("PRIJMENI"), result.getString("TELEFON"), result.getString("EMAIL"),
                         adresa));
+                zakazniciPom.add(new Zakaznik(result.getInt("ID_ZAKAZNIKA"), result.getString("JMENO"),
+                        result.getString("PRIJMENI"), result.getString("TELEFON"), result.getString("EMAIL"),
+                        adresa));
                 podminka = false;
                 if (adresy.isEmpty()) {
                     adresy.add(adresa);
@@ -133,11 +138,20 @@ public class ZakazniciController implements Initializable {
                             podminka = true;
                         }
                     }
-                    if(!podminka){
+                    if (!podminka) {
                         adresy.add(adresa);
                     }
                 }
 
+            }
+            if (MainSceneController.roleId.get() == 1) {
+                zakaznici.clear();
+                for (Zakaznik z : zakazniciPom) {
+                    if (z.getJmeno().equals(MainSceneController.jmenoName.get())
+                            && z.getPrijmeni().equals(MainSceneController.prijmeniName.get())) {
+                        zakaznici.add(z);
+                    }
+                }
             }
 
             tableView.getItems().addAll(zakaznici);

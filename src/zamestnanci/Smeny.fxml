@@ -20,7 +20,7 @@
             <TableColumn fx:id="datumCol" prefWidth="114.39999389648438" text="Datum" />
          </columns>
       </TableView>
-      <VBox alignment="TOP_CENTER" layoutX="750.0" layoutY="23.0" prefHeight="263.0" prefWidth="164.0" spacing="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="23.0">
+      <VBox alignment="TOP_CENTER" layoutX="750.0" layoutY="23.0" prefHeight="307.0" prefWidth="164.0" spacing="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="23.0">
          <children>
             <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
             <Button mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />

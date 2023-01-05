@@ -62,6 +62,8 @@ public class MainSceneController implements Initializable {
     public static BooleanProperty loggedIn;
     public static IntegerProperty roleId;
     public static StringProperty userName;
+    public static StringProperty jmenoName;
+    public static StringProperty prijmeniName;
     public static StringProperty roleName;
     public static boolean emulation = false;
     public static Role role;
@@ -109,6 +111,8 @@ public class MainSceneController implements Initializable {
         loggedIn = new SimpleBooleanProperty(false);
         roleId = new SimpleIntegerProperty();
         userName = new SimpleStringProperty();
+        jmenoName = new SimpleStringProperty();
+        prijmeniName = new SimpleStringProperty();
         roleName = new SimpleStringProperty();
         roleName.set("Neregistrovaný");
         roleId.set(3);
@@ -347,7 +351,7 @@ public class MainSceneController implements Initializable {
 
     private void setVisible() {
         switch (roleId.get()) {
-            case 3:
+            case 3: //Administrator
                 zakazniciBtn.setVisible(true);
                 zamestnanciBtn.setVisible(true);
                 objednavkyBtn.setVisible(true);
@@ -368,7 +372,7 @@ public class MainSceneController implements Initializable {
                     emulationBtn.setVisible(false);
                 }
                 break;
-            case 0:
+            case 0: //Neregistrovany
                 zakazniciBtn.setVisible(false);
                 zamestnanciBtn.setVisible(false);
                 objednavkyBtn.setVisible(false);
@@ -389,14 +393,14 @@ public class MainSceneController implements Initializable {
                     emulationBtn.setVisible(false);
                 }
                 break;
-            case 1:
-                zakazniciBtn.setVisible(false);
+            case 1: //Zakaznik
+                zakazniciBtn.setVisible(true);
                 zamestnanciBtn.setVisible(false);
                 objednavkyBtn.setVisible(true);
                 smenyBtn.setVisible(false);
                 menuBtn.setVisible(true);
                 rezervaceBtn.setVisible(true);
-                platbyBtn.setVisible(true);
+                platbyBtn.setVisible(false);
                 receptyBtn.setVisible(false);
                 uzivateleBtn.setVisible(false);
                 obrazkyBtn.setVisible(false);
@@ -410,7 +414,7 @@ public class MainSceneController implements Initializable {
                     emulationBtn.setVisible(false);
                 }
                 break;
-            case 2:
+            case 2: //Zamestnanec
                 zakazniciBtn.setVisible(true);
                 zamestnanciBtn.setVisible(false);
                 objednavkyBtn.setVisible(true);

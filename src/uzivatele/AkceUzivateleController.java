@@ -8,6 +8,8 @@ package uzivatele;
 import connection.DatabaseConnection;
 import databaseapplication.MainSceneController;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.CallableStatement;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -27,6 +29,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  * FXML Controller class
@@ -99,11 +102,14 @@ public class AkceUzivateleController implements Initializable {
     }
 
     @FXML
-    private void PotvrditAction(ActionEvent event) {
+    private void PotvrditAction(ActionEvent event) throws NoSuchAlgorithmException {
         if (!"".equals(jmenoTextField.getText()) && !"".equals(prijmeniTextField.getText())
                 && !"".equals(loginTextField.getText()) && !"".equals(hesloTextField.getText())
                 && !"".equals(roleCombo.getValue())) {
             Statement statement = connection.createBlockedStatement();
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(hesloTextField.getText().getBytes());
+            String hashedPassword = DatatypeConverter.printHexBinary(md.digest());
             try {
                 if (this.idUzivatele != -1) {
 
@@ -112,7 +118,7 @@ public class AkceUzivateleController implements Initializable {
                     cstmt.setString(2, jmenoTextField.getText());
                     cstmt.setString(3, prijmeniTextField.getText());
                     cstmt.setString(4, loginTextField.getText());
-                    cstmt.setString(5, hesloTextField.getText());
+                    cstmt.setString(5, hashedPassword);
                     cstmt.setInt(6, roleCombo.getValue().getIdRole());
                     cstmt.execute();
                     MainSceneController msc = new MainSceneController();
@@ -120,11 +126,11 @@ public class AkceUzivateleController implements Initializable {
 
                     System.out.println("aktualizace OK");
                 } else {
-                    CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozObjednavkuProc(?,?,?,?)}");
+                    CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozUzivateleProc(?,?,?,?,?)}");
                     cstmt.setString(1, jmenoTextField.getText());
                     cstmt.setString(2, prijmeniTextField.getText());
                     cstmt.setString(3, loginTextField.getText());
-                    cstmt.setString(4, hesloTextField.getText());
+                    cstmt.setString(4, hashedPassword);
                     cstmt.setInt(5, roleCombo.getValue().getIdRole());
                     cstmt.execute();
                     MainSceneController msc = new MainSceneController();

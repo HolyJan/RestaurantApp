@@ -6,6 +6,7 @@
 package login;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -72,7 +73,7 @@ public class RegistraceController implements Initializable {
                     Stage stage = (Stage) registraceButton.getScene().getWindow();
                     stage.close();
                 } else {
-                    showInfoDialog("Uživatel s tímto loginem jíž existuje.");
+                    MainSceneController.showDialog("Uživatel s tímto loginem jíž existuje.");
                 }
             } catch (SQLException | NoSuchAlgorithmException e) {
                 System.out.println(e.getMessage());

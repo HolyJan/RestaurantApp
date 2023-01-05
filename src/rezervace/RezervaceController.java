@@ -113,6 +113,7 @@ public class RezervaceController implements Initializable {
         tableView.getItems().clear();
         zakaznici.clear();
         stoly.clear();
+        ObservableList<Rezervace> rezervacePom = FXCollections.observableArrayList();
         Statement statement = connection.createBlockedStatement();
         try {
 
@@ -136,11 +137,23 @@ public class RezervaceController implements Initializable {
                             if (result.getInt("CISLO_STOLU") == stul.getCisloStolu()) {
                                 rezervace.add(new Rezervace(result.getInt("ID_REZERVACE"),
                                         result.getString("CAS"), result.getDate("DATUM"), zakaznik, stul));
+                                rezervacePom.add(new Rezervace(result.getInt("ID_REZERVACE"),
+                                        result.getString("CAS"), result.getDate("DATUM"), zakaznik, stul));
                             }
                         }
                     }
                 }
             }
+            if (MainSceneController.roleId.get() == 1) {
+                rezervace.clear();
+                for (Rezervace r : rezervacePom) {
+                    if(r.getJmeno().equals(MainSceneController.jmenoName.get()) 
+                            && r.getPrijmeni().equals(MainSceneController.prijmeniName.get())){
+                        rezervace.add(r);
+                    }
+                }
+            }
+
             tableView.getItems().addAll(rezervace);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -187,7 +200,7 @@ public class RezervaceController implements Initializable {
     private void pridatAction(ActionEvent event) throws IOException {
         edit = false;
         openANewView(event, "rezervace/AkceRezervace.fxml", connection);
-
+        loadData();
     }
 
     @FXML
