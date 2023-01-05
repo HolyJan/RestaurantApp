@@ -25,11 +25,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import menu.Recept;
@@ -66,6 +68,14 @@ public class AdresyController implements Initializable {
     private TextField tfPSC;
     @FXML
     private TextField tfObec;
+    @FXML
+    private Button upravitBtn;
+    @FXML
+    private Button odebratBtn;
+    @FXML
+    private VBox btnsBox;
+    @FXML
+    private VBox filtrBox;
 
     /**
      * Initializes the controller class.
@@ -73,6 +83,10 @@ public class AdresyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        if (MainSceneController.roleId.get() == 1) {
+            filtrBox.setVisible(false);
+            btnsBox.setVisible(false);
+        }
         tfCisloPop.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -136,13 +150,15 @@ public class AdresyController implements Initializable {
 
     @FXML
     private void odebratAction(ActionEvent event) throws SQLException {
-        Adresa adresa = tableView.getSelectionModel().getSelectedItem();
-        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberAdresuProc(?)}");
-        cstmt.setInt(1, adresa.getIdAdresy());
-        cstmt.execute();
-        loadData();
-        MainSceneController msc = new MainSceneController();
-        msc.aktivita(connection, MainSceneController.userName.get(), "ADRESY", "DELETE", new Date(System.currentTimeMillis()));
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            Adresa adresa = tableView.getSelectionModel().getSelectedItem();
+            CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberAdresuProc(?)}");
+            cstmt.setInt(1, adresa.getIdAdresy());
+            cstmt.execute();
+            loadData();
+        } else {
+            MainSceneController.showDialog("Není vybrán prvek pro odebrání");
+        }
     }
 
     private void openANewView(ActionEvent event, String fileLocation, DatabaseConnection conn) throws IOException {
@@ -177,23 +193,39 @@ public class AdresyController implements Initializable {
         tableView.getItems().clear();
         adresy.clear();
         Statement statement = connection.createBlockedStatement();
+        ObservableList<Adresa> adresyPom = FXCollections.observableArrayList();
         try {
             ResultSet result = statement.executeQuery("SELECT * FROM ADRESY_VIEW");
             while (result.next()) {
                 Adresa adresa = new Adresa(result.getInt("ID_ADRESA"), result.getString("ULICE"), result.getString("CISLO_POPISNE"),
                         result.getString("PSC"), result.getString("OBEC"));
                 adresy.add(adresa);
+                adresyPom.add(adresa);
 
             }
+            if (MainSceneController.roleId.get() == 1) {
+                ResultSet result1 = statement.executeQuery("SELECT * FROM zakaznici_view where telefon = '" + MainSceneController.telefon.get() + "'");
+                if (result1.next()) {
+                    adresy.clear();
+                    for (Adresa a : adresyPom) {
+                        if(a.getIdAdresy() == result1.getInt("ID_ADRESA")){
+                            adresy.add(a);
+                        }
+                    }
+
+                }
+            }
+
             tableView.getItems().addAll(adresy);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
     @FXML
-    private void filtruj(ActionEvent event) {
+    private void filtruj(ActionEvent event
+    ) {
         try {
             if (tfUlice.getText() == "") {
                 tfUlice.setText(null);
@@ -225,12 +257,13 @@ public class AdresyController implements Initializable {
             }
             tableView.getItems().addAll(adresy);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
     @FXML
-    private void zobrazVse(ActionEvent event) {
+    private void zobrazVse(ActionEvent event
+    ) {
         tableView.getItems().clear();
         loadData();
     }

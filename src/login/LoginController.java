@@ -58,7 +58,7 @@ public class LoginController implements Initializable {
                 MessageDigest md = MessageDigest.getInstance("MD5");
                 md.update(passwordTextField.getText().getBytes());
                 String hashedPassword = DatatypeConverter.printHexBinary(md.digest());
-                ResultSet result = statement.executeQuery("SELECT jmeno,prijmeni,login,id_role FROM uzivatele WHERE "
+                ResultSet result = statement.executeQuery("SELECT jmeno,prijmeni,login,id_role, telefon FROM uzivatele WHERE "
                         + "login=" + "'" + usernameTextField.getText() + "'AND heslo=" + "'" + hashedPassword + "'");
                 if (!result.next()) {
                     showError("Chyba přihlášení. Login nebo heslo je špatně!");
@@ -67,13 +67,14 @@ public class LoginController implements Initializable {
                     MainSceneController.roleId.set(result.getInt("ID_ROLE"));
                     MainSceneController.jmenoName.set(result.getString("JMENO"));
                     MainSceneController.prijmeniName.set(result.getString("PRIJMENI"));
+                    MainSceneController.telefon.set(result.getString("TELEFON"));
                     MainSceneController.loggedIn.set(true);
                     MainSceneController.userName.set(usernameTextField.getText());
                     Stage stage = (Stage) passwordTextField.getScene().getWindow();
                     stage.close();
                 }
             }catch(SQLException | NoSuchAlgorithmException e){ 
-                System.out.println(e.getMessage());
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }else{
             showError("Chyba přihlášení. Vyplňte všechna pole!");

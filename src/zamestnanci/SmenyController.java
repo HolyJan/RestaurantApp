@@ -106,7 +106,7 @@ public class SmenyController implements Initializable {
             cbSmena.getItems().add("Odpolední");
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -131,9 +131,9 @@ public class SmenyController implements Initializable {
             try {
                 controllerAkceSmeny.setData(smena, smena.getIdZamestnance(), smena.getJmeno(),
                         smena.getPrijmeni(), smena.getTelefon(), smena.getIdPozice(),
-                        smena.getPozice());
+                        smena.getPozice(), 0);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
 
@@ -182,14 +182,15 @@ public class SmenyController implements Initializable {
 
     @FXML
     private void odebratAction(ActionEvent event) throws SQLException {
-        Smena smena = tableView.getSelectionModel().getSelectedItem();
+        if(tableView.getSelectionModel().getSelectedItem() != null){
+                    Smena smena = tableView.getSelectionModel().getSelectedItem();
         CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberSmenuProc(?)}");
         cstmt.setInt(1, smena.getId());
         cstmt.execute();
         loadData();
-        MainSceneController msc = new MainSceneController();
-        msc.aktivita(connection, MainSceneController.userName.get(), "SMENY", "DELETE", new Date(System.currentTimeMillis()));
-
+        }else{
+            MainSceneController.showDialog("Není vybrán prvek pro odebrání");
+        }
     }
 
     @FXML
@@ -208,7 +209,7 @@ public class SmenyController implements Initializable {
             tableView.getItems().addAll(smeny);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -246,7 +247,7 @@ public class SmenyController implements Initializable {
             }
             tableView.getItems().addAll(smeny);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 

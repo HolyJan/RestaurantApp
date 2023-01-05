@@ -28,6 +28,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -82,6 +83,12 @@ public class ObjednavkyController implements Initializable {
     private ComboBox<String> cbCasObjednani;
     @FXML
     private ComboBox<String> cbVyzvednuti;
+    @FXML
+    private Button upravitBtn;
+    @FXML
+    private Button odebratBtn;
+    @FXML
+    private Button zobrazObjednavkyBtn;
 
     /**
      * Initializes the controller class.
@@ -89,6 +96,11 @@ public class ObjednavkyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        if(MainSceneController.roleId.get() == 1){
+            upravitBtn.setVisible(false);
+            odebratBtn.setVisible(false);
+            zobrazObjednavkyBtn.setVisible(false);
+        }
         tfCena.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -124,7 +136,7 @@ public class ObjednavkyController implements Initializable {
         objednavky.clear();
         cbCasObjednani.getItems().clear();
         cbVyzvednuti.getItems().clear();
-
+        ObservableList<Objednavka> objednavkyPom = FXCollections.observableArrayList();
         tableView.getItems().clear();
         Statement statement = connection.createBlockedStatement();
         try {
@@ -156,12 +168,27 @@ public class ObjednavkyController implements Initializable {
                         result.getInt("ID_DORUCENI"), result.getString("CAS_OBJEDNANI"),
                         result.getString("DORUCENI"), result.getInt("ID_POLOZKY"),
                         result.getString("NAZEV_POLOZKY"), result.getInt("CENA")));
+                objednavkyPom.add(new Objednavka(result.getInt("ID_OBJEDNAVKY"), zakazik,
+                        result.getInt("ID_DORUCENI"), result.getString("CAS_OBJEDNANI"),
+                        result.getString("DORUCENI"), result.getInt("ID_POLOZKY"),
+                        result.getString("NAZEV_POLOZKY"), result.getInt("CENA")));
 
             }
+            if (MainSceneController.roleId.get() == 1) {
+                objednavky.clear();
+                for (Objednavka o : objednavkyPom) {
+                    if (o.getJmeno().equals(MainSceneController.jmenoName.get())
+                            && o.getPrijmeni().equals(MainSceneController.prijmeniName.get()) 
+                            && o.getZakaznik().getTelefon().equals(MainSceneController.telefon.get())) {
+                        objednavky.add(o);
+                    }
+                }
+            }
+
             tableView.getItems().addAll(objednavky);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -192,7 +219,7 @@ public class ObjednavkyController implements Initializable {
                         objednavka.getVyzvednuti(), objednavka.getIdPolozky(),
                         objednavka.getNazevPolozky(), objednavka.getCenaPolozky());
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
 
@@ -222,28 +249,18 @@ public class ObjednavkyController implements Initializable {
 
     @FXML
     private void odebratAction(ActionEvent event) throws SQLException {
-        Objednavka objednavka = tableView.getSelectionModel().getSelectedItem();
-        try {
-            CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberObjednavkuProc(?)}");
-            cstmt.setInt(1, objednavka.getIdObjednavky());
-            cstmt.execute();
-            MainSceneController msc = new MainSceneController();
-            msc.aktivita(connection, MainSceneController.userName.get(), "OBJEDNAVKY", "DELETE", new Date(System.currentTimeMillis()));
-            loadData();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public void PridejAktivitu(Aktivita aktivita) {
-        Statement statement = connection.createBlockedStatement();
-        try {
-            ResultSet result = statement.executeQuery("INSERT INTO AKTIVITY (Username, Tabulka, Akce, Datum) VALUES ('"
-                    + aktivita.getUzivatel() + "','" + aktivita.getTabulka() + "','" + aktivita.getAkce() + ""
-                    + "','" + aktivita.getDatum() + "')");
-            result.next();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            Objednavka objednavka = tableView.getSelectionModel().getSelectedItem();
+            try {
+                CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberObjednavkuProc(?)}");
+                cstmt.setInt(1, objednavka.getIdObjednavky());
+                cstmt.execute();
+                loadData();
+            } catch (Exception e) {
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
+            }
+        } else {
+            MainSceneController.showDialog("Není vybrán prvek pro odebrání");
         }
     }
 
@@ -324,7 +341,7 @@ public class ObjednavkyController implements Initializable {
             }
             tableView.getItems().addAll(objednavky);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -332,10 +349,10 @@ public class ObjednavkyController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
-        tfCena.setText(null);
-        tfJmeno.setText(null);
-        tfNazevPolozky.setText(null);
-        tfPrijmeni.setText(null);
+        tfCena.setText("");
+        tfJmeno.setText("");
+        tfNazevPolozky.setText("");
+        tfPrijmeni.setText("");
 
     }
 }

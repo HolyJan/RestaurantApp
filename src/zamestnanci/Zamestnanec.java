@@ -17,63 +17,75 @@ public class Zamestnanec {
     private String telefon;
     private int idPozice;
     private String pozice;
+    private int idNadrizeneho;
 
-    public Zamestnanec(int id, String jmeno, String prijmeni, String telefon, int idPozice, String pozice) {
+    public Zamestnanec(int id, String jmeno, String prijmeni, String telefon, int idPozice, String pozice, int idNadrizeneho) {
         this.id = id;
         this.jmeno = jmeno;
         this.prijmeni = prijmeni;
         this.telefon = telefon;
         this.idPozice = idPozice;
         this.pozice = pozice;
+        this.idNadrizeneho = idNadrizeneho;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getJmeno() {
-        return jmeno;
-    }
-
-    public String getPrijmeni() {
-        return prijmeni;
-    }
-
-    public String getTelefon() {
-        return telefon;
-    }
-
-    public int getIdPozice() {
-        return idPozice;
-    }
-
-    public String getPozice() {
-        return pozice;
-    }
-
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getJmeno() {
+        return jmeno;
     }
 
     public void setJmeno(String jmeno) {
         this.jmeno = jmeno;
     }
 
+    public String getPrijmeni() {
+        return prijmeni;
+    }
+
     public void setPrijmeni(String prijmeni) {
         this.prijmeni = prijmeni;
+    }
+
+    public String getTelefon() {
+        return telefon;
     }
 
     public void setTelefon(String telefon) {
         this.telefon = telefon;
     }
 
+    public int getIdPozice() {
+        return idPozice;
+    }
+
     public void setIdPozice(int idPozice) {
         this.idPozice = idPozice;
+    }
+
+    public String getPozice() {
+        return pozice;
     }
 
     public void setPozice(String pozice) {
         this.pozice = pozice;
     }
+
+    public int getIdNadrizeneho() {
+        return idNadrizeneho;
+    }
+
+    public void setIdNadrizeneho(int idNadrizeneho) {
+        this.idNadrizeneho = idNadrizeneho;
+    }
+
+    
 
     @Override
     public String toString() {

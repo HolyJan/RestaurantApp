@@ -64,28 +64,24 @@ public class AkceReceptController implements Initializable {
                         CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozReceptProc(?)}");
                         cstmt.setString(1, nazevText.getText());
                         cstmt.execute();
-                        MainSceneController msc = new MainSceneController();
-                        msc.aktivita(connection, MainSceneController.userName.get(), "RECEPTY", "INSERT", new Date(System.currentTimeMillis()));
                     } else {
                         CallableStatement cstmt = connection.getConnection().prepareCall("{call updateReceptProc(?,?)}");
                         cstmt.setInt(1, idReceptu);
                         cstmt.setString(2, nazevText.getText());
                         cstmt.execute();
-                        MainSceneController msc = new MainSceneController();
-                        msc.aktivita(connection, MainSceneController.userName.get(), "RECEPTY", "UPDATE", new Date(System.currentTimeMillis()));
                     }
                     Stage stage = (Stage) potvrditBut.getScene().getWindow();
                     stage.close();
                 } else {
-                    showError("Tento název má jíž jiný recept. Zvolte jiný!");
+                    MainSceneController.showError("Tento název má jíž jiný recept. Zvolte jiný!");
                     throw new SQLException();
                 }
             } else {
-                showError("Vyplňte název!");
+                MainSceneController.showError("Vyplňte název!");
                 throw new SQLException();
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -97,12 +93,5 @@ public class AkceReceptController implements Initializable {
         this.recepty = recepty;
     }
 
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Chyba");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
 }

@@ -93,7 +93,8 @@ public class AkceZakaznikController implements Initializable {
 
     @FXML
     private void potvrditAction(ActionEvent event) {
-        if (!"".equals(jmenoText.getText()) && !"".equals(prijmeniText.getText()) && !"".equals(telefonText.getText())) {
+        if (!"".equals(jmenoText.getText()) && !"".equals(prijmeniText.getText())
+                && !"".equals(telefonText.getText()) || telefonText.getText().length() != 9) {
             Statement statement = connection.createBlockedStatement();
 
             try {
@@ -106,8 +107,6 @@ public class AkceZakaznikController implements Initializable {
                     cstmt.setString(5, emailText.getText());
                     cstmt.setInt(6, idAdresa);
                     cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "ZAKAZNICI", "UPDATE", new Date(System.currentTimeMillis()));
 
                     CallableStatement cstmt1 = connection.getConnection().prepareCall("{call updateAdresuProc(?,?,?,?,?)}");
                     cstmt1.setInt(1, idAdresa);
@@ -116,7 +115,6 @@ public class AkceZakaznikController implements Initializable {
                     cstmt1.setString(4, adresaCombo.getValue().getPsc());
                     cstmt1.setString(5, adresaCombo.getValue().getMesto());
                     cstmt1.execute();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "ADRESY", "UPDATE", new Date(System.currentTimeMillis()));
                     System.out.println("aktualizace OK");
                 } else {
                     CallableStatement cstmt1 = connection.getConnection().prepareCall("{call vlozZakaznikaProc(?,?,?,?,?)}");
@@ -126,16 +124,18 @@ public class AkceZakaznikController implements Initializable {
                     cstmt1.setString(4, emailText.getText());
                     cstmt1.setInt(5, adresaCombo.getValue().getIdAdresy());
                     cstmt1.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "ZAKAZNICI", "INSERT", new Date(System.currentTimeMillis()));
                 }
                 Stage stage = (Stage) jmenoText.getScene().getWindow();
                 stage.close();
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
-        }else{
-            MainSceneController.showError("Vyplňte všechna pole!");
+        } else {
+            if (telefonText.getText().length() != 9) {
+                MainSceneController.showDialog("Telefonní číslo musí mít 9 číslic");
+            } else {
+                MainSceneController.showError("Vyplňte všechna pole!");
+            }
         }
     }
 
@@ -150,7 +150,7 @@ public class AkceZakaznikController implements Initializable {
             adresaCombo.setItems(adresy);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 }

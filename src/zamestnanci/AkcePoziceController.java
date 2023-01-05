@@ -58,16 +58,11 @@ public class AkcePoziceController implements Initializable {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozPoziciProc(?)}");
                     cstmt.setString(1, poziceText.getText());
                     cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "POZICE", "INSERT", new Date(System.currentTimeMillis()));
-
                 } else {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call updatePoziciProc(?,?)}");
                     cstmt.setInt(1, idPozice);
                     cstmt.setString(2, poziceText.getText());
                     cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "POZICE", "UPDATE", new Date(System.currentTimeMillis()));
                 }
                 Stage stage = (Stage) poziceText.getScene().getWindow();
                 stage.close();
@@ -76,7 +71,7 @@ public class AkcePoziceController implements Initializable {
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 

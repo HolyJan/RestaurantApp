@@ -113,8 +113,6 @@ public class AkceObrazkyController implements Initializable {
                         pstmt.setString(3, priponaText.getText());
                         pstmt.setString(4, nazevText.getText());
                         pstmt.execute();
-                        MainSceneController msc = new MainSceneController();
-                        msc.aktivita(connection, MainSceneController.userName.get(), "OBRAZKY_MENU", "INSERT", new Date(System.currentTimeMillis()));
                         result = statement.executeQuery("SELECT obrazky_id_obrazku_seq.currval as id FROM dual");
                         result.next();
                         System.out.println(result.getInt("id"));
@@ -126,8 +124,6 @@ public class AkceObrazkyController implements Initializable {
                         pstmt.setString(4, priponaText.getText());
                         pstmt.setString(5, nazevText.getText());
                         pstmt.execute();
-                        MainSceneController msc = new MainSceneController();
-                        msc.aktivita(connection, MainSceneController.userName.get(), "OBRAZKY_MENU", "UPDATE", new Date(System.currentTimeMillis()));
                     }
 
                 } else {
@@ -139,7 +135,7 @@ public class AkceObrazkyController implements Initializable {
                 throw new SQLException("Obrázek není načtený nebo název není vyplněn!");
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
 
     }
@@ -165,7 +161,7 @@ public class AkceObrazkyController implements Initializable {
                 umisteniText.setText(path);
                 priponaText.setText(extension);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
 
         }

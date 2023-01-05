@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="473.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zakaznici.ZakazniciController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="473.0" prefWidth="1097.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zakaznici.ZakazniciController">
    <children>
       <TableView fx:id="tableView" layoutX="8.0" layoutY="5.0" prefHeight="400.0" prefWidth="891.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <columns>
@@ -26,7 +26,7 @@
             <TableColumn fx:id="mestoCol" prefWidth="109.0" text="Obec" />
          </columns>
       </TableView>
-      <VBox alignment="TOP_CENTER" layoutX="891.0" layoutY="39.0" prefHeight="152.0" prefWidth="114.0" spacing="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="39.0">
+      <VBox fx:id="btnsBox" alignment="TOP_CENTER" layoutX="935.0" layoutY="33.0" prefHeight="152.0" prefWidth="114.0" spacing="10.0" AnchorPane.rightAnchor="47.59999999999991" AnchorPane.topAnchor="33.0">
          <children>
             <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
             <Button mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />
@@ -34,7 +34,7 @@
             <Button mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
          </children>
       </VBox>
-      <VBox layoutX="897.0" layoutY="191.0" prefHeight="215.0" prefWidth="141.0" spacing="10.0">
+      <VBox fx:id="FiltrBox" layoutX="903.0" layoutY="192.0" prefHeight="242.0" prefWidth="174.0" spacing="10.0" AnchorPane.bottomAnchor="38.599999999999994" AnchorPane.rightAnchor="19.599999999999994">
          <children>
             <Label text="Filtr:">
                <font>
@@ -77,7 +77,7 @@
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="26.0" prefWidth="60.0" text="Filtruj" />
-                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="25.0" prefWidth="74.0" text="Zobraz vše" />
+                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="26.0" prefWidth="94.0" text="Zobraz vše" />
                </children>
             </HBox>
          </children>

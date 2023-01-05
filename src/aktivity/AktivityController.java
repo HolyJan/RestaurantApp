@@ -6,6 +6,7 @@
 package aktivity;
 
 import connection.DatabaseConnection;
+import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
 import java.sql.Date;
@@ -41,7 +42,6 @@ public class AktivityController implements Initializable {
     private AnchorPane pane;
     @FXML
     private TableView<Aktivita> tableView;
-    @FXML
     private TableColumn<Aktivita, String> uzivatelCol;
     @FXML
     private TableColumn<Aktivita, String> tabulkaCol;
@@ -53,8 +53,6 @@ public class AktivityController implements Initializable {
     private DatabaseConnection connection;
     ObservableList<Aktivita> aktivity = FXCollections.observableArrayList();
     ObservableList<Aktivita> aktivityFiltr = FXCollections.observableArrayList();
-    @FXML
-    private TextField tfUzivatel;
     @FXML
     private TextField tfTabulka;
     @FXML
@@ -78,7 +76,6 @@ public class AktivityController implements Initializable {
                 }
             }
         });
-        uzivatelCol.setCellValueFactory(new PropertyValueFactory<>("uzivatel"));
         tabulkaCol.setCellValueFactory(new PropertyValueFactory<>("tabulka"));
         akceCol.setCellValueFactory(new PropertyValueFactory<>("akce"));
         datumCol.setCellValueFactory(new PropertyValueFactory<>("datum"));
@@ -92,8 +89,8 @@ public class AktivityController implements Initializable {
         try {
             ResultSet result = statement.executeQuery("SELECT * FROM AKTIVITY");
             while (result.next()) {
-                if (result.getString("USERNAME") != null) {
-                    aktivity.add(new Aktivita(result.getString("USERNAME"), result.getString("TABULKA"), result.getString("AKCE"),
+                if (result.getString("TABULKA") != null) {
+                    aktivity.add(new Aktivita(result.getString("TABULKA"), result.getString("AKCE"),
                             result.getDate("DATUM")));
                 }
             }
@@ -110,12 +107,11 @@ public class AktivityController implements Initializable {
     public void PridejAktivitu(Aktivita aktivita) {
         Statement statement = connection.createBlockedStatement();
         try {
-            ResultSet result = statement.executeQuery("INSERT INTO AKTIVITY (Username, Tabulka, Akce, Datum) VALUES ('"
-                    + aktivita.getUzivatel() + "','" + aktivita.getTabulka() + "','" + aktivita.getAkce() + ""
+            ResultSet result = statement.executeQuery("INSERT INTO AKTIVITY (Username, Tabulka, Akce, Datum) VALUES ('" + aktivita.getTabulka() + "','" + aktivita.getAkce() + ""
                     + "','" + aktivita.getDatum() + "')");
             result.next();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -129,9 +125,6 @@ public class AktivityController implements Initializable {
             if (tfTabulka.getText() == "") {
                 tfTabulka.setText(null);
             }
-            if (tfUzivatel.getText() == "") {
-                tfUzivatel.setText(null);
-            }
 
             aktivity.clear();
             tableView.getItems().clear();
@@ -142,22 +135,21 @@ public class AktivityController implements Initializable {
                 utilDate = new java.util.Date(Date.valueOf(dpDatum.getValue()).getTime());
                 date = DATE_FORMAT.format(utilDate);
             }
-            CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_AKTIVITY_SEARCH.PRO_RETURN_AKTIVITY(?,?,?,?,?)}");
+            CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_AKTIVITY_SEARCH.PRO_RETURN_AKTIVITY(?,?,?,?)}");
             cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
-            cs.setString("novyUzivatel", tfUzivatel.getText());
             cs.setString("novaTabulka", tfTabulka.getText());
             cs.setString("novaAkce", cbAkce.getValue());
             cs.setString("noveDatum", date);
             cs.execute();
             ResultSet result = (ResultSet) cs.getObject("o_cursor");
             while (result.next()) {
-                aktivity.add(new Aktivita(result.getString("USERNAME"), result.getString("TABULKA"), result.getString("AKCE"),
+                aktivity.add(new Aktivita(result.getString("TABULKA"), result.getString("AKCE"),
                         result.getDate("DATUM")));
 
             }
             tableView.getItems().addAll(aktivity);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
 
     }
@@ -166,8 +158,7 @@ public class AktivityController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
-        tfTabulka.setText(null);
-        tfUzivatel.setText(null);
+        tfTabulka.setText("");
 
     }
 

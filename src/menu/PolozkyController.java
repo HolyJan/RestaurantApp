@@ -7,8 +7,6 @@ package menu;
 
 import connection.DatabaseConnection;
 import databaseapplication.MainSceneController;
-import static databaseapplication.MainSceneController.role;
-import enums.Role;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -45,7 +43,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import oracle.jdbc.OracleTypes;
-import zamestnanci.Zamestnanec;
 
 /**
  * FXML Controller class
@@ -247,8 +244,15 @@ public class PolozkyController implements Initializable {
     }
 
     @FXML
-    private void odebratAction(ActionEvent event) {
-
+    private void odebratAction(ActionEvent event) throws SQLException {
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            CallableStatement cstmt1 = connection.getConnection().prepareCall("{call odeberPolozkuProc(?)}");
+            cstmt1.setInt(1, tableView.getSelectionModel().getSelectedItem().getIdPolozky());
+            cstmt1.execute();
+            loadData();
+        } else {
+            MainSceneController.showDialog("Není vybrán prvek pro odebrání");
+        }
     }
 
     @FXML
@@ -430,7 +434,7 @@ public class PolozkyController implements Initializable {
             }
             tableView.getItems().addAll(polozkyFiltr);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -438,10 +442,10 @@ public class PolozkyController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
-        tfCena.clear();
-        tfMenu.clear();
-        tfNazev.clear();
-        tfRecept.clear();
+        tfCena.setText("");
+        tfMenu.setText("");
+        tfNazev.setText("");
+        tfRecept.setText("");
         cbObrazek.setValue(null);
     }
 }

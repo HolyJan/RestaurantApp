@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="396.0" prefWidth="212.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/18" fx:controller="zamestnanci.SmenyZamestnanceController">
+   <children>
+      <TableView fx:id="tableView" prefHeight="394.0" prefWidth="211.0" AnchorPane.bottomAnchor="1.6000000000000227" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.8000000000000114" AnchorPane.topAnchor="0.0">
+         <columns>
+            <TableColumn fx:id="smenaCol" prefWidth="100.80001831054688" text="Směna" />
+            <TableColumn fx:id="datumCol" prefWidth="114.39999389648438" text="Datum" />
+         </columns>
+      </TableView>
+   </children>
+</AnchorPane>

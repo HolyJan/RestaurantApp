@@ -8,28 +8,70 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="166.0" prefWidth="247.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="login.RegistraceController">
+<AnchorPane id="AnchorPane" prefHeight="360.0" prefWidth="312.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="login.RegistraceController">
    <children>
-      <HBox layoutX="20.0" layoutY="14.0" prefHeight="115.0" prefWidth="194.0" spacing="10.0">
+      <HBox layoutX="5.0" layoutY="14.0" prefHeight="270.0" prefWidth="297.0" spacing="10.0" AnchorPane.bottomAnchor="75.60000000000002" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="9.399999999999977" AnchorPane.topAnchor="14.0">
          <children>
-            <VBox alignment="TOP_RIGHT" prefHeight="115.0" prefWidth="80.0" spacing="5.0">
+            <VBox alignment="TOP_RIGHT" prefHeight="270.0" prefWidth="300.0" spacing="5.0">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Jméno" />
-                  <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Příjmení" />
-                  <Label alignment="TOP_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Login" />
-                  <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Heslo" />
-               </children>
-            </VBox>
-            <VBox prefHeight="115.0" prefWidth="167.0" spacing="5.0">
-               <children>
-                  <TextField fx:id="jmenoTextField" />
-                  <TextField fx:id="prijmeniTextField" />
-                  <TextField fx:id="loginTextField" />
-                  <PasswordField fx:id="hesloTextField" />
+                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Jméno" />
+                        <TextField fx:id="jmenoTextField" prefWidth="150.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="85.0" text="Příjmení" />
+                        <TextField fx:id="prijmeniTextField" prefWidth="150.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="88.0" text="Telefon" />
+                        <TextField fx:id="telefonTextField" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Label alignment="TOP_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Login" />
+                        <TextField fx:id="loginTextField" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Heslo" />
+                        <PasswordField fx:id="hesloTextField" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="89.0" text="Ulice" />
+                        <TextField fx:id="uliceTextField" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="95.0" text="Číslo popisné" />
+                        <TextField fx:id="cisloPopTextField" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="58.0" text="PSČ" />
+                        <TextField fx:id="pscTextField" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Obec" />
+                        <TextField fx:id="obecTextField" />
+                     </children>
+                  </HBox>
                </children>
             </VBox>
          </children>
       </HBox>
-      <Button fx:id="registraceButton" layoutX="79.0" layoutY="139.0" mnemonicParsing="false" onAction="#registrovatAction" text="Registrovat" />
+      <Button fx:id="registraceButton" layoutX="85.0" layoutY="194.0" mnemonicParsing="false" onAction="#registrovatAction" text="Registrovat" AnchorPane.bottomAnchor="1.3999999999999986" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="86.0" />
    </children>
 </AnchorPane>

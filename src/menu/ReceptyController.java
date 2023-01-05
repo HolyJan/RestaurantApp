@@ -84,7 +84,7 @@ public class ReceptyController implements Initializable {
             tableView.getItems().addAll(recepty);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -109,7 +109,7 @@ public class ReceptyController implements Initializable {
             try {
                 controllerAkceRecept.setData(recept);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
 
@@ -144,11 +144,15 @@ public class ReceptyController implements Initializable {
 
     @FXML
     private void odebratAction(ActionEvent event) throws SQLException {
-        Recept recept = tableView.getSelectionModel().getSelectedItem();
-        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberReceptProc(?)}");
-        cstmt.setInt(1, recept.getId());
-        cstmt.execute();
-        loadData();
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            Recept recept = tableView.getSelectionModel().getSelectedItem();
+            CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberReceptProc(?)}");
+            cstmt.setInt(1, recept.getId());
+            cstmt.execute();
+            loadData();
+        } else {
+            MainSceneController.showDialog("Není vybrán prvek pro odebrání");
+        }
 
     }
 
@@ -173,7 +177,7 @@ public class ReceptyController implements Initializable {
             }
             tableView.getItems().addAll(recepty);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -181,7 +185,7 @@ public class ReceptyController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
-        tfRecept.setText(null);
+        tfRecept.setText("");
 
     }
 

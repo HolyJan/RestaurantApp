@@ -30,7 +30,7 @@
             <Button mnemonicParsing="false" onAction="#zobrazZamestnAction" prefHeight="69.0" prefWidth="112.0" text="Zobraz zaměstnance" wrapText="true" />
          </children>
       </VBox>
-      <VBox layoutX="225.0" layoutY="365.0" prefHeight="148.0" prefWidth="142.0" spacing="10.0" AnchorPane.bottomAnchor="24.0" AnchorPane.rightAnchor="26.600000000000023">
+      <VBox layoutX="225.0" layoutY="365.0" prefHeight="148.0" prefWidth="156.0" spacing="10.0" AnchorPane.bottomAnchor="24.0" AnchorPane.rightAnchor="13.0">
          <children>
             <Label text="Filtr:">
                <font>
@@ -55,7 +55,7 @@
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="26.0" prefWidth="60.0" text="Filtruj" />
-                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="25.0" prefWidth="74.0" text="Zobraz vše" />
+                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="26.0" prefWidth="88.0" text="Zobraz vše" />
                </children>
             </HBox>
          </children>

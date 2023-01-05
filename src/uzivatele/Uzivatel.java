@@ -13,14 +13,16 @@ public class Uzivatel {
     private int idUzivatele;
     private String jmeno;
     private String prijmeni;
+    private String telefon;
     private String login;
     private String heslo;
     private Role role;
 
-    public Uzivatel(int idUzivatele, String jmeno, String prijmeni, String login, String heslo, Role role) {
+    public Uzivatel(int idUzivatele, String jmeno, String prijmeni, String telefon, String login, String heslo, Role role) {
         this.idUzivatele = idUzivatele;
         this.jmeno = jmeno;
         this.prijmeni = prijmeni;
+        this.telefon = telefon;
         this.login = login;
         this.heslo = heslo;
         this.role = role;
@@ -72,6 +74,14 @@ public class Uzivatel {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getTelefon() {
+        return telefon;
+    }
+
+    public void setTelefon(String telefon) {
+        this.telefon = telefon;
     }
 
    

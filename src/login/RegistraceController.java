@@ -10,16 +10,17 @@ import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -44,19 +45,57 @@ public class RegistraceController implements Initializable {
     DatabaseConnection connection;
     @FXML
     private Button registraceButton;
+    @FXML
+    private TextField telefonTextField;
+    @FXML
+    private TextField uliceTextField;
+    @FXML
+    private TextField cisloPopTextField;
+    @FXML
+    private TextField pscTextField;
+    @FXML
+    private TextField obecTextField;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        telefonTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    telefonTextField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+        cisloPopTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    cisloPopTextField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+        pscTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    pscTextField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
     }
 
     @FXML
     private void registrovatAction(ActionEvent event) {
         if (!"".equals(jmenoTextField.getText()) && !"".equals(prijmeniTextField.getText())
-                && !"".equals(loginTextField.getText()) && !"".equals(hesloTextField.getText())) {
+                && !"".equals(loginTextField.getText()) && !"".equals(hesloTextField.getText()) && !"".equals(telefonTextField.getText())
+                && !"".equals(uliceTextField.getText()) && !"".equals(cisloPopTextField.getText()) && !"".equals(pscTextField.getText())
+                && !"".equals(obecTextField.getText()) || telefonTextField.getText().length() != 9) {
             Statement statement = connection.createBlockedStatement();
             try {
                 MessageDigest md = MessageDigest.getInstance("MD5");
@@ -66,43 +105,45 @@ public class RegistraceController implements Initializable {
                         + "login=" + "'" + loginTextField.getText() + "'");
                 if (!result.next()) {
                     statement.executeQuery("INSERT INTO UZIVATELE (jmeno, prijmeni, login,"
-                            + "heslo, id_role) VALUES ('" + jmenoTextField.getText() + "','"
+                            + "heslo, id_role, telefon) VALUES ('" + jmenoTextField.getText() + "','"
                             + prijmeniTextField.getText() + "','" + loginTextField.getText()
-                            + "','" + hashedPassword + "', 1)");
-                    showInfoDialog("Registrace proběhla úspěšně.");
+                            + "','" + hashedPassword + "', 1, '" + telefonTextField.getText() + "')");
+                    CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozAdresuProc(?,?,?,?)}");
+                    cstmt.setString(1, uliceTextField.getText());
+                    cstmt.setString(2, cisloPopTextField.getText());
+                    cstmt.setString(3, pscTextField.getText());
+                    cstmt.setString(4, obecTextField.getText());
+                    cstmt.execute();
+                    result = statement.executeQuery("SELECT adresy_id_adresa_seq.currval as id FROM dual");
+                    result.next();
+                    int id = result.getInt("id");
+                    CallableStatement cstmt1 = connection.getConnection().prepareCall("{call vlozZakaznikaProc(?,?,?,?,?)}");
+                    cstmt1.setString(1, jmenoTextField.getText());
+                    cstmt1.setString(2, prijmeniTextField.getText());
+                    cstmt1.setString(3, telefonTextField.getText());
+                    cstmt1.setString(4, null);
+                    cstmt1.setInt(5, id);
+                    cstmt1.execute();
+                    MainSceneController.showDialog("Registrace proběhla úspěšně.");
                     Stage stage = (Stage) registraceButton.getScene().getWindow();
                     stage.close();
                 } else {
                     MainSceneController.showDialog("Uživatel s tímto loginem jíž existuje.");
                 }
             } catch (SQLException | NoSuchAlgorithmException e) {
-                System.out.println(e.getMessage());
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         } else {
-            showError("Chyba registrace. Vyplňte všechna pole!");
+            if (telefonTextField.getText().length() != 9) {
+                MainSceneController.showDialog("Telefonní číslo musí mít 9 číslic");
+            } else {
+                MainSceneController.showError("Chyba registrace. Vyplňte všechna pole!");
+            }
         }
     }
 
     public void setConnection(DatabaseConnection connection) {
         this.connection = connection;
-    }
-
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Chyba");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private void showInfoDialog(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("");
-        alert.setHeaderText(null);
-        alert.setGraphic(null);
-        alert.setContentText(message);
-
-        alert.showAndWait();
     }
 
 }

@@ -92,7 +92,7 @@ public class AkceZamestnanecController implements Initializable {
     @FXML
     private void potvrditAction(ActionEvent event) {
         if (!"".equals(jmenoText.getText()) && !"".equals(prijmeniText.getText())
-                && !"".equals(telefonText.getText()) && !"".equals(poziceCombo.getValue())) {
+                && !"".equals(telefonText.getText()) && !"".equals(poziceCombo.getValue()) || telefonText.getText().length() != 9) {
             Statement statement = connection.createBlockedStatement();
             try {
                 ResultSet result = statement.executeQuery("SELECT * FROM pozice_view"
@@ -109,9 +109,6 @@ public class AkceZamestnanecController implements Initializable {
                     cstmt.setString(4, telefonText.getText());
                     cstmt.setInt(5, idPoz);
                     cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "ZAMESTNANCI", "UPDATE", new Date(System.currentTimeMillis()));
-
                     System.out.println("aktualizace OK");
                 } else {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozZamestnanceProc(?,?,?,?)}");
@@ -120,16 +117,19 @@ public class AkceZamestnanecController implements Initializable {
                     cstmt.setString(3, telefonText.getText());
                     cstmt.setInt(4, idPoz);
                     cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "ZAMESTNANCI", "INSERT", new Date(System.currentTimeMillis()));
-
                 }
                 Stage stage = (Stage) jmenoText.getScene().getWindow();
                 stage.close();
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
 
+        }else{
+            if(telefonText.getText().length() != 9){
+                MainSceneController.showDialog("Telefonní číslo musí mít 9 číslic");
+            }else{
+                MainSceneController.showError("Vyplňte všechna pole!");
+            }
         }
     }
 
@@ -143,7 +143,7 @@ public class AkceZamestnanecController implements Initializable {
             poziceCombo.setItems(pracPozice);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 

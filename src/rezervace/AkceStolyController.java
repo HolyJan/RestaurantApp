@@ -10,6 +10,7 @@ import databaseapplication.MainSceneController;
 import java.net.URL;
 import java.sql.CallableStatement;
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
@@ -75,36 +76,38 @@ public class AkceStolyController implements Initializable {
     }
 
     @FXML
-    private void PotvrditAction(ActionEvent event) {
+    private void PotvrditAction(ActionEvent event) throws SQLException {
         if (!"".equals(cisloStoluTextField.getText()) && !"".equals(pocetMistTextField.getText())) {
             Statement statement = connection.createBlockedStatement();
             try {
-                if (this.idStolu != -1) {
-                    CallableStatement cstmt = connection.getConnection().prepareCall("{call updateStulProc(?,?,?)}");
-                    cstmt.setInt(1, idStolu);
-                    cstmt.setInt(2, Integer.parseInt(pocetMistTextField.getText()));
-                    cstmt.setInt(3, Integer.parseInt(cisloStoluTextField.getText()));
-                    cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "STOLY", "UPDATE", new Date(System.currentTimeMillis()));
+                ResultSet result = statement.executeQuery("SELECT * FROM stoly_view where cislo_stolu = " + Integer.parseInt(cisloStoluTextField.getText()));
+                if (!result.next()) {
 
-                    System.out.println("aktualizace OK");
-                } else {
-                    CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozStulProc(?,?)}");
-                    cstmt.setInt(1, Integer.parseInt(pocetMistTextField.getText()));
-                    cstmt.setInt(2, Integer.parseInt(cisloStoluTextField.getText()));
-                    cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "STOLY", "INSERT", new Date(System.currentTimeMillis()));
+                    if (this.idStolu != -1) {
+                        CallableStatement cstmt = connection.getConnection().prepareCall("{call updateStulProc(?,?,?)}");
+                        cstmt.setInt(1, idStolu);
+                        cstmt.setInt(2, Integer.parseInt(pocetMistTextField.getText()));
+                        cstmt.setInt(3, Integer.parseInt(cisloStoluTextField.getText()));
+                        cstmt.execute();
 
+                        System.out.println("aktualizace OK");
+                    } else {
+                        CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozStulProc(?,?)}");
+                        cstmt.setInt(1, Integer.parseInt(pocetMistTextField.getText()));
+                        cstmt.setInt(2, Integer.parseInt(cisloStoluTextField.getText()));
+                        cstmt.execute();
+
+                    }
+                    Stage stage = (Stage) cisloStoluTextField.getScene().getWindow();
+                    stage.close();
+                }else{
+                    MainSceneController.showError("Toto číslo stolu je jíž v tabulce!");
                 }
-                Stage stage = (Stage) cisloStoluTextField.getScene().getWindow();
-                stage.close();
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
-
         }
+
     }
 
 }

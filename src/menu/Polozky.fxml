@@ -49,7 +49,7 @@
             <ImageView fx:id="imageViewJidlo" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </HBox>
-      <VBox layoutX="675.0" layoutY="218.0" prefHeight="215.0" prefWidth="141.0" spacing="10.0" AnchorPane.bottomAnchor="113.60000000000002" AnchorPane.rightAnchor="32.39999999999998">
+      <VBox layoutX="675.0" layoutY="218.0" prefHeight="242.0" prefWidth="163.0" spacing="10.0" AnchorPane.bottomAnchor="114.0" AnchorPane.rightAnchor="11.0">
          <children>
             <Label text="Filtr:">
                <font>
@@ -92,7 +92,7 @@
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="26.0" prefWidth="61.0" text="Filtruj" />
-                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="25.0" prefWidth="74.0" text="Zobraz vše" />
+                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="26.0" prefWidth="95.0" text="Zobraz vše" />
                </children>
             </HBox>
          </children>

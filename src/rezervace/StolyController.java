@@ -25,6 +25,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -61,6 +62,12 @@ public class StolyController implements Initializable {
     private TextField tfCisloStolu;
     @FXML
     private TextField tfPocetMist;
+    @FXML
+    private Button pridatBtn;
+    @FXML
+    private Button upravitBtn;
+    @FXML
+    private Button odebratBtn;
 
     /**
      * Initializes the controller class.
@@ -68,6 +75,16 @@ public class StolyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        if (MainSceneController.roleId.get() == 1) {
+            pridatBtn.setVisible(false);
+            upravitBtn.setVisible(false);
+            odebratBtn.setVisible(false);
+
+        }
+        if (MainSceneController.roleId.get() == 2) {
+            odebratBtn.setVisible(false);
+
+        }
         tfCisloStolu.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -112,7 +129,7 @@ public class StolyController implements Initializable {
             }
             tableView.getItems().addAll(stoly);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -138,7 +155,7 @@ public class StolyController implements Initializable {
                 controllerAkceStoly.setData(stul.getIdStolu(),
                         stul.getCisloStolu(), stul.getPocetMist());
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
 
@@ -173,13 +190,15 @@ public class StolyController implements Initializable {
 
     @FXML
     private void odebratAction(ActionEvent event) throws SQLException {
-        Stul stul = tableView.getSelectionModel().getSelectedItem();
-        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberStulProc(?)}");
-        cstmt.setInt(1, stul.getIdStolu());
-        cstmt.execute();
-        loadData();
-        MainSceneController msc = new MainSceneController();
-        msc.aktivita(connection, MainSceneController.userName.get(), "STOLY", "DELETE", new Date(System.currentTimeMillis()));
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            Stul stul = tableView.getSelectionModel().getSelectedItem();
+            CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberStulProc(?)}");
+            cstmt.setInt(1, stul.getIdStolu());
+            cstmt.execute();
+            loadData();
+        } else {
+            MainSceneController.showDialog("Není vybrán prvek pro odebrání");
+        }
     }
 
     @FXML
@@ -208,7 +227,7 @@ public class StolyController implements Initializable {
             }
             tableView.getItems().addAll(stoly);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -216,8 +235,8 @@ public class StolyController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
-        tfCisloStolu.setText(null);
-        tfPocetMist.setText(null);
+        tfCisloStolu.setText("");
+        tfPocetMist.setText("");
     }
 
 }

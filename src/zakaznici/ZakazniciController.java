@@ -31,6 +31,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import oracle.jdbc.OracleTypes;
@@ -79,6 +80,10 @@ public class ZakazniciController implements Initializable {
     private TextField tfEmail;
     @FXML
     private ComboBox<Adresa> tfAdresa;
+    @FXML
+    private VBox btnsBox;
+    @FXML
+    private VBox FiltrBox;
 
     /**
      * Initializes the controller class.
@@ -86,6 +91,10 @@ public class ZakazniciController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        if(MainSceneController.roleId.get() == 1){
+            FiltrBox.setVisible(false);
+            btnsBox.setVisible(false);
+        }
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -148,7 +157,8 @@ public class ZakazniciController implements Initializable {
                 zakaznici.clear();
                 for (Zakaznik z : zakazniciPom) {
                     if (z.getJmeno().equals(MainSceneController.jmenoName.get())
-                            && z.getPrijmeni().equals(MainSceneController.prijmeniName.get())) {
+                            && z.getPrijmeni().equals(MainSceneController.prijmeniName.get()) 
+                            && z.getTelefon().equals(MainSceneController.telefon.get())) {
                         zakaznici.add(z);
                     }
                 }
@@ -158,7 +168,7 @@ public class ZakazniciController implements Initializable {
             tfAdresa.getItems().addAll(adresy);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -186,7 +196,7 @@ public class ZakazniciController implements Initializable {
                         zakaznik.getTelefon(), zakaznik.getEmail(),
                         zakaznik.getAdresa());
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
 
@@ -219,13 +229,15 @@ public class ZakazniciController implements Initializable {
 
     @FXML
     private void odebratAction(ActionEvent event) throws SQLException {
-        Zakaznik zakaznik = tableView.getSelectionModel().getSelectedItem();
-        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberZakaznikaProc(?)}");
-        cstmt.setInt(1, zakaznik.getId());
-        cstmt.execute();
-        loadData();
-        MainSceneController msc = new MainSceneController();
-        msc.aktivita(connection, MainSceneController.userName.get(), "ZAKAZNICI", "DELETE", new Date(System.currentTimeMillis()));
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            Zakaznik zakaznik = tableView.getSelectionModel().getSelectedItem();
+            CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberZakaznikaProc(?)}");
+            cstmt.setInt(1, zakaznik.getId());
+            cstmt.execute();
+            loadData();
+        } else {
+            MainSceneController.showDialog("Není vybrán prvek pro odebrání");
+        }
     }
 
     @FXML
@@ -274,7 +286,7 @@ public class ZakazniciController implements Initializable {
             }
             tableView.getItems().addAll(zakaznici);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
 
     }
@@ -283,10 +295,10 @@ public class ZakazniciController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
-        tfEmail.setText(null);
-        tfJmeno.setText(null);
-        tfPrijmeni.setText(null);
-        tfTelefon.setText(null);
+        tfEmail.setText("");
+        tfJmeno.setText("");
+        tfPrijmeni.setText("");
+        tfTelefon.setText("");
     }
 
 }

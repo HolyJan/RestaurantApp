@@ -82,9 +82,6 @@ public class AkceAdresyController implements Initializable {
                     cstmt.setString(4, pscText.getText());
                     cstmt.setString(5, mestoText.getText());
                     cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "ADRESY", "UPDATE", new Date(System.currentTimeMillis()));
-
                     System.out.println("aktualizace OK");
                 } else {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozAdresuProc(?,?,?,?)}");
@@ -93,14 +90,12 @@ public class AkceAdresyController implements Initializable {
                     cstmt.setString(3, pscText.getText());
                     cstmt.setString(4, mestoText.getText());
                     cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "ADRESY", "INSERT", new Date(System.currentTimeMillis()));
                     System.out.println("vložení OK");
                 }
                 Stage stage = (Stage) uliceText.getScene().getWindow();
                 stage.close();
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
     }

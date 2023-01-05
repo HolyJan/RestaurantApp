@@ -90,7 +90,7 @@ public class PoziceController implements Initializable {
             tableView.getItems().addAll(pozice);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -146,13 +146,15 @@ public class PoziceController implements Initializable {
 
     @FXML
     private void odebratAction(ActionEvent event) throws SQLException {
-        Pozice pozice = tableView.getSelectionModel().getSelectedItem();
-        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberPoziciProc(?)}");
-        cstmt.setInt(1, pozice.getIdPozice());
-        cstmt.execute();
-        loadData();
-        MainSceneController msc = new MainSceneController();
-        msc.aktivita(connection, MainSceneController.userName.get(), "POZICE", "DELETE", new Date(System.currentTimeMillis()));
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            Pozice pozice = tableView.getSelectionModel().getSelectedItem();
+            CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberPoziciProc(?)}");
+            cstmt.setInt(1, pozice.getIdPozice());
+            cstmt.execute();
+            loadData();
+        } else {
+            MainSceneController.showDialog("Není vybrán prvek pro odebrání");
+        }
     }
 
     @FXML
@@ -174,7 +176,7 @@ public class PoziceController implements Initializable {
             }
             tableView.getItems().addAll(pozice);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -182,6 +184,7 @@ public class PoziceController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
+        tfPozice.setText("");
     }
 
 }

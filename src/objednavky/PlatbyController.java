@@ -12,7 +12,9 @@ import java.net.URL;
 import java.sql.CallableStatement;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +77,8 @@ public class PlatbyController implements Initializable {
     private TextField tfNazevPolozky;
     @FXML
     private ComboBox<String> cbTypPlatby;
+    @FXML
+    private DatePicker dpDatumFunkce;
 
     /**
      * Initializes the controller class.
@@ -151,7 +155,7 @@ public class PlatbyController implements Initializable {
             cbTypPlatby.getItems().add("Kartou");
             tableView.getItems().addAll(platby);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -164,7 +168,7 @@ public class PlatbyController implements Initializable {
         sendDataViaController(fileLocation, loader);
         Scene mainScene = new Scene(parent);
         stage.setScene(mainScene);
-        stage.show();
+        stage.showAndWait();
     }
 
     private void sendDataViaController(String fileLocation, FXMLLoader loader) {
@@ -176,7 +180,7 @@ public class PlatbyController implements Initializable {
             try {
                 controllerAkcePlatby.setData(platba);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
 
@@ -213,16 +217,18 @@ public class PlatbyController implements Initializable {
 
     @FXML
     private void odebratAction(ActionEvent event) {
-        Platba platba = tableView.getSelectionModel().getSelectedItem();
-        try {
-            CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberPlatbuProc(?)}");
-            cstmt.setInt(1, platba.getIdPlatby());
-            cstmt.execute();
-            MainSceneController msc = new MainSceneController();
-            msc.aktivita(connection, MainSceneController.userName.get(), "PLATBY", "DELETE", new Date(System.currentTimeMillis()));
-            loadData();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            Platba platba = tableView.getSelectionModel().getSelectedItem();
+            try {
+                CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberPlatbuProc(?)}");
+                cstmt.setInt(1, platba.getIdPlatby());
+                cstmt.execute();
+                loadData();
+            } catch (Exception e) {
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
+            }
+        } else {
+            MainSceneController.showDialog("Není vybrán prvek pro odebrání");
         }
     }
 
@@ -260,7 +266,7 @@ public class PlatbyController implements Initializable {
             }
             tableView.getItems().addAll(platby);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -268,10 +274,48 @@ public class PlatbyController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
-        tfCastka.setText(null);
-        tfCisloKarty.setText(null);
-        tfNazevPolozky.setText(null);
-        tfTypPlatby.setText(null);
+        tfCastka.setText("");
+        cbTypPlatby.setValue("");
+    }
+
+    @FXML
+    private void zabrazTrzbyKartouAction(ActionEvent event) throws SQLException {
+        java.util.Date utilDate = null;
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yy");
+        String date = null;
+        if (dpDatumFunkce.getValue() != null) {
+            utilDate = new java.util.Date(Date.valueOf(dpDatumFunkce.getValue()).getTime());
+            date = DATE_FORMAT.format(utilDate);
+        }
+        if (date == null) {
+            MainSceneController.showError("Není vybrán datum!");
+        } else {
+            CallableStatement cs = this.connection.getConnection().prepareCall("{? = call trzby_kartou(?)}");
+            cs.registerOutParameter(1, Types.INTEGER);
+            cs.setString(2, date);
+            cs.executeUpdate();
+            MainSceneController.showDialog("Tržby od " + date + " placené kartou jsou: " + cs.getInt(1) + "Kč");
+        }
+    }
+
+    @FXML
+    private void zobrazTrzbyHotoveAction(ActionEvent event) throws SQLException {
+        java.util.Date utilDate = null;
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yy");
+        String date = null;
+        if (dpDatumFunkce.getValue() != null) {
+            utilDate = new java.util.Date(Date.valueOf(dpDatumFunkce.getValue()).getTime());
+            date = DATE_FORMAT.format(utilDate);
+        }
+        if (date == null) {
+            MainSceneController.showError("Není vybrán datum!");
+        } else {
+            CallableStatement cs = this.connection.getConnection().prepareCall("{? = call trzby_hotove(?)}");
+            cs.registerOutParameter(1, Types.INTEGER);
+            cs.setString(2, date);
+            cs.executeUpdate();
+            MainSceneController.showDialog("Tržby od " + date + " placené hotově jsou: " + cs.getInt(1) + "Kč");
+        }
     }
 
 }

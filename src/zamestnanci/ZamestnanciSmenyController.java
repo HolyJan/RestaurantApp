@@ -91,12 +91,13 @@ public class ZamestnanciSmenyController implements Initializable {
             ResultSet result = statement.executeQuery("SELECT * FROM SMENY_VIEW WHERE ID_SMENA =" + smenaId);
             while (result.next()) {
                 zamestnanci.add(new Zamestnanec(result.getInt("ID_ZAMESTNANCE"), result.getString("JMENO"),
-                        result.getString("PRIJMENI"), result.getString("TELEFON"), result.getInt("ID_POZICE"), result.getString("POZICE")));
+                        result.getString("PRIJMENI"), result.getString("TELEFON"),
+                        result.getInt("ID_POZICE"), result.getString("POZICE"), 0));
             }
             tableView.getItems().addAll(zamestnanci);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
 
         zamestnanciVse.clear();
@@ -104,12 +105,13 @@ public class ZamestnanciSmenyController implements Initializable {
             ResultSet result = statement.executeQuery("SELECT * FROM ZAMESTNANCI_VIEW");
             while (result.next()) {
                 zamestnanciVse.add(new Zamestnanec(result.getInt("ID_ZAMESTNANCE"), result.getString("JMENO"),
-                        result.getString("PRIJMENI"), result.getString("TELEFON"), result.getInt("ID_POZICE"), result.getString("NAZEV")));
+                        result.getString("PRIJMENI"), result.getString("TELEFON"), result.getInt("ID_POZICE"),
+                        result.getString("NAZEV"), 0));
             }
             comboZamestnanci.getItems().addAll(zamestnanciVse);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -124,8 +126,6 @@ public class ZamestnanciSmenyController implements Initializable {
                 cstmt1.setInt(1, smenaId);
                 cstmt1.setInt(2, comboZamestnanci.getValue().getId());
                 cstmt1.execute();
-                MainSceneController msc = new MainSceneController();
-                msc.aktivita(connection, MainSceneController.userName.get(), "SMENY_ZAMESTN", "INSERT", new Date(System.currentTimeMillis()));
 
             } else {
                 MainSceneController.showError("Na této směně je jíž zameěstnanec zapsán!");
@@ -141,11 +141,9 @@ public class ZamestnanciSmenyController implements Initializable {
             cstmt1.setInt(1, smenaId);
             cstmt1.setInt(2, tableView.getSelectionModel().getSelectedItem().getId());
             cstmt1.execute();
-            MainSceneController msc = new MainSceneController();
-            msc.aktivita(connection, MainSceneController.userName.get(), "SMENY_ZAMESTN", "DELETE", new Date(System.currentTimeMillis()));
             loadData();
 
-        }else{
+        } else {
             MainSceneController.showDialog("Není vybraný žádný řádek!");
         }
 

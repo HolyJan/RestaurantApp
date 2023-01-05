@@ -109,7 +109,8 @@ public class UzivateleController implements Initializable {
             ResultSet result = statement.executeQuery("SELECT * FROM UZIVATELE_VIEW");
             while (result.next()) {
                 if (result.getString("JMENO") != null) {
-                    uzivatele.add(new Uzivatel(result.getInt("ID_UZIVATELE"), result.getString("JMENO"), result.getString("PRIJMENI"), result.getString("LOGIN"),
+                    uzivatele.add(new Uzivatel(result.getInt("ID_UZIVATELE"), result.getString("JMENO"),
+                            result.getString("PRIJMENI"), result.getString("TELEFON"), result.getString("LOGIN"),
                             result.getString("HESLO"), new Role(result.getInt("ID_ROLE"), result.getString("ROLE"))));
                 }
             }
@@ -121,7 +122,7 @@ public class UzivateleController implements Initializable {
 
             tableView.getItems().addAll(uzivatele);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -149,7 +150,7 @@ public class UzivateleController implements Initializable {
                         uzivatel.getLogin(), uzivatel.getHeslo(),
                         uzivatel.getRole());
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
 
@@ -181,13 +182,15 @@ public class UzivateleController implements Initializable {
 
     @FXML
     private void odebratAction(ActionEvent event) throws SQLException {
-        Uzivatel uzivatel = tableView.getSelectionModel().getSelectedItem();
-        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberUzivateleProc(?)}");
-        cstmt.setInt(1, uzivatel.getIdUzivatele());
-        cstmt.execute();
-        loadData();
-        MainSceneController msc = new MainSceneController();
-        msc.aktivita(connection, MainSceneController.userName.get(), "UZIVATELE", "INSERT", new Date(System.currentTimeMillis()));
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            Uzivatel uzivatel = tableView.getSelectionModel().getSelectedItem();
+            CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberUzivateleProc(?)}");
+            cstmt.setInt(1, uzivatel.getIdUzivatele());
+            cstmt.execute();
+            loadData();
+        } else {
+            MainSceneController.showDialog("Není vybrán prvek pro odebrání");
+        }
     }
 
     public void setConnection(DatabaseConnection con) {
@@ -204,13 +207,13 @@ public class UzivateleController implements Initializable {
             MainSceneController.emulation = true;
             MainSceneController.userName.set(uzivatel.getLogin());
             MainSceneController.roleId.set(uzivatel.getRole().getIdRole());
+            MainSceneController.jmenoName.set(uzivatel.getJmeno());
+            MainSceneController.prijmeniName.set(uzivatel.getPrijmeni());
+            MainSceneController.telefon.set(uzivatel.getTelefon());
             Stage stage1 = (Stage) tableView.getScene().getWindow();
             stage1.close();
         } catch (DatabaseException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -239,7 +242,8 @@ public class UzivateleController implements Initializable {
             ResultSet result = (ResultSet) cs.getObject("o_cursor");
             while (result.next()) {
 
-                uzivatele.add(new Uzivatel(result.getInt("ID_UZIVATELE"), result.getString("JMENO"), result.getString("PRIJMENI"), result.getString("LOGIN"),
+                uzivatele.add(new Uzivatel(result.getInt("ID_UZIVATELE"), result.getString("JMENO"),
+                        result.getString("TELEFON"), result.getString("PRIJMENI"), result.getString("LOGIN"),
                         result.getString("HESLO"), new Role(result.getInt("ID_ROLE"), result.getString("ROLE"))));
 
             }
@@ -253,8 +257,8 @@ public class UzivateleController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
-        tfJmeno.setText(null);
-        tfLogin.setText(null);
-        tfPrijmeni.setText(null);
+        tfJmeno.setText("");
+        tfLogin.setText("");
+        tfPrijmeni.setText("");
     }
 }

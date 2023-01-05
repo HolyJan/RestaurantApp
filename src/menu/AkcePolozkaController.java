@@ -191,7 +191,7 @@ public class AkcePolozkaController implements Initializable {
             obrazekCombo.setItems(obrazkyList);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -216,8 +216,6 @@ public class AkcePolozkaController implements Initializable {
                     cstmt.setInt(4, idMenu);
                     cstmt.setInt(5, idObrazku);
                     cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "POLOZKY_MENU", "INSERT", new Date(System.currentTimeMillis()));
                     this.polozka = new Polozka(idPolozky, nazevText.getText(),
                             Integer.parseInt(cenaText.getText()),
                             receptCombo.getValue(),
@@ -233,8 +231,6 @@ public class AkcePolozkaController implements Initializable {
                     cstmt.setInt(5, idMenu);
                     cstmt.setInt(6, idObrazku);
                     cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "POLOZKY_MENU", "UPDATE", new Date(System.currentTimeMillis()));
                     polozka.setIdPolozky(idPolozky);
                     polozka.setNazevPolozky(nazevText.getText());
                     polozka.setCenaPolozky(Integer.parseInt(cenaText.getText()));
@@ -248,8 +244,10 @@ public class AkcePolozkaController implements Initializable {
                 ctrl.tableView.getSelectionModel().select(polozka);
                 ctrl.updatImageView();
             } catch (NumberFormatException | SQLException e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
+        }else{
+            MainSceneController.showError("Vyplňte všechna pole!");
         }
     }
 
@@ -335,7 +333,7 @@ public class AkcePolozkaController implements Initializable {
                 this.obrazkyList.remove(obrazekCombo.getValue());
                 ctrl.updateData();
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         } else {
             showError("Vyber obrázek, který chceš odstranit");

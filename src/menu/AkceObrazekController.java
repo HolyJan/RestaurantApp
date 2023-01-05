@@ -12,8 +12,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.sql.Blob;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -97,7 +95,7 @@ public class AkceObrazekController implements Initializable {
                     imageView.setImage(new Image(image));
                 }
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
 
         }
@@ -118,8 +116,6 @@ public class AkceObrazekController implements Initializable {
                         pstmt.setString(3, pripona);
                         pstmt.setString(4, nazevObrazku);
                         pstmt.execute();
-                        MainSceneController msc = new MainSceneController();
-                        msc.aktivita(connection, MainSceneController.userName.get(), "OBRAZKY_MENU", "INSERT", new Date(System.currentTimeMillis()));
                         result = statement.executeQuery("SELECT obrazky_id_obrazku_seq.currval as id FROM dual");
                         result.next();
                         System.out.println(result.getInt("id"));
@@ -133,24 +129,22 @@ public class AkceObrazekController implements Initializable {
                         pstmt.setString(4, pripona);
                         pstmt.setString(5, nazevObrazku);
                         pstmt.execute();
-                        MainSceneController msc = new MainSceneController();
-                        msc.aktivita(connection, MainSceneController.userName.get(), "OBRAZKY_MENU", "UPDATE", new Date(System.currentTimeMillis()));
                         obrazek.setNazev(nazevObrazku);
                         obrazek.setObrazek(new Image(newImage));
                     }
 
                 } else {
-                    showError("Tento název má jíž jiný obrázek. Zvolte jiný!");
+                    MainSceneController.showError("Tento název má jíž jiný obrázek. Zvolte jiný!");
                     throw new SQLException();
                 }
                 Stage stage = (Stage) potvrditBut.getScene().getWindow();
                 stage.close();
             } else {
-                showError("Obrázek není načtený nebo název není vyplněn!");
+                MainSceneController.showError("Obrázek není načtený nebo název není vyplněn!");
                 throw new SQLException();
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
 
     }
@@ -163,12 +157,5 @@ public class AkceObrazekController implements Initializable {
         this.obrazky = obrazky;
     }
 
-    private void showError(String message) {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("Chyba");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
 }

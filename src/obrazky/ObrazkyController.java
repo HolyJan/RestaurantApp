@@ -113,7 +113,7 @@ public class ObrazkyController implements Initializable {
             tableView.getItems().addAll(obrazky);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -170,16 +170,18 @@ public class ObrazkyController implements Initializable {
 
     @FXML
     private void odebratAction(ActionEvent event) {
-        Obrazek obrazek = tableView.getSelectionModel().getSelectedItem();
-        try {
-            CallableStatement cstmt = connection.getConnection().prepareCall("{call deleteObrazekProc(?)}");
-            cstmt.setInt(1, obrazek.getIdObrazku());
-            cstmt.execute();
-            loadData();
-            MainSceneController msc = new MainSceneController();
-            msc.aktivita(connection, MainSceneController.userName.get(), "OBRAZKY_MENU", "DELETE", new Date(System.currentTimeMillis()));
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            Obrazek obrazek = tableView.getSelectionModel().getSelectedItem();
+            try {
+                CallableStatement cstmt = connection.getConnection().prepareCall("{call deleteObrazekProc(?)}");
+                cstmt.setInt(1, obrazek.getIdObrazku());
+                cstmt.execute();
+                loadData();
+            } catch (SQLException e) {
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
+            }
+        } else {
+            MainSceneController.showDialog("Není vybrán prvek pro odebrání");
         }
     }
 
@@ -209,7 +211,7 @@ public class ObrazkyController implements Initializable {
             }
             tableView.getItems().addAll(obrazky);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -217,7 +219,7 @@ public class ObrazkyController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
-        tfNazev.setText(null);
-        tfPripona.setText(null);
+        tfNazev.setText("");
+        tfPripona.setText("");
     }
 }

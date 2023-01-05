@@ -122,7 +122,7 @@ public class AkceObjednavkaController implements Initializable {
             vyzvednutiCombo.setItems(zpusobyVyzvednuti);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -156,15 +156,10 @@ public class AkceObjednavkaController implements Initializable {
                     cstmt.setInt(4, idDor);
                     cstmt.setInt(5, 3);
                     cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "OBJEDNAVKY", "UPDATE", new Date(System.currentTimeMillis()));
-
                     CallableStatement cstmt1 = connection.getConnection().prepareCall("{call updateObjednavky_polozkyProc(?,?)}");
                     cstmt1.setInt(1, idObjednavky);
                     cstmt1.setInt(2, idPol);
                     cstmt1.execute();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "OBJEDNAVKY_POLOZKY", "UPDATE", new Date(System.currentTimeMillis()));
-
                     System.out.println("aktualizace OK");
                 } else {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozObjednavkuProc(?,?,?,?)}");
@@ -173,9 +168,6 @@ public class AkceObjednavkaController implements Initializable {
                     cstmt.setInt(3, idDor);
                     cstmt.setInt(4, 3);
                     cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "OBJEDNAVKY", "INSERT", new Date(System.currentTimeMillis()));
-
                     ResultSet result3 = statement.executeQuery("SELECT * FROM objednavky WHERE id_objednavky = (SELECT MAX(id_objednavky) FROM objednavky)");
                     result3.next();
                     int idObjedn = result3.getInt("ID_OBJEDNAVKY");
@@ -184,12 +176,11 @@ public class AkceObjednavkaController implements Initializable {
                     cstmt1.setInt(1, idObjedn);
                     cstmt1.setInt(2, idPol);
                     cstmt1.execute();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "OBJEDNAVKY_POLOZKY", "INSERT", new Date(System.currentTimeMillis()));
                 }
                 Stage stage = (Stage) zakaznikCombo.getScene().getWindow();
                 stage.close();
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
 
         }

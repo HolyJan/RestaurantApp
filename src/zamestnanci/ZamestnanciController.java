@@ -103,7 +103,8 @@ public class ZamestnanciController implements Initializable {
             ResultSet result = statement.executeQuery("SELECT * FROM ZAMESTNANCI_VIEW");
             while (result.next()) {
                 zamestnanci.add(new Zamestnanec(result.getInt("ID_ZAMESTNANCE"), result.getString("JMENO"),
-                        result.getString("PRIJMENI"), result.getString("TELEFON"), result.getInt("ID_POZICE"), result.getString("NAZEV")));
+                        result.getString("PRIJMENI"), result.getString("TELEFON"),
+                        result.getInt("ID_POZICE"), result.getString("NAZEV"), result.getInt("ID_NADRIZENEHO")));
                 if (!cbPozice.getItems().contains(result.getString("NAZEV"))) {
                     cbPozice.getItems().add(result.getString("NAZEV"));
                 }
@@ -111,7 +112,7 @@ public class ZamestnanciController implements Initializable {
             tableView.getItems().addAll(zamestnanci);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -139,10 +140,29 @@ public class ZamestnanciController implements Initializable {
                         zamestnanec.getTelefon(), zamestnanec.getIdPozice(),
                         zamestnanec.getPozice());
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
 
+    }
+
+    private void openANewView2(ActionEvent event, String fileLocation, DatabaseConnection conn) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getClassLoader().getResource(fileLocation));
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        Parent parent = loader.load();
+        sendDataViaController2(fileLocation, loader);
+        Scene mainScene = new Scene(parent);
+        stage.setScene(mainScene);
+        stage.showAndWait();
+    }
+
+    private void sendDataViaController2(String fileLocation, FXMLLoader loader) {
+        loader.setLocation(getClass().getResource(fileLocation));
+        SmenyZamestnanceController controllerAkceZamestnance = loader.getController();
+        controllerAkceZamestnance.setConnection(connection);
+        controllerAkceZamestnance.setIdZamestnance(tableView.getSelectionModel().getSelectedItem().getId());
     }
 
     @FXML
@@ -169,13 +189,15 @@ public class ZamestnanciController implements Initializable {
 
     @FXML
     private void odebratAction(ActionEvent event) throws SQLException {
-        Zamestnanec zamestnanec = tableView.getSelectionModel().getSelectedItem();
-        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberZamestnanceProc(?)}");
-        cstmt.setInt(1, zamestnanec.getId());
-        cstmt.execute();
-        MainSceneController msc = new MainSceneController();
-        msc.aktivita(connection, MainSceneController.userName.get(), "ZAMESTNANCI", "DELETE", new Date(System.currentTimeMillis()));
-        loadData();
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            Zamestnanec zamestnanec = tableView.getSelectionModel().getSelectedItem();
+            CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberZamestnanceProc(?)}");
+            cstmt.setInt(1, zamestnanec.getId());
+            cstmt.execute();
+            loadData();
+        } else {
+            MainSceneController.showDialog("Není vybrán zaměstnanec, kterého chcete odebrat");
+        }
     }
 
     @FXML
@@ -187,8 +209,9 @@ public class ZamestnanciController implements Initializable {
             if (tfPrijmeni.getText() == "") {
                 tfPrijmeni.setText(null);
             }
-            if (tfTelefon.getText() == "") {
-                tfTelefon.setText(null);
+            String telefon = null;
+            if (!tfTelefon.getText().isEmpty()) {
+                telefon = tfTelefon.getText();
             }
             zamestnanci.clear();
             tableView.getItems().clear();
@@ -196,18 +219,19 @@ public class ZamestnanciController implements Initializable {
             cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
             cs.setString("noveJmeno", tfJmeno.getText());
             cs.setString("novePrijmeni", tfPrijmeni.getText());
-            cs.setString("novyTelefon", tfTelefon.getText());
+            cs.setString("novyTelefon", telefon);
             cs.setString("novaPozice", cbPozice.getValue());
             cs.execute();
             ResultSet result = (ResultSet) cs.getObject("o_cursor");
             while (result.next()) {
                 zamestnanci.add(new Zamestnanec(result.getInt("ID_ZAMESTNANCE"), result.getString("JMENO"),
-                        result.getString("PRIJMENI"), result.getString("TELEFON"), result.getInt("ID_POZICE"), result.getString("NAZEV")));
+                        result.getString("PRIJMENI"), result.getString("TELEFON"),
+                        result.getInt("ID_POZICE"), result.getString("NAZEV"), result.getInt("ID_NADRIZENEHO")));
 
             }
             tableView.getItems().addAll(zamestnanci);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -215,8 +239,46 @@ public class ZamestnanciController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
-        tableView.getItems().addAll(zamestnanci);
+        cbPozice.setValue(null);
+        tfJmeno.setText("");
+        tfPrijmeni.setText("");
+        tfTelefon.setText("");
 
+    }
+
+    @FXML
+    private void zobrazNadrizenehoAction(ActionEvent event) {
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            try {
+                zamestnanci.clear();
+                int id = tableView.getSelectionModel().getSelectedItem().getId();
+                tableView.getItems().clear();
+                CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_ZAMESTNANCI_SEARCH.PRO_RETURN_NADRIZENE(?,?)}");
+                cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
+                cs.setInt("noveId", id);
+                cs.execute();
+                ResultSet result = (ResultSet) cs.getObject("o_cursor");
+                while (result.next()) {
+                    zamestnanci.add(new Zamestnanec(result.getInt("ID_ZAMESTNANCE"), result.getString("JMENO"),
+                            result.getString("PRIJMENI"), result.getString("TELEFON"),
+                            result.getInt("ID_POZICE"), result.getString("NAZEV"), result.getInt("ID_NADRIZENEHO")));
+                }
+                tableView.getItems().addAll(zamestnanci);
+            } catch (Exception e) {
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
+            }
+        } else {
+            MainSceneController.showDialog("Není vybrán zaměstnanec pro zobrazení nadřízených");
+        }
+    }
+
+    @FXML
+    private void zobrazSmenyAction(ActionEvent event) throws IOException {
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            openANewView2(event, "zamestnanci/SmenyZamestnance.fxml", connection);
+        } else {
+            MainSceneController.showDialog("Není vybrán zaměstnanec pro zobrazení směn");
+        }
     }
 
 }

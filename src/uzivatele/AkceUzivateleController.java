@@ -97,7 +97,7 @@ public class AkceUzivateleController implements Initializable {
             roleCombo.setItems(role);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -121,9 +121,6 @@ public class AkceUzivateleController implements Initializable {
                     cstmt.setString(5, hashedPassword);
                     cstmt.setInt(6, roleCombo.getValue().getIdRole());
                     cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "UZIVATELE", "UPDATE", new Date(System.currentTimeMillis()));
-
                     System.out.println("aktualizace OK");
                 } else {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozUzivateleProc(?,?,?,?,?)}");
@@ -133,14 +130,11 @@ public class AkceUzivateleController implements Initializable {
                     cstmt.setString(4, hashedPassword);
                     cstmt.setInt(5, roleCombo.getValue().getIdRole());
                     cstmt.execute();
-                    MainSceneController msc = new MainSceneController();
-                    msc.aktivita(connection, MainSceneController.userName.get(), "UZIVATELE", "INSERT", new Date(System.currentTimeMillis()));
-
                 }
                 Stage stage = (Stage) jmenoTextField.getScene().getWindow();
                 stage.close();
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
 
         }

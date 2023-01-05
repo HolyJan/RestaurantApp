@@ -61,8 +61,10 @@ public class MainSceneController implements Initializable {
     private Button loginBtn;
     public static BooleanProperty loggedIn;
     public static IntegerProperty roleId;
+    public static IntegerProperty userId;
     public static StringProperty userName;
     public static StringProperty jmenoName;
+    public static StringProperty telefon;
     public static StringProperty prijmeniName;
     public static StringProperty roleName;
     public static boolean emulation = false;
@@ -112,6 +114,7 @@ public class MainSceneController implements Initializable {
         roleId = new SimpleIntegerProperty();
         userName = new SimpleStringProperty();
         jmenoName = new SimpleStringProperty();
+        telefon = new SimpleStringProperty();
         prijmeniName = new SimpleStringProperty();
         roleName = new SimpleStringProperty();
         roleName.set("Neregistrovaný");
@@ -337,17 +340,6 @@ public class MainSceneController implements Initializable {
         openANewView(event, "menu/Recepty.fxml", connection);
     }
 
-    public void aktivita(DatabaseConnection connection, String username, String tabulka, String akce, Date datum) throws SQLException {
-        PreparedStatement pstmt = connection.getConnection().prepareStatement("{call vlozAktivituProc(?,?,?,?)}");
-        if (username == null) {
-            username = "Neregistrovany";
-        }
-        pstmt.setString(1, username);
-        pstmt.setString(2, tabulka);
-        pstmt.setString(3, akce);
-        pstmt.setDate(4, datum);
-        pstmt.execute();
-    }
 
     private void setVisible() {
         switch (roleId.get()) {

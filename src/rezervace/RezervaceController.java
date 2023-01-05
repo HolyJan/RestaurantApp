@@ -26,6 +26,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -67,8 +69,6 @@ public class RezervaceController implements Initializable {
     ObservableList<Stul> stoly = FXCollections.observableArrayList();
     ObservableList<Zakaznik> zakaznici = FXCollections.observableArrayList();
     @FXML
-    private TextField tfCas;
-    @FXML
     private TextField tfJmeno;
     @FXML
     private TextField tfPrijmeni;
@@ -76,6 +76,10 @@ public class RezervaceController implements Initializable {
     private TextField tfCisloStolu;
     @FXML
     private DatePicker dpDatum;
+    @FXML
+    private ComboBox<String> cbCas;
+    @FXML
+    private Button zobrazNadchRezBtn;
 
     /**
      * Initializes the controller class.
@@ -83,6 +87,13 @@ public class RezervaceController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        for (int i = 10; i < 22; i++) {
+            cbCas.getItems().add(i + ":00");
+            cbCas.getItems().add(i + ":30");
+        }
+        if(MainSceneController.roleId.get() == 1){
+            zobrazNadchRezBtn.setVisible(false);
+        }
         tfCisloStolu.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -147,8 +158,8 @@ public class RezervaceController implements Initializable {
             if (MainSceneController.roleId.get() == 1) {
                 rezervace.clear();
                 for (Rezervace r : rezervacePom) {
-                    if(r.getJmeno().equals(MainSceneController.jmenoName.get()) 
-                            && r.getPrijmeni().equals(MainSceneController.prijmeniName.get())){
+                    if (r.getJmeno().equals(MainSceneController.jmenoName.get())
+                            && r.getPrijmeni().equals(MainSceneController.prijmeniName.get())) {
                         rezervace.add(r);
                     }
                 }
@@ -156,7 +167,7 @@ public class RezervaceController implements Initializable {
 
             tableView.getItems().addAll(rezervace);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -216,13 +227,15 @@ public class RezervaceController implements Initializable {
 
     @FXML
     private void odebratAction(ActionEvent event) throws SQLException {
-        Rezervace rezervace = tableView.getSelectionModel().getSelectedItem();
-        CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberRezervaciProc(?)}");
-        cstmt.setInt(1, rezervace.getIdRezervace());
-        cstmt.execute();
-        loadData();
-        MainSceneController msc = new MainSceneController();
-        msc.aktivita(connection, MainSceneController.userName.get(), "REZERVACE", "DELETE", new Date(System.currentTimeMillis()));
+        if (tableView.getSelectionModel().getSelectedItem() != null) {
+            Rezervace rezervace = tableView.getSelectionModel().getSelectedItem();
+            CallableStatement cstmt = connection.getConnection().prepareCall("{call odeberRezervaciProc(?)}");
+            cstmt.setInt(1, rezervace.getIdRezervace());
+            cstmt.execute();
+            loadData();
+        } else {
+            MainSceneController.showDialog("Není vybrán prvek pro odebrání");
+        }
     }
 
     @FXML
@@ -286,16 +299,13 @@ public class RezervaceController implements Initializable {
             }
             tableView.getItems().addAll(rezervace1);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
     @FXML
     private void filtruj(ActionEvent event) {
         try {
-            if (tfCas.getText() == "") {
-                tfCas.setText(null);
-            }
             if (tfJmeno.getText() == "") {
                 tfJmeno.setText(null);
             }
@@ -330,7 +340,7 @@ public class RezervaceController implements Initializable {
             }
             CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_REZERVACE_SEARCH.PRO_RETURN_REZERVACE(?,?,?,?,?,?)}");
             cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
-            cs.setString("novyCas", tfCas.getText());
+            cs.setString("novyCas", cbCas.getValue());
             cs.setString("noveDatum", date);
             cs.setString("noveJmeno", tfJmeno.getText());
             cs.setString("novePrijmeni", tfPrijmeni.getText());
@@ -354,7 +364,7 @@ public class RezervaceController implements Initializable {
             }
             tableView.getItems().addAll(rezervace);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
@@ -362,10 +372,10 @@ public class RezervaceController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
-        tfCas.setText(null);
-        tfCisloStolu.setText(null);
-        tfJmeno.setText(null);
-        tfPrijmeni.setText(null);
+        cbCas.setValue("");
+        tfCisloStolu.setText("");
+        tfJmeno.setText("");
+        tfPrijmeni.setText("");
         dpDatum.setValue(null);
     }
 

@@ -41,7 +41,7 @@
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="26.0" prefWidth="60.0" text="Filtruj" />
-                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="25.0" prefWidth="74.0" text="Zobraz vše" />
+                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="26.0" prefWidth="84.0" text="Zobraz vše" />
                </children>
             </HBox>
          </children>

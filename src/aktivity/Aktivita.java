@@ -12,24 +12,14 @@ import java.sql.Date;
  * @author Notebook
  */
 public class Aktivita {
-    private String uzivatel;
     private String tabulka;
     private String akce;
     private Date datum;
 
-    public Aktivita(String uzivatel, String tabulka, String akce, Date datum) {
-        this.uzivatel = uzivatel;
+    public Aktivita(String tabulka, String akce, Date datum) {
         this.tabulka = tabulka;
         this.akce = akce;
         this.datum = datum;
-    }
-
-    public String getUzivatel() {
-        return uzivatel;
-    }
-
-    public void setUzivatel(String uzivatel) {
-        this.uzivatel = uzivatel;
     }
 
     public String getTabulka() {
@@ -55,6 +45,6 @@ public class Aktivita {
     public void setDatum(Date datum) {
         this.datum = datum;
     }
-    
+
     
 }

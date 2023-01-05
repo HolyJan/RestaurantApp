@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="543.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="objednavky.ObjednavkyController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="543.0" prefWidth="814.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="objednavky.ObjednavkyController">
    <children>
-      <TableView fx:id="tableView" layoutX="5.0" prefHeight="400.0" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="194.0" AnchorPane.topAnchor="0.0">
+      <TableView fx:id="tableView" layoutX="5.0" prefHeight="543.0" prefWidth="597.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="217.0" AnchorPane.topAnchor="0.0">
          <columns>
             <TableColumn fx:id="jmenoCol" prefWidth="101.0" text="Jméno" />
             <TableColumn fx:id="prijmeniCol" prefWidth="100.0" text="Příjmení" />
@@ -24,16 +24,16 @@
             <TableColumn fx:id="cenaCol" minWidth="3.0" prefWidth="61.0" text="Cena (Kč)" />
          </columns>
       </TableView>
-      <VBox alignment="TOP_CENTER" layoutX="641.0" layoutY="14.0" prefHeight="212.0" prefWidth="100.0" spacing="10.0" AnchorPane.rightAnchor="49.0" AnchorPane.topAnchor="14.0">
+      <VBox alignment="TOP_CENTER" layoutX="641.0" layoutY="14.0" prefHeight="228.0" prefWidth="100.0" spacing="10.0" AnchorPane.rightAnchor="49.0" AnchorPane.topAnchor="14.0">
          <children>
             <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
             <Button mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />
-            <Button mnemonicParsing="false" onAction="#upravitAction" text="Upravit" />
-            <Button mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
-            <Button mnemonicParsing="false" onAction="#objednavkyPredemDomuAction" text="Zobraz objednávky předem domů" textAlignment="CENTER" wrapText="true" />
+            <Button fx:id="upravitBtn" mnemonicParsing="false" onAction="#upravitAction" text="Upravit" />
+            <Button fx:id="odebratBtn" mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
+            <Button fx:id="zobrazObjednavkyBtn" mnemonicParsing="false" onAction="#objednavkyPredemDomuAction" prefHeight="79.0" prefWidth="100.0" text="Zobraz objednávky předem domů" textAlignment="CENTER" wrapText="true" />
          </children>
       </VBox>
-      <VBox layoutX="606.0" layoutY="241.0" prefHeight="242.0" prefWidth="169.0" spacing="10.0">
+      <VBox layoutX="630.0" layoutY="242.0" prefHeight="278.0" prefWidth="186.0" spacing="10.0" AnchorPane.bottomAnchor="23.0" AnchorPane.rightAnchor="14.0">
          <children>
             <Label text="Filtr:">
                <font>
@@ -82,7 +82,7 @@
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="26.0" prefWidth="80.0" text="Filtruj" />
-                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="25.0" prefWidth="74.0" text="Zobraz vše" />
+                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="26.0" prefWidth="96.0" text="Zobraz vše" />
                </children>
             </HBox>
          </children>
