@@ -32,6 +32,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import menu.Recept;
+import oracle.jdbc.OracleTypes;
 import uzivatele.AkceUzivateleController;
 import uzivatele.Role;
 import uzivatele.Uzivatel;
@@ -162,7 +164,7 @@ public class StolyController implements Initializable {
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
         if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
-            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!");;
         } else {
             openANewView(event, "rezervace/AkceStoly.fxml", connection);
         }
@@ -182,12 +184,38 @@ public class StolyController implements Initializable {
 
     @FXML
     private void filtruj(ActionEvent event) {
+        try {
+            if (tfCisloStolu.getText() == "") {
+                tfCisloStolu.setText(null);
+            }
+            if (tfPocetMist.getText() == "") {
+                tfPocetMist.setText(null);
+            }
+
+            stoly.clear();
+            tableView.getItems().clear();
+            CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_STOLY_SEARCH.PRO_RETURN_STOLY(?,?,?)}");
+            cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
+            cs.setString("noveCislo", tfCisloStolu.getText());
+            cs.setString("novyPocet", tfPocetMist.getText());
+            cs.execute();
+            ResultSet result = (ResultSet) cs.getObject("o_cursor");
+            while (result.next()) {
+
+                if (result.getInt("POCET_MIST") != 0) {
+                    stoly.add(new Stul(result.getInt("ID_STUL"), result.getInt("CISLO_STOLU"), result.getInt("POCET_MIST")));
+                }
+            }
+            tableView.getItems().addAll(stoly);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @FXML
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
-        tableView.getItems().addAll(stoly);
+        loadData();
     }
 
 }

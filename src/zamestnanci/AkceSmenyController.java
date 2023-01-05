@@ -28,6 +28,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import menu.Recept;
 
@@ -38,7 +39,6 @@ import menu.Recept;
  */
 public class AkceSmenyController implements Initializable {
 
-    @FXML
     private ComboBox<Zamestnanec> zamestnanecCombo;
     @FXML
     private AnchorPane pane;
@@ -50,11 +50,12 @@ public class AkceSmenyController implements Initializable {
     @FXML
     private DatePicker datePicker;
     @FXML
-    private ComboBox<Smena> smenaCombo;
+    private ComboBox<String> smenaCombo;
     @FXML
     private Button potvrditBut;
     int idZamestnance = -1;
     int oldIdSmena;
+    private HBox hbox;
 
     /**
      * Initializes the controller class.
@@ -62,6 +63,9 @@ public class AkceSmenyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        smenaCombo.getItems().add("Ranní");
+        smenaCombo.getItems().add("Odpolední");
+
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -77,17 +81,23 @@ public class AkceSmenyController implements Initializable {
     private void potvrditAction(ActionEvent event) {
 
         try {
-            if (datePicker.getValue() != null && smenaCombo.getValue() != null && zamestnanecCombo.getValue() != null) {
+            if (datePicker.getValue() != null && smenaCombo.getValue() != null) {
                 Statement statement = connection.createBlockedStatement();
                 if (idZamestnance == -1) {
                     SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yy");
                     java.util.Date utilDate = new java.util.Date(Date.valueOf(datePicker.getValue()).getTime());
-                    CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozSmenu_zamestnProc(?,?)}");
                     ResultSet result = statement.executeQuery("SELECT * FROM SMENY_VIEW WHERE datum='" + DATE_FORMAT.format(utilDate) + "' "
                             + "AND smena='" + smenaCombo.getValue() + "'");
                     if (!result.next()) {
-                        CallableStatement cstmt1 = connection.getConnection().prepareCall("{call vlozSmenuProc(?,?)}");
-                        cstmt1.setString(1, smenaCombo.getValue().getSmena());
+                        CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozSmenuProc(?,?)}");
+                        cstmt.setString(1, smenaCombo.getValue());
+                        cstmt.setDate(2, Date.valueOf(datePicker.getValue()));
+                        cstmt.execute();
+                    }else{
+                        MainSceneController.showError("Tato směna je jíž v tabulce");
+                    }
+                    /*     CallableStatement cstmt1 = connection.getConnection().prepareCall("{call vlozSmenuProc(?,?)}");
+                        cstmt1.setString(1, smenaCombo.getValue());
                         cstmt1.setDate(2, Date.valueOf(datePicker.getValue()));
                         cstmt1.execute();
                         MainSceneController msc = new MainSceneController();
@@ -112,12 +122,12 @@ public class AkceSmenyController implements Initializable {
                             MainSceneController msc = new MainSceneController();
                             msc.aktivita(connection, MainSceneController.userName.get(), "SMENY_ZAMESTN", "INSERT", new Date(System.currentTimeMillis()));
                         }
-                    }
+                    }*/
                 } else {
-                    CallableStatement cstmt = connection.getConnection().prepareCall("{call updateSmenu_zamestnProc(?,?,?)}");
-                    cstmt.setInt(1, oldIdSmena);
-                    cstmt.setInt(2, smenaCombo.getValue().getId());
-                    cstmt.setInt(3, zamestnanecCombo.getValue().getId());
+                    CallableStatement cstmt = connection.getConnection().prepareCall("{call updateSmenu_Proc(?,?,?)}");
+                    cstmt.setString(1, smenaCombo.getValue());
+                    cstmt.setInt(2, oldIdSmena);
+                    cstmt.setDate(3, Date.valueOf(datePicker.getValue()));
                     cstmt.execute();
                     MainSceneController msc = new MainSceneController();
                     msc.aktivita(connection, MainSceneController.userName.get(), "SMENY_ZAMESTN", "UPDATE", new Date(System.currentTimeMillis()));
@@ -153,11 +163,7 @@ public class AkceSmenyController implements Initializable {
                     smeny.add(smena);
                 }
             } else {
-                smeny.add(new Smena(0, "Ranní", null, 0, "", "", "", 0, ""));
-                smeny.add(new Smena(0, "Odpolední", null, 0, "", "", "", 0, ""));
             }
-            zamestnanecCombo.setItems(zamestnanci);
-            smenaCombo.setItems(smeny);
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -170,11 +176,10 @@ public class AkceSmenyController implements Initializable {
 
     public void setData(Smena smena, int idZamestn, String jmeno, String prijmeni, String telefon, int idPoz, String pozice) {
         idZamestnance = idZamestn;
-        smenaCombo.setValue(smena);
+        smenaCombo.setValue(smena.getSmena());
         datePicker.setValue(smena.getDatum().toLocalDate());
         Zamestnanec zamestan = new Zamestnanec(idZamestn, jmeno, prijmeni, telefon, idPoz, pozice);
-        zamestnanecCombo.setValue(zamestan);
-        datePicker.setDisable(true);
+        //zamestnanecCombo.setValue(zamestan);
         oldIdSmena = smena.getId();
 
     }

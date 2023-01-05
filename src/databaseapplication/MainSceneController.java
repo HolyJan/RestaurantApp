@@ -111,7 +111,7 @@ public class MainSceneController implements Initializable {
         userName = new SimpleStringProperty();
         roleName = new SimpleStringProperty();
         roleName.set("Neregistrovaný");
-        roleId.set(0);
+        roleId.set(3);
         setVisible();
         loggedIn.addListener(new ChangeListener<Boolean>() {
             @Override

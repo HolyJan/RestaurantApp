@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -61,14 +62,8 @@
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
-                  <Label text="Heslo" />
-                  <TextField fx:id="tfHeslo" prefHeight="25.0" prefWidth="80.0" />
-               </children>
-            </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
-               <children>
                   <Label text="Role" />
-                  <TextField fx:id="tfRole" prefHeight="25.0" prefWidth="80.0" />
+                  <ComboBox fx:id="cbRole" prefHeight="25.0" prefWidth="80.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">

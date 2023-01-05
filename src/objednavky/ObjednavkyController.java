@@ -28,6 +28,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -35,6 +36,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import menu.Recept;
+import oracle.jdbc.OracleTypes;
 import zakaznici.Adresa;
 import zakaznici.Zakaznik;
 
@@ -60,6 +63,7 @@ public class ObjednavkyController implements Initializable {
     @FXML
     private TableColumn<Objednavka, String> cenaCol;
 
+    List<Zakaznik> zakaznicci = new ArrayList<>();
     DatabaseConnection connection;
     ObservableList<Objednavka> objednavky = FXCollections.observableArrayList();
     boolean init;
@@ -71,13 +75,13 @@ public class ObjednavkyController implements Initializable {
     @FXML
     private TextField tfPrijmeni;
     @FXML
-    private TextField tfCasObjednani;
-    @FXML
-    private TextField tfVyzvednuti;
-    @FXML
     private TextField tfNazevPolozky;
     @FXML
     private TextField tfCena;
+    @FXML
+    private ComboBox<String> cbCasObjednani;
+    @FXML
+    private ComboBox<String> cbVyzvednuti;
 
     /**
      * Initializes the controller class.
@@ -118,11 +122,21 @@ public class ObjednavkyController implements Initializable {
 
     private void loadData() {
         objednavky.clear();
+        cbCasObjednani.getItems().clear();
+        cbVyzvednuti.getItems().clear();
+
         tableView.getItems().clear();
         Statement statement = connection.createBlockedStatement();
         try {
+            ResultSet result10 = statement.executeQuery("SELECT * FROM ZPUSOBY_VYZVEDNUTI");
+            while (result10.next()) {
+                cbVyzvednuti.getItems().add(result10.getString("NAZEV"));
+            }
+
+            cbCasObjednani.getItems().add("Předem");
+            cbCasObjednani.getItems().add("Na místě");
+
             ResultSet result1 = statement.executeQuery("SELECT * FROM Zakaznici_view");
-            List<Zakaznik> zakaznicci = new ArrayList<>();
             while (result1.next()) {
                 zakaznicci.add(new Zakaznik(result1.getInt("ID_ZAKAZNIKA"), result1.getString("JMENO"),
                         result1.getString("PRIJMENI"), result1.getString("TELEFON"), result1.getString("EMAIL"),
@@ -199,7 +213,7 @@ public class ObjednavkyController implements Initializable {
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
         if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
-            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!");;
         } else {
             openANewView(event, "objednavky/akceObjednavka.fxml", connection);
         }
@@ -271,11 +285,52 @@ public class ObjednavkyController implements Initializable {
 
     @FXML
     private void filtruj(ActionEvent event) {
+        try {
+            if (tfJmeno.getText() == "") {
+                tfJmeno.setText(null);
+            }
+            if (tfPrijmeni.getText() == "") {
+                tfPrijmeni.setText(null);
+            }
+            if (tfCena.getText() == "") {
+                tfCena.setText(null);
+            }
+            if (tfNazevPolozky.getText() == "") {
+                tfNazevPolozky.setText(null);
+            }
+            objednavky.clear();
+            tableView.getItems().clear();
+            CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_OBJEDNAVKY_SEARCH.PRO_RETURN_OBJEDNAVKY(?,?,?,?,?,?,?)}");
+            cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
+            cs.setString("noveJmeno", tfJmeno.getText());
+            cs.setString("novePrijmeni", tfPrijmeni.getText());
+            cs.setString("novyCas", cbCasObjednani.getValue());
+            cs.setString("noveDoruceni", cbVyzvednuti.getValue());
+            cs.setString("novyNazev", tfNazevPolozky.getText());
+            cs.setString("novaCena", tfCena.getText());
+            cs.execute();
+            ResultSet result = (ResultSet) cs.getObject("o_cursor");
+
+            while (result.next()) {
+                for (Zakaznik zakaznik : zakaznicci) {
+                    if (zakaznik.getId() == result.getInt("ID_ZAKAZNIKA")) {
+                        objednavky.add(new Objednavka(result.getInt("ID_OBJEDNAVKY"), zakaznik,
+                                result.getInt("ID_DORUCENI"), result.getString("CAS_OBJEDNANI"),
+                                result.getString("DORUCENI"), result.getInt("ID_POLOZKY"),
+                                result.getString("NAZEV_POLOZKY"), result.getInt("CENA")));
+                    }
+                }
+
+            }
+            tableView.getItems().addAll(objednavky);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @FXML
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
-        tableView.getItems().addAll(objednavky);
+        loadData();
     }
 }

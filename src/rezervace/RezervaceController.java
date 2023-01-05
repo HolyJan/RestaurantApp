@@ -15,6 +15,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,6 +28,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -33,6 +36,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import menu.Recept;
+import oracle.jdbc.OracleTypes;
 import uzivatele.AkceUzivateleController;
 import uzivatele.Role;
 import uzivatele.Uzivatel;
@@ -70,13 +75,13 @@ public class RezervaceController implements Initializable {
     @FXML
     private TextField tfCas;
     @FXML
-    private TextField tfDatum;
-    @FXML
     private TextField tfJmeno;
     @FXML
     private TextField tfPrijmeni;
     @FXML
     private TextField tfCisloStolu;
+    @FXML
+    private DatePicker dpDatum;
 
     /**
      * Initializes the controller class.
@@ -195,7 +200,7 @@ public class RezervaceController implements Initializable {
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
         if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
-            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!");;
         } else {
             openANewView(event, "rezervace/AkceRezervace.fxml", connection);
         }
@@ -257,8 +262,8 @@ public class RezervaceController implements Initializable {
                     Date datum = result3.getDate("DATUM");
                     int cisloStolu = result3.getInt("CISLO_STOLU");
                     SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-                    if (result3.getString("CAS").equals(rezervace2.getCas()) && 
-                            f.format(result3.getDate("DATUM")).equals(f.format(rezervace2.getDatum()))) {
+                    if (result3.getString("CAS").equals(rezervace2.getCas())
+                            && f.format(result3.getDate("DATUM")).equals(f.format(rezervace2.getDatum()))) {
                         for (Zakaznik zakaznik : zakaznici) {
                             if (result3.getString("PRIJMENI").equals(zakaznik.getPrijmeni()) && result3.getString("JMENO").equals(zakaznik.getJmeno())) {
                                 for (Stul stul : stoly) {
@@ -280,12 +285,76 @@ public class RezervaceController implements Initializable {
 
     @FXML
     private void filtruj(ActionEvent event) {
+        try {
+            if (tfCas.getText() == "") {
+                tfCas.setText(null);
+            }
+            if (tfJmeno.getText() == "") {
+                tfJmeno.setText(null);
+            }
+            if (tfPrijmeni.getText() == "") {
+                tfPrijmeni.setText(null);
+            }
+            if (tfCisloStolu.getText() == "") {
+                tfCisloStolu.setText(null);
+            }
+
+            rezervace.clear();
+            tableView.getItems().clear();
+            Statement statement = connection.createBlockedStatement();
+            ResultSet result1 = statement.executeQuery("SELECT * FROM ZAKAZNICI_VIEW");
+            while (result1.next()) {
+                zakaznici.add(new Zakaznik(result1.getInt("ID_ZAKAZNIKA"), result1.getString("JMENO"),
+                        result1.getString("PRIJMENI"), result1.getString("TELEFON"), result1.getString("EMAIL"), null));
+            }
+
+            ResultSet result2 = statement.executeQuery("SELECT * FROM STOLY_VIEW");
+            while (result2.next()) {
+                stoly.add(new Stul(result2.getInt("ID_STUL"), result2.getInt("CISLO_STOLU"),
+                        result2.getInt("POCET_MIST")));
+            }
+
+            java.util.Date utilDate = null;
+            SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yy");
+            String date = null;
+            if (dpDatum.getValue() != null) {
+                utilDate = new java.util.Date(Date.valueOf(dpDatum.getValue()).getTime());
+                date = DATE_FORMAT.format(utilDate);
+            }
+            CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_REZERVACE_SEARCH.PRO_RETURN_REZERVACE(?,?,?,?,?,?)}");
+            cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
+            cs.setString("novyCas", tfCas.getText());
+            cs.setString("noveDatum", date);
+            cs.setString("noveJmeno", tfJmeno.getText());
+            cs.setString("novePrijmeni", tfPrijmeni.getText());
+            cs.setString("noveCislo", tfCisloStolu.getText());
+            cs.execute();
+            ResultSet result3 = (ResultSet) cs.getObject("o_cursor");
+            while (result3.next()) {
+                for (Zakaznik zakaznik : zakaznici) {
+                    if (result3.getInt("ID_ZAKAZNIKA") == zakaznik.getId()) {
+                        for (Stul stul : stoly) {
+                            if (result3.getInt("CISLO_STOLU") == stul.getCisloStolu()) {
+                                rezervace.add(new Rezervace(result3.getInt("ID_REZERVACE"),
+                                        result3.getString("CAS"), result3.getDate("DATUM"), zakaznik, stul));
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+            }
+            tableView.getItems().addAll(rezervace);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @FXML
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
-        tableView.getItems().addAll(rezervace);
+        loadData();
     }
 
 }

@@ -8,11 +8,14 @@ package aktivity;
 import connection.DatabaseConnection;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.CallableStatement;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -32,10 +35,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import oracle.jdbc.OracleTypes;
 import uzivatele.AkceUzivateleController;
 import uzivatele.Role;
 import uzivatele.Uzivatel;
 import zakaznici.Zakaznik;
+import zamestnanci.Zamestnanec;
 
 /**
  * FXML Controller class
@@ -128,40 +133,54 @@ public class AktivityController implements Initializable {
 
     @FXML
     private void filtruj(ActionEvent event) {
-        /*aktivityFiltr.clear();
-        for (Aktivita z : aktivity) {
-            aktivityFiltr.add(z);
-        }
-        for (Aktivita z : aktivity) {
-            if (tfUzivatel.getText() != "") {
-                if (!z.getUzivatel().contains(tfUzivatel.getText())) {
-                    aktivityFiltr.remove(z);
-                }
+        try {
+            if (tfAkce.getText().isEmpty()) {
+                tfAkce.setText(null);
             }
-            if (tfTabulka.getText() != "") {
-                if (!z.getTabulka().contains(tfTabulka.getText()) && aktivityFiltr.contains(z)) {
-                    aktivityFiltr.remove(z);
-                }
+            if (tfTabulka.getText().isEmpty()) {
+                tfTabulka.setText(null);
             }
-            if (tfAkce.getText() != "") {
-                if (!z.getAkce().contains(tfAkce.getText()) && aktivityFiltr.contains(z)) {
-                    aktivityFiltr.remove(z);
-                }
+            if (tfUzivatel.getText().isEmpty()) {
+                tfUzivatel.setText(null);
             }
+
+            aktivity.clear();
+            tableView.getItems().clear();
+            java.util.Date utilDate = null;
+            SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yy");
+            String date = null;
             if (dpDatum.getValue() != null) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                if (!z.getDatum().toString().equals(sdf.format(Date.valueOf(dpDatum.getValue()))) && aktivityFiltr.contains(z)) {
-                    aktivityFiltr.remove(z);
-                }
+                utilDate = new java.util.Date(Date.valueOf(dpDatum.getValue()).getTime());
+                date = DATE_FORMAT.format(utilDate);
             }
+            System.out.println(tfAkce.getText());
+            System.out.println(tfUzivatel.getText());
+            System.out.println(tfTabulka.getText());
+            System.out.println(date);
+            CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_AKTIVITY_SEARCH.PRO_RETURN_AKTIVITY(?,?,?,?,?)}");
+            cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
+            cs.setString("novaAkce", tfAkce.getText());
+            cs.setString("novaTabulka", tfTabulka.getText());
+            cs.setString("novyUzivatel", tfUzivatel.getText());
+            cs.setString("noveDatum", date);
+            cs.execute();
+            ResultSet result = (ResultSet) cs.getObject("o_cursor");
+            while (result.next()) {
+                aktivity.add(new Aktivita(result.getString("USERNAME"), result.getString("TABULKA"), result.getString("AKCE"),
+                        result.getDate("DATUM")));
+
+            }
+            tableView.getItems().addAll(aktivity);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        tableView.getItems().clear();
-        tableView.getItems().addAll(aktivityFiltr);*/
+
     }
 
     @FXML
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
+        loadData();
         tableView.getItems().addAll(aktivity);
     }
 

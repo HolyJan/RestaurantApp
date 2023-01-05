@@ -32,6 +32,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import menu.Recept;
+import oracle.jdbc.OracleTypes;
 
 /**
  * FXML Controller class
@@ -125,7 +127,7 @@ public class AdresyController implements Initializable {
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
         if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
-            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!");;
         } else {
             openANewView(event, "zakaznici/AkceAdresy.fxml", connection);
         }
@@ -192,11 +194,44 @@ public class AdresyController implements Initializable {
 
     @FXML
     private void filtruj(ActionEvent event) {
+        try {
+            if (tfUlice.getText() == "") {
+                tfUlice.setText(null);
+            }
+            if (tfCisloPop.getText() == "") {
+                tfCisloPop.setText(null);
+            }
+            if (tfPSC.getText() == "") {
+                tfPSC.setText(null);
+            }
+            if (tfObec.getText() == "") {
+                tfObec.setText(null);
+            }
+
+            adresy.clear();
+            tableView.getItems().clear();
+            CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_ADRESY_SEARCH.PRO_RETURN_ADRESY(?,?,?,?,?)}");
+            cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
+            cs.setString("novaUlice", tfUlice.getText());
+            cs.setString("noveCislo", tfCisloPop.getText());
+            cs.setString("novePSC", tfPSC.getText());
+            cs.setString("novaObec", tfObec.getText());
+            cs.execute();
+            ResultSet result = (ResultSet) cs.getObject("o_cursor");
+            while (result.next()) {
+                Adresa adresa = new Adresa(result.getInt("ID_ADRESA"), result.getString("ULICE"), result.getString("CISLO_POPISNE"),
+                        result.getString("PSC"), result.getString("OBEC"));
+                adresy.add(adresa);
+            }
+            tableView.getItems().addAll(adresy);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @FXML
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
-        tableView.getItems().addAll(adresy);
+        loadData();
     }
 }

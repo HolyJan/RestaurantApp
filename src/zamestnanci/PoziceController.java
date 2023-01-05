@@ -27,10 +27,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import menu.Recept;
+import oracle.jdbc.OracleTypes;
 
 /**
  * FXML Controller class
@@ -49,6 +52,8 @@ public class PoziceController implements Initializable {
     private boolean edit = false;
     private DatabaseConnection connection;
     ObservableList<Pozice> pozice = FXCollections.observableArrayList();
+    @FXML
+    private TextField tfPozice;
 
     /**
      * Initializes the controller class.
@@ -148,6 +153,35 @@ public class PoziceController implements Initializable {
         loadData();
         MainSceneController msc = new MainSceneController();
         msc.aktivita(connection, MainSceneController.userName.get(), "POZICE", "DELETE", new Date(System.currentTimeMillis()));
+    }
+
+    @FXML
+    private void filtruj(ActionEvent event) {
+        try {
+            if (tfPozice.getText() == "") {
+                tfPozice.setText(null);
+            }
+
+            pozice.clear();
+            tableView.getItems().clear();
+            CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_POZICE_SEARCH.PRO_RETURN_POZICE(?,?)}");
+            cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
+            cs.setString("novyNazev", tfPozice.getText());
+            cs.execute();
+            ResultSet result = (ResultSet) cs.getObject("o_cursor");
+            while (result.next()) {
+                pozice.add(new Pozice(result.getInt("ID_POZICE"), result.getString("NAZEV")));
+            }
+            tableView.getItems().addAll(pozice);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @FXML
+    private void zobrazVse(ActionEvent event) {
+        tableView.getItems().clear();
+        loadData();
     }
 
 }

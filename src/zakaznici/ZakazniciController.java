@@ -36,6 +36,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import login.RegistraceController;
+import menu.Recept;
+import oracle.jdbc.OracleTypes;
 import uzivatele.Uzivatel;
 
 /**
@@ -118,6 +120,7 @@ public class ZakazniciController implements Initializable {
         adresy.clear();
         Statement statement = connection.createBlockedStatement();
         try {
+            boolean podminka;
             ResultSet result = statement.executeQuery("SELECT * FROM ZAKAZNICI_VIEW");
             while (result.next()) {
                 Adresa adresa = new Adresa(result.getInt("ID_ADRESA"), result.getString("ULICE"), result.getString("CISLO_POPISNE"),
@@ -128,7 +131,7 @@ public class ZakazniciController implements Initializable {
                 adresy.add(adresa);
 
             }
-            
+
             tableView.getItems().addAll(zakaznici);
             tfAdresa.getItems().addAll(adresy);
 
@@ -184,7 +187,7 @@ public class ZakazniciController implements Initializable {
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
         if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
-            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!");;
         } else {
             openANewView(event, "zakaznici/akceZakaznik.fxml", connection);
         }
@@ -203,50 +206,61 @@ public class ZakazniciController implements Initializable {
         msc.aktivita(connection, MainSceneController.userName.get(), "ZAKAZNICI", "DELETE", new Date(System.currentTimeMillis()));
     }
 
-
-
     @FXML
     private void filtruj(ActionEvent event) {
-        
-/*        zakazniciFiltr.clear();
-        for(Zakaznik z: zakaznici) {
-            zakazniciFiltr.add(z);
+        try {
+            if (tfJmeno.getText() == "") {
+                tfJmeno.setText(null);
+            }
+            if (tfPrijmeni.getText() == "") {
+                tfPrijmeni.setText(null);
+            }
+            if (tfTelefon.getText() == "") {
+                tfTelefon.setText(null);
+            }
+            if (tfEmail.getText() == "") {
+                tfEmail.setText(null);
+            }
+
+            String idAdresy = null;
+            if (tfAdresa.getValue() != null) {
+                idAdresy = tfAdresa.getValue().getIdAdresy() + "";
+            }
+
+            zakaznici.clear();
+            tableView.getItems().clear();
+            CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_ZAKAZNICI_SEARCH.PRO_RETURN_ZAKAZNICI(?,?,?,?,?,?)}");
+            cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
+            cs.setString("noveJmeno", tfJmeno.getText());
+            cs.setString("novePrijmeni", tfPrijmeni.getText());
+            cs.setString("novyTelefon", tfTelefon.getText());
+            cs.setString("novyEmail", tfEmail.getText());
+            cs.setString("noveId", idAdresy);
+            cs.execute();
+            ResultSet result = (ResultSet) cs.getObject("o_cursor");
+            while (result.next()) {
+
+                for (Adresa adresa : adresy) {
+                    if (result.getInt("ID_ADRESA") == adresa.getIdAdresy()) {
+                        zakaznici.add(new Zakaznik(result.getInt("ID_ZAKAZNIKA"), result.getString("JMENO"),
+                                result.getString("PRIJMENI"), result.getString("TELEFON"), result.getString("EMAIL"),
+                                adresa));
+                        break;
+                    }
+                }
+
+            }
+            tableView.getItems().addAll(zakaznici);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        for(Zakaznik z : zakaznici) {
-            if(tfJmeno.getText() != "") {
-                if(!z.getJmeno().contains(tfJmeno.getText())) {
-                    zakazniciFiltr.remove(z);
-                }
-            }
-            if(tfPrijmeni.getText() != "") {
-                if(!z.getPrijmeni().contains(tfPrijmeni.getText()) && zakazniciFiltr.contains(z)) {
-                    zakazniciFiltr.remove(z);
-                }
-            }
-            if(tfTelefon.getText() != "") {
-                if(!z.getTelefon().contains(tfTelefon.getText()) && zakazniciFiltr.contains(z)) {
-                    zakazniciFiltr.remove(z);
-                }
-            }
-            if(tfEmail.getText() != "") {
-                if(!z.getEmail().contains(tfEmail.getText()) && zakazniciFiltr.contains(z)) {
-                    zakazniciFiltr.remove(z);
-                }
-            }
-            if(tfAdresa.getSelectionModel().getSelectedItem() != null) {
-                if(z.getAdresa().getIdAdresy() != tfAdresa.getSelectionModel().getSelectedItem().getIdAdresy() && zakazniciFiltr.contains(z)) {
-                    zakazniciFiltr.remove(z);
-                }
-            }
-        }
-        tableView.getItems().clear();
-        tableView.getItems().addAll(zakazniciFiltr);*/
+
     }
 
     @FXML
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
-        tableView.getItems().addAll(zakaznici);
+        loadData();
     }
 
 }

@@ -29,7 +29,7 @@
             <Button mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
          </children>
       </VBox>
-      <VBox layoutX="796.0" layoutY="187.0" prefHeight="213.0" prefWidth="142.0" spacing="10.0" AnchorPane.bottomAnchor="39.0" AnchorPane.rightAnchor="13.0">
+      <VBox layoutX="797.0" layoutY="190.0" prefHeight="213.0" prefWidth="142.0" spacing="10.0" AnchorPane.bottomAnchor="40.39999999999998" AnchorPane.rightAnchor="12.600000000000023">
          <children>
             <Label text="Filtr:">
                <font>
@@ -47,23 +47,10 @@
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
-                  <Label text="Typ" />
-                  <TextField fx:id="tfTyp" prefHeight="25.0" prefWidth="80.0" />
-               </children>
-            </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
-               <children>
-                  <Label text="Umístění" />
-                  <TextField fx:id="tfUmisteni" prefHeight="25.0" prefWidth="80.0" />
-               </children>
-            </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
-               <children>
                   <Label text="Přípona" />
                   <TextField fx:id="tfPripona" prefHeight="25.0" prefWidth="80.0" />
                </children>
             </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0" />
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="26.0" prefWidth="70.0" text="Filtruj" />

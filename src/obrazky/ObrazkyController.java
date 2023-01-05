@@ -36,8 +36,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import menu.Polozka;
+import menu.Recept;
 import objednavky.AkceObjednavkaController;
 import objednavky.Objednavka;
+import oracle.jdbc.OracleTypes;
 import zakaznici.Adresa;
 import zakaznici.Zakaznik;
 
@@ -67,10 +69,6 @@ public class ObrazkyController implements Initializable {
     boolean edit = false;
     @FXML
     private TextField tfNazev;
-    @FXML
-    private TextField tfTyp;
-    @FXML
-    private TextField tfUmisteni;
     @FXML
     private TextField tfPripona;
 
@@ -162,7 +160,7 @@ public class ObrazkyController implements Initializable {
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
         if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
-            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!");;
         } else {
             openANewView(event, "obrazky/AkceObrazky.fxml", connection);
         }
@@ -187,11 +185,37 @@ public class ObrazkyController implements Initializable {
 
     @FXML
     private void filtruj(ActionEvent event) {
+        try {
+            if (tfNazev.getText() == "") {
+                tfNazev.setText(null);
+            }
+            if (tfPripona.getText() == "") {
+                tfPripona.setText(null);
+            }
+
+            obrazky.clear();
+            tableView.getItems().clear();
+            CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_OBRAZKY_SEARCH.PRO_RETURN_OBRAZKY(?,?,?)}");
+            cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
+            cs.setString("novyNazev", tfNazev.getText());
+            cs.setString("novaKoncovka", tfPripona.getText());
+            cs.execute();
+            ResultSet result = (ResultSet) cs.getObject("o_cursor");
+            while (result.next()) {
+
+                obrazky.add(new Obrazek(result.getInt("ID_OBRAZKU"), result.getString("NAZEV"),
+                        result.getBlob("OBRAZEK"), result.getString("UMISTENI_OBRAZKU"), result.getString("PRIPONA_OBRAZKU")));
+
+            }
+            tableView.getItems().addAll(obrazky);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @FXML
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
-        tableView.getItems().addAll(obrazky);
+        loadData();
     }
 }

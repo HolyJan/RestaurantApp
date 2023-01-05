@@ -14,6 +14,9 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,14 +28,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import menu.Recept;
 import objednavky.AkceObjednavkaController;
 import objednavky.Objednavka;
+import oracle.jdbc.OracleTypes;
 
 /**
  * FXML Controller class
@@ -47,9 +55,7 @@ public class SmenyController implements Initializable {
     private TableColumn<Smena, String> smenaCol;
     @FXML
     private TableColumn<Smena, String> datumCol;
-    @FXML
     private TableColumn<Smena, String> jmenoCol;
-    @FXML
     private TableColumn<Smena, String> prijmeniCol;
 
     DatabaseConnection connection;
@@ -57,22 +63,20 @@ public class SmenyController implements Initializable {
     @FXML
     private AnchorPane pane;
     boolean init;
-    @FXML
     private TableColumn<Smena, String> telefonCol;
-    @FXML
     private TableColumn<Smena, String> poziceCol;
     boolean edit = false;
+    @FXML
+    private DatePicker dpDatum;
+    @FXML
+    private ComboBox<String> cbSmena;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        jmenoCol.setCellValueFactory(new PropertyValueFactory<>("jmeno"));
-        prijmeniCol.setCellValueFactory(new PropertyValueFactory<>("prijmeni"));
         smenaCol.setCellValueFactory(new PropertyValueFactory<>("smena"));
-        telefonCol.setCellValueFactory(new PropertyValueFactory<>("telefon"));
-        poziceCol.setCellValueFactory(new PropertyValueFactory<>("pozice"));
         datumCol.setCellValueFactory(new PropertyValueFactory<>("datum"));
         init = false;
         pane.widthProperty().addListener(new ChangeListener<Number>() {
@@ -95,14 +99,17 @@ public class SmenyController implements Initializable {
         tableView.getItems().clear();
         Statement statement = connection.createBlockedStatement();
         try {
-            ResultSet result = statement.executeQuery("SELECT * FROM SMENY_VIEW");
+            ResultSet result = statement.executeQuery("SELECT * FROM SMENY");
             while (result.next()) {
-                if (result.getString("JMENO") != null) {
-                    smeny.add(new Smena(result.getInt("ID_SMENA"), result.getString("SMENA"), result.getDate("DATUM"), result.getInt("ID_ZAMESTNANCE"),
-                            result.getString("JMENO"), result.getString("PRIJMENI"), result.getString("TELEFON"), result.getInt("ID_POZICE"), result.getString("POZICE")));
+                if (result.getString("NAZEV") != null) {
+                    smeny.add(new Smena(result.getInt("ID_SMENA"), result.getString("NAZEV"), result.getDate("DATUM"), 0,
+                            null, null, null, 0, null));
                 }
             }
             tableView.getItems().addAll(smeny);
+
+            cbSmena.getItems().add("Ranní");
+            cbSmena.getItems().add("Odpolední");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -136,6 +143,25 @@ public class SmenyController implements Initializable {
             }
         }
 
+    }
+
+    private void openANewView2(ActionEvent event, String fileLocation, DatabaseConnection conn) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getClassLoader().getResource(fileLocation));
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        Parent parent = loader.load();
+        sendDataViaController2(fileLocation, loader);
+        Scene mainScene = new Scene(parent);
+        stage.setScene(mainScene);
+        stage.showAndWait();
+    }
+
+    private void sendDataViaController2(String fileLocation, FXMLLoader loader) {
+        loader.setLocation(getClass().getResource(fileLocation));
+        ZamestnanciSmenyController controllerAkceSmeny = loader.getController();
+        controllerAkceSmeny.setConnection(connection);
+        controllerAkceSmeny.setSmenaId(tableView.getSelectionModel().selectedItemProperty().get().getId());
     }
 
     @FXML
@@ -190,6 +216,47 @@ public class SmenyController implements Initializable {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @FXML
+    private void zobrazZamestnAction(ActionEvent event) throws IOException {
+        openANewView2(event, "zamestnanci/ZamestnanciSmeny.fxml", connection);
+
+    }
+
+    @FXML
+    private void filtruj(ActionEvent event) {
+        try {
+            java.util.Date utilDate = null;
+            SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yy");
+            String date = null;
+            if (dpDatum.getValue() != null) {
+                utilDate = new java.util.Date(Date.valueOf(dpDatum.getValue()).getTime());
+                date = DATE_FORMAT.format(utilDate);
+            }
+            smeny.clear();
+            tableView.getItems().clear();
+            CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_SMENY_SEARCH.PRO_RETURN_SMENY(?,?,?)}");
+            cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
+            cs.setString("novyNazev", cbSmena.getValue());
+            cs.setString("noveDatum", date);
+            cs.execute();
+            ResultSet result = (ResultSet) cs.getObject("o_cursor");
+            while (result.next()) {
+                smeny.add(new Smena(result.getInt("ID_SMENA"), result.getString("NAZEV"), result.getDate("DATUM"), 0,
+                        null, null, null, 0, null));
+            }
+            tableView.getItems().addAll(smeny);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @FXML
+    private void zobrazVse(ActionEvent event) {
+        tableView.getItems().clear();
+        loadData();
+
     }
 
 }

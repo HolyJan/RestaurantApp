@@ -28,6 +28,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -36,8 +37,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import menu.Recept;
 import objednavky.AkceObjednavkaController;
 import objednavky.Objednavka;
+import oracle.jdbc.OracleTypes;
 import zamestnanci.Smena;
 
 /**
@@ -74,9 +77,7 @@ public class UzivateleController implements Initializable {
     @FXML
     private TextField tfLogin;
     @FXML
-    private TextField tfHeslo;
-    @FXML
-    private TextField tfRole;
+    private ComboBox<String> cbRole;
 
     /**
      * Initializes the controller class.
@@ -106,6 +107,7 @@ public class UzivateleController implements Initializable {
 
     private void loadData() {
         uzivatele.clear();
+        cbRole.getItems().clear();
         tableView.getItems().clear();
         Statement statement = connection.createBlockedStatement();
         try {
@@ -116,6 +118,12 @@ public class UzivateleController implements Initializable {
                             result.getString("HESLO"), new Role(result.getInt("ID_ROLE"), result.getString("ROLE"))));
                 }
             }
+
+            ResultSet result1 = statement.executeQuery("SELECT * FROM Role");
+            while (result1.next()) {
+                cbRole.getItems().add(result1.getString("ROLE"));
+            }
+
             tableView.getItems().addAll(uzivatele);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -169,7 +177,7 @@ public class UzivateleController implements Initializable {
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
         if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
-            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!");;
         } else {
             openANewView(event, "uzivatele/akceUzivatele.fxml", connection);
         }
@@ -213,11 +221,42 @@ public class UzivateleController implements Initializable {
 
     @FXML
     private void filtruj(ActionEvent event) {
+        try {
+            if (tfJmeno.getText() == "") {
+                tfJmeno.setText(null);
+            }
+            if (tfPrijmeni.getText() == "") {
+                tfPrijmeni.setText(null);
+            }
+            if (tfLogin.getText() == "") {
+                tfLogin.setText(null);
+            }
+
+            uzivatele.clear();
+            tableView.getItems().clear();
+            CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_UZIVATELE_SEARCH.PRO_RETURN_UZIVATELE(?,?,?,?,?)}");
+            cs.registerOutParameter("o_cursor", OracleTypes.CURSOR);
+            cs.setString("noveJmeno", tfJmeno.getText());
+            cs.setString("novePrijmeni", tfPrijmeni.getText());
+            cs.setString("novyLogin", tfLogin.getText());
+            cs.setString("novaRole", cbRole.getValue());
+            cs.execute();
+            ResultSet result = (ResultSet) cs.getObject("o_cursor");
+            while (result.next()) {
+
+                uzivatele.add(new Uzivatel(result.getInt("ID_UZIVATELE"), result.getString("JMENO"), result.getString("PRIJMENI"), result.getString("LOGIN"),
+                        result.getString("HESLO"), new Role(result.getInt("ID_ROLE"), result.getString("ROLE"))));
+
+            }
+            tableView.getItems().addAll(uzivatele);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @FXML
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
-        tableView.getItems().addAll(uzivatele);
+        loadData();
     }
 }
