@@ -216,6 +216,8 @@ public class StolyController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
+        tfCisloStolu.setText(null);
+        tfPocetMist.setText(null);
     }
 
 }

@@ -14,8 +14,6 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -38,11 +36,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import menu.Recept;
 import oracle.jdbc.OracleTypes;
-import rezervace.AkceRezervaceController;
-import rezervace.Rezervace;
-import rezervace.Stul;
 import zakaznici.Adresa;
 import zakaznici.Zakaznik;
 
@@ -274,6 +268,10 @@ public class PlatbyController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
+        tfCastka.setText(null);
+        tfCisloKarty.setText(null);
+        tfNazevPolozky.setText(null);
+        tfTypPlatby.setText(null);
     }
 
 }

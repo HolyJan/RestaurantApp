@@ -217,5 +217,7 @@ public class ObrazkyController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
+        tfNazev.setText(null);
+        tfPripona.setText(null);
     }
 }

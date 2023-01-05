@@ -33,15 +33,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import menu.Recept;
-import objednavky.AkceObjednavkaController;
-import objednavky.Objednavka;
 import oracle.jdbc.OracleTypes;
-import zamestnanci.Smena;
 
 /**
  * FXML Controller class
@@ -258,5 +253,8 @@ public class UzivateleController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
+        tfJmeno.setText(null);
+        tfLogin.setText(null);
+        tfPrijmeni.setText(null);
     }
 }

@@ -15,8 +15,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -36,11 +34,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import menu.Recept;
 import oracle.jdbc.OracleTypes;
-import uzivatele.AkceUzivateleController;
-import uzivatele.Role;
-import uzivatele.Uzivatel;
 import zakaznici.Zakaznik;
 
 /**
@@ -355,6 +349,11 @@ public class RezervaceController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
+        tfCas.setText(null);
+        tfCisloStolu.setText(null);
+        tfJmeno.setText(null);
+        tfPrijmeni.setText(null);
+        dpDatum.setValue(null);
     }
 
 }

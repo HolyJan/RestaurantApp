@@ -8,9 +8,7 @@ package menu;
 import connection.DatabaseConnection;
 import databaseapplication.MainSceneController;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +18,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,14 +28,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.imageio.ImageIO;
 import oracle.jdbc.OracleTypes;
-import zamestnanci.AkcePoziceController;
-import zamestnanci.Pozice;
 
 /**
  * FXML Controller class
@@ -142,7 +135,7 @@ public class ReceptyController implements Initializable {
     private void upravitAction(ActionEvent event) throws IOException {
         edit = true;
         if (tableView.getSelectionModel().selectedItemProperty().get() == null) {
-            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!"); ;
+            MainSceneController.showDialog("Vyberte položku, kterou chcete poupravit!");;
         } else {
             openANewView(event, "menu/AkceRecept.fxml", connection);
         }
@@ -165,7 +158,7 @@ public class ReceptyController implements Initializable {
             if (tfRecept.getText() == "") {
                 tfRecept.setText(null);
             }
-            
+
             recepty.clear();
             tableView.getItems().clear();
             CallableStatement cs = this.connection.getConnection().prepareCall("{call PAC_REZEPTY_SEARCH.PRO_RETURN_RECEPTY(?,?)}");
@@ -174,7 +167,7 @@ public class ReceptyController implements Initializable {
             cs.execute();
             ResultSet result = (ResultSet) cs.getObject("o_cursor");
             while (result.next()) {
-            
+
                 recepty.add(new Recept(result.getInt("ID_RECEPTU"), result.getString("NAZEV")));
 
             }
@@ -188,6 +181,8 @@ public class ReceptyController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
+        tfRecept.setText(null);
+
     }
 
 }

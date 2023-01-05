@@ -332,5 +332,10 @@ public class ObjednavkyController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
+        tfCena.setText(null);
+        tfJmeno.setText(null);
+        tfNazevPolozky.setText(null);
+        tfPrijmeni.setText(null);
+
     }
 }

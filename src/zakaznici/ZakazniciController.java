@@ -15,7 +15,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -31,14 +30,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import login.RegistraceController;
-import menu.Recept;
 import oracle.jdbc.OracleTypes;
-import uzivatele.Uzivatel;
 
 /**
  * FXML Controller class
@@ -118,6 +113,7 @@ public class ZakazniciController implements Initializable {
         zakaznici.clear();
         tableView.getItems().clear();
         adresy.clear();
+        tfAdresa.getItems().clear();
         Statement statement = connection.createBlockedStatement();
         try {
             boolean podminka;
@@ -128,7 +124,19 @@ public class ZakazniciController implements Initializable {
                 zakaznici.add(new Zakaznik(result.getInt("ID_ZAKAZNIKA"), result.getString("JMENO"),
                         result.getString("PRIJMENI"), result.getString("TELEFON"), result.getString("EMAIL"),
                         adresa));
-                adresy.add(adresa);
+                podminka = false;
+                if (adresy.isEmpty()) {
+                    adresy.add(adresa);
+                } else {
+                    for (Adresa a : adresy) {
+                        if (a.getIdAdresy() == adresa.getIdAdresy()) {
+                            podminka = true;
+                        }
+                    }
+                    if(!podminka){
+                        adresy.add(adresa);
+                    }
+                }
 
             }
 
@@ -261,6 +269,10 @@ public class ZakazniciController implements Initializable {
     private void zobrazVse(ActionEvent event) {
         tableView.getItems().clear();
         loadData();
+        tfEmail.setText(null);
+        tfJmeno.setText(null);
+        tfPrijmeni.setText(null);
+        tfTelefon.setText(null);
     }
 
 }
