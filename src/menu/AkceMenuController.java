@@ -70,7 +70,6 @@ public class AkceMenuController implements Initializable {
                         cstmt.execute();
                         result = statement.executeQuery("SELECT menu_id_menu_seq.currval as id FROM dual");
                         result.next();
-                        System.out.println(result.getInt("id"));
                         menu.add(new Menu(result.getInt("id"), new java.sql.Date(System.currentTimeMillis()), nazevText.getText()));
                         Date Date;
                     } else {

@@ -53,7 +53,7 @@ public class AkceUzivateleController implements Initializable {
     private AnchorPane pane;
     private int idUzivatele = -1;
     private DatabaseConnection connection;
-
+    String stareHeslo;
     ObservableList<Role> role = FXCollections.observableArrayList();
 
     /**
@@ -81,6 +81,7 @@ public class AkceUzivateleController implements Initializable {
         loginTextField.setText(login);
         hesloTextField.setText(heslo);
         roleCombo.setValue(role);
+        stareHeslo = heslo;
     }
 
     void setConnection(DatabaseConnection con) {
@@ -109,10 +110,14 @@ public class AkceUzivateleController implements Initializable {
             Statement statement = connection.createBlockedStatement();
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(hesloTextField.getText().getBytes());
-            String hashedPassword = DatatypeConverter.printHexBinary(md.digest());
+            String hashedPassword;
             try {
                 if (this.idUzivatele != -1) {
-
+                    if (!hesloTextField.getText().equals(stareHeslo)) {
+                        hashedPassword = DatatypeConverter.printHexBinary(md.digest());
+                    } else {
+                        hashedPassword = stareHeslo;
+                    }
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call updateUzivateleProc(?,?,?,?,?,?)}");
                     cstmt.setInt(1, idUzivatele);
                     cstmt.setString(2, jmenoTextField.getText());
@@ -121,8 +126,8 @@ public class AkceUzivateleController implements Initializable {
                     cstmt.setString(5, hashedPassword);
                     cstmt.setInt(6, roleCombo.getValue().getIdRole());
                     cstmt.execute();
-                    System.out.println("aktualizace OK");
                 } else {
+                    hashedPassword = DatatypeConverter.printHexBinary(md.digest());
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozUzivateleProc(?,?,?,?,?)}");
                     cstmt.setString(1, jmenoTextField.getText());
                     cstmt.setString(2, prijmeniTextField.getText());
@@ -134,7 +139,7 @@ public class AkceUzivateleController implements Initializable {
                 Stage stage = (Stage) jmenoTextField.getScene().getWindow();
                 stage.close();
             } catch (SQLException e) {
-            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
 
         }

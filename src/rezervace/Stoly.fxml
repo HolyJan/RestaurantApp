@@ -11,23 +11,23 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="342.0" prefWidth="411.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rezervace.StolyController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="380.0" prefWidth="490.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rezervace.StolyController">
    <children>
-      <TableView fx:id="tableView" prefHeight="342.0" prefWidth="217.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="194.0" AnchorPane.topAnchor="0.0">
+      <TableView fx:id="tableView" prefHeight="380.0" prefWidth="218.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="272.0" AnchorPane.topAnchor="0.0">
          <columns>
             <TableColumn fx:id="cisloStoluCol" prefWidth="100.80001831054688" text="Číslo stolu" />
             <TableColumn fx:id="pocetMistCol" prefWidth="114.39999389648438" text="Počet míst" />
          </columns>
       </TableView>
-      <VBox alignment="TOP_CENTER" layoutX="262.0" layoutY="72.0" prefHeight="144.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="174.0" AnchorPane.rightAnchor="22.0">
+      <VBox alignment="TOP_CENTER" layoutX="297.0" layoutY="30.0" prefHeight="144.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="206.0" AnchorPane.rightAnchor="93.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
-            <Button fx:id="pridatBtn" mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />
-            <Button fx:id="upravitBtn" mnemonicParsing="false" onAction="#upravitAction" text="Upravit" />
-            <Button fx:id="odebratBtn" mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
+            <Button mnemonicParsing="false" onAction="#updateAction" prefWidth="75.0" text="Update" />
+            <Button fx:id="pridatBtn" mnemonicParsing="false" onAction="#pridatAction" prefWidth="75.0" text="Přidat " />
+            <Button fx:id="upravitBtn" mnemonicParsing="false" onAction="#upravitAction" prefWidth="75.0" text="Upravit" />
+            <Button fx:id="odebratBtn" mnemonicParsing="false" onAction="#odebratAction" prefWidth="75.0" text="Odebrat" />
          </children>
       </VBox>
-      <VBox layoutX="227.0" layoutY="248.0" prefHeight="160.0" prefWidth="182.0" spacing="10.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="2.0">
+      <VBox layoutX="227.0" layoutY="248.0" prefHeight="170.0" prefWidth="245.0" spacing="10.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="20.0">
          <children>
             <Label text="Filtr:">
                <font>
@@ -37,7 +37,7 @@
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Číslo stolu" />
-                  <TextField fx:id="tfCisloStolu" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="tfCisloStolu" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="150.0" />
                </children>
                <VBox.margin>
                   <Insets />
@@ -46,15 +46,15 @@
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Počet míst" />
-                  <TextField fx:id="tfPocetMist" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="tfPocetMist" prefHeight="25.0" prefWidth="150.0" />
                </children>
             </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
+            <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="152.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="26.0" prefWidth="83.0" text="Filtruj" />
-                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="26.0" prefWidth="106.0" text="Zobraz vše" />
+                  <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="25.0" prefWidth="120.0" text="Filtruj" />
+                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="25.0" prefWidth="120.0" text="Zobraz vše" />
                </children>
-            </HBox>
+            </VBox>
          </children>
       </VBox>
    </children>

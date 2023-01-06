@@ -200,10 +200,7 @@ public class UzivateleController implements Initializable {
     @FXML
     private void emulationBtn(ActionEvent event) {
         Uzivatel uzivatel = tableView.getSelectionModel().getSelectedItem();
-        try {
-            if (uzivatel == null) {
-                throw new DatabaseException("Please select a user");
-            }
+        if(uzivatel != null){
             MainSceneController.emulation = true;
             MainSceneController.userName.set(uzivatel.getLogin());
             MainSceneController.roleId.set(uzivatel.getRole().getIdRole());
@@ -212,8 +209,8 @@ public class UzivateleController implements Initializable {
             MainSceneController.telefon.set(uzivatel.getTelefon());
             Stage stage1 = (Stage) tableView.getScene().getWindow();
             stage1.close();
-        } catch (DatabaseException e) {
-            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
+        }else{
+            MainSceneController.showError("vyberte Uživatele na kterého se chcete emulovat");
         }
     }
 
@@ -249,7 +246,7 @@ public class UzivateleController implements Initializable {
             }
             tableView.getItems().addAll(uzivatele);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 

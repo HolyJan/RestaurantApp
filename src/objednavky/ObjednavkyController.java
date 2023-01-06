@@ -101,6 +101,9 @@ public class ObjednavkyController implements Initializable {
             odebratBtn.setVisible(false);
             zobrazObjednavkyBtn.setVisible(false);
         }
+        if(MainSceneController.roleId.get() == 2){
+            odebratBtn.setVisible(false);
+        }
         tfCena.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -296,7 +299,7 @@ public class ObjednavkyController implements Initializable {
             tableView.getItems().addAll(objednavky);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 

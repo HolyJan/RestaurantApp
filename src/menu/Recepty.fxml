@@ -11,22 +11,22 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="429.0" prefWidth="352.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="menu.ReceptyController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="429.0" prefWidth="428.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="menu.ReceptyController">
    <children>
-      <TableView fx:id="tableView" prefHeight="429.0" prefWidth="166.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="186.0" AnchorPane.topAnchor="0.0">
+      <TableView fx:id="tableView" prefHeight="429.0" prefWidth="166.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="262.0" AnchorPane.topAnchor="0.0">
          <columns>
             <TableColumn fx:id="receptCol" prefWidth="165.20001220703125" text="Recept" />
          </columns>
       </TableView>
-      <VBox alignment="TOP_CENTER" layoutX="183.0" layoutY="24.0" prefHeight="147.0" prefWidth="100.0" spacing="10.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="24.0">
+      <VBox alignment="TOP_CENTER" layoutX="253.0" layoutY="24.0" prefHeight="147.0" prefWidth="100.0" spacing="10.0" AnchorPane.rightAnchor="75.0" AnchorPane.topAnchor="24.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
-            <Button mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />
-            <Button mnemonicParsing="false" onAction="#upravitAction" text="Upravit" />
-            <Button mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
+            <Button mnemonicParsing="false" onAction="#updateAction" prefWidth="75.0" text="Update" />
+            <Button mnemonicParsing="false" onAction="#pridatAction" prefWidth="75.0" text="Přidat " />
+            <Button mnemonicParsing="false" onAction="#upravitAction" prefWidth="75.0" text="Upravit" />
+            <Button fx:id="odebratBtn" mnemonicParsing="false" onAction="#odebratAction" prefWidth="75.0" text="Odebrat" />
          </children>
       </VBox>
-      <VBox layoutX="171.0" layoutY="187.0" prefHeight="119.0" prefWidth="166.0" spacing="10.0" AnchorPane.bottomAnchor="122.80000000000001" AnchorPane.rightAnchor="14.600000000000023">
+      <VBox layoutX="204.0" layoutY="178.0" prefHeight="172.0" prefWidth="210.0" spacing="10.0" AnchorPane.bottomAnchor="79.0" AnchorPane.rightAnchor="20.0">
          <children>
             <Label text="Filtr:">
                <font>
@@ -36,18 +36,18 @@
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Recept" />
-                  <TextField fx:id="tfRecept" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="tfRecept" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="150.0" />
                </children>
                <VBox.margin>
                   <Insets />
                </VBox.margin>
             </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
+            <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="152.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="26.0" prefWidth="70.0" text="Filtruj" />
-                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="26.0" prefWidth="86.0" text="Zobraz vše" />
+                  <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="25.0" prefWidth="120.0" text="Filtruj" />
+                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="25.0" prefWidth="120.0" text="Zobraz vše" />
                </children>
-            </HBox>
+            </VBox>
          </children>
       </VBox>
    </children>

@@ -33,6 +33,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import menu.Polozka;
@@ -71,6 +72,8 @@ public class ObrazkyController implements Initializable {
     private TextField tfNazev;
     @FXML
     private TextField tfPripona;
+    @FXML
+    private VBox odebratBtn;
 
     /**
      * Initializes the controller class.
@@ -78,6 +81,9 @@ public class ObrazkyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        if(MainSceneController.roleId.get() == 2){
+            odebratBtn.setVisible(false);
+        }
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -138,7 +144,7 @@ public class ObrazkyController implements Initializable {
             try {
                 controllerAkceObrazky.setData(obrazek);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
 

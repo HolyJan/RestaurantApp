@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="533.0" prefWidth="717.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rezervace.RezervaceController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="609.0" prefWidth="765.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rezervace.RezervaceController">
    <children>
-      <TableView fx:id="tableView" prefHeight="533.0" prefWidth="503.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="214.0" AnchorPane.topAnchor="0.0">
+      <TableView fx:id="tableView" prefHeight="577.0" prefWidth="502.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="263.0" AnchorPane.topAnchor="0.0">
          <columns>
             <TableColumn fx:id="casCol" prefWidth="75.20001524686813" text="Čas" />
             <TableColumn fx:id="datumCol" prefWidth="97.5999755859375" text="Datum" />
@@ -24,61 +24,71 @@
             <TableColumn fx:id="cisloStoluCol" minWidth="3.0" prefWidth="88.39996337890625" text="Číslo stolu" />
          </columns>
       </TableView>
-      <VBox alignment="TOP_CENTER" layoutX="562.0" layoutY="28.0" prefHeight="222.0" prefWidth="100.0" spacing="10.0" AnchorPane.rightAnchor="55.0" AnchorPane.topAnchor="28.0">
+      <VBox alignment="TOP_CENTER" layoutX="562.0" layoutY="28.0" prefHeight="574.0" prefWidth="258.0" spacing="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="28.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
-            <Button mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />
-            <Button mnemonicParsing="false" onAction="#upravitAction" text="Upravit" />
-            <Button mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
-            <Button fx:id="zobrazNadchRezBtn" mnemonicParsing="false" onAction="#nadchazejiciRezervaceAction" prefHeight="70.0" prefWidth="88.0" text="Zobraz nadcházející rezervace" wrapText="true" />
-         </children>
-      </VBox>
-      <VBox layoutX="671.0" layoutY="251.0" prefHeight="242.0" prefWidth="179.0" spacing="10.0" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="13.0">
-         <children>
-            <Label text="Filtr:">
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </Label>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
+            <Button mnemonicParsing="false" onAction="#updateAction" prefWidth="75.0" text="Update" />
+            <Button mnemonicParsing="false" onAction="#pridatAction" prefWidth="75.0" text="Přidat " />
+            <Button fx:id="upravitBtn" mnemonicParsing="false" onAction="#upravitAction" prefWidth="75.0" text="Upravit" />
+            <Button fx:id="odebratBtn" mnemonicParsing="false" onAction="#odebratAction" prefWidth="75.0" text="Odebrat" />
+            <Button fx:id="zobrazNadchRezBtn" mnemonicParsing="false" onAction="#nadchazejiciRezervaceAction" prefHeight="25.0" prefWidth="200.0" text="Zobraz nadcházející rezervace" wrapText="true" />
+            <VBox alignment="BOTTOM_LEFT" prefHeight="390.0" prefWidth="258.0" spacing="10.0">
                <children>
-                  <Label text="Čas" />
-                  <ComboBox fx:id="cbCas" prefHeight="25.0" prefWidth="80.0" />
+                  <Label text="Filtr:">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
+                     <children>
+                        <Label text="Čas" />
+                        <ComboBox fx:id="cbCas" prefHeight="25.0" prefWidth="150.0" />
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
+                     <children>
+                        <Label text="Datum" />
+                        <DatePicker fx:id="dpDatum" prefHeight="25.0" prefWidth="150.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
+                     <children>
+                        <Label text="Jméno" />
+                        <TextField fx:id="tfJmeno" prefHeight="25.0" prefWidth="150.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
+                     <children>
+                        <Label text="Příjmení" />
+                        <TextField fx:id="tfPrijmeni" prefHeight="25.0" prefWidth="150.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
+                     <children>
+                        <Label text="Číslo stolu" />
+                        <TextField fx:id="tfCisloStolu" prefHeight="25.0" prefWidth="150.0" />
+                     </children>
+                  </HBox>
+                  <VBox alignment="TOP_RIGHT" prefHeight="70.0" prefWidth="210.0" spacing="10.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="25.0" prefWidth="120.0" text="Filtruj" />
+                        <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="25.0" prefWidth="120.0" text="Zobraz vše" />
+                     </children>
+                  </VBox>
+                  <HBox alignment="BOTTOM_RIGHT" prefHeight="46.0" prefWidth="251.0">
+                     <children>
+                        <DatePicker fx:id="dpDatumPocetRezervaci" prefHeight="25.0" prefWidth="150.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" prefHeight="28.0" prefWidth="251.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#zobrazPocetRezervaciAction" prefWidth="190.0" text="Zobraz počet rezervací" />
+                     </children>
+                  </HBox>
                </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
-               <children>
-                  <Label text="Datum" />
-                  <DatePicker fx:id="dpDatum" prefHeight="25.0" prefWidth="80.0" />
-               </children>
-            </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
-               <children>
-                  <Label text="Jméno" />
-                  <TextField fx:id="tfJmeno" prefHeight="25.0" prefWidth="80.0" />
-               </children>
-            </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
-               <children>
-                  <Label text="Příjmení" />
-                  <TextField fx:id="tfPrijmeni" prefHeight="25.0" prefWidth="80.0" />
-               </children>
-            </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
-               <children>
-                  <Label text="Číslo stolu" />
-                  <TextField fx:id="tfCisloStolu" prefHeight="25.0" prefWidth="80.0" />
-               </children>
-            </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="26.0" prefWidth="70.0" text="Filtruj" />
-                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="26.0" prefWidth="93.0" text="Zobraz vše" />
-               </children>
-            </HBox>
+            </VBox>
          </children>
       </VBox>
    </children>

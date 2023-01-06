@@ -81,6 +81,9 @@ public class StolyController implements Initializable {
             odebratBtn.setVisible(false);
 
         }
+        if(MainSceneController.roleId.get() == 2){
+            odebratBtn.setVisible(false);
+        }
         if (MainSceneController.roleId.get() == 2) {
             odebratBtn.setVisible(false);
 

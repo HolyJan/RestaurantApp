@@ -19,6 +19,7 @@ public class DatabaseApplication extends Application {
     public static Stage mainStage;
     @Override
     public void start(Stage stage) throws Exception {
+        stage.setTitle("Informační systém restaurce");
         Parent root = FXMLLoader.load(getClass().getResource("MainScene.fxml"));
         mainStage = stage;
         Scene scene = new Scene(root);

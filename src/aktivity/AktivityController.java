@@ -100,7 +100,7 @@ public class AktivityController implements Initializable {
             cbAkce.getItems().add("DELETE");
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 

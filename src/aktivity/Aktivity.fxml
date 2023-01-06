@@ -12,16 +12,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="410.0" prefWidth="533.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aktivity.AktivityController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="410.0" prefWidth="607.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aktivity.AktivityController">
    <children>
-      <TableView fx:id="tableView" prefHeight="410.0" prefWidth="478.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="176.0" AnchorPane.topAnchor="0.0">
+      <TableView fx:id="tableView" prefHeight="410.0" prefWidth="358.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="249.0" AnchorPane.topAnchor="0.0">
          <columns>
             <TableColumn fx:id="tabulkaCol" prefWidth="118.4000244140625" text="Tabulka" />
             <TableColumn fx:id="akceCol" prefWidth="112.80006408691406" text="Akce" />
             <TableColumn fx:id="datumCol" minWidth="3.0" prefWidth="122.60000610351562" text="Datum" />
          </columns>
       </TableView>
-      <VBox layoutX="498.0" layoutY="32.0" prefHeight="215.0" prefWidth="141.0" spacing="10.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="32.0">
+      <VBox layoutX="371.0" layoutY="37.0" prefHeight="322.0" prefWidth="215.0" spacing="10.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="25.0">
          <children>
             <Label text="Filtr:">
                <font>
@@ -31,27 +31,27 @@
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Tabulka" />
-                  <TextField fx:id="tfTabulka" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="tfTabulka" prefHeight="26.0" prefWidth="150.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Akce" />
-                  <ComboBox fx:id="cbAkce" prefHeight="25.0" prefWidth="80.0" />
+                  <ComboBox fx:id="cbAkce" prefHeight="25.0" prefWidth="150.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Datum" />
-                  <DatePicker fx:id="dpDatum" prefHeight="25.0" prefWidth="80.0" />
+                  <DatePicker fx:id="dpDatum" prefHeight="25.0" prefWidth="150.0" />
                </children>
             </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
+            <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="152.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="25.0" prefWidth="46.0" text="Filtruj" />
-                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="26.0" prefWidth="90.0" text="Zobraz vše" />
+                  <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="25.0" prefWidth="120.0" text="Filtruj" />
+                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="25.0" prefWidth="120.0" text="Zobraz vše" />
                </children>
-            </HBox>
+            </VBox>
          </children>
       </VBox>
    </children>

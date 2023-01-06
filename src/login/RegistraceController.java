@@ -95,7 +95,7 @@ public class RegistraceController implements Initializable {
         if (!"".equals(jmenoTextField.getText()) && !"".equals(prijmeniTextField.getText())
                 && !"".equals(loginTextField.getText()) && !"".equals(hesloTextField.getText()) && !"".equals(telefonTextField.getText())
                 && !"".equals(uliceTextField.getText()) && !"".equals(cisloPopTextField.getText()) && !"".equals(pscTextField.getText())
-                && !"".equals(obecTextField.getText()) || telefonTextField.getText().length() != 9) {
+                && !"".equals(obecTextField.getText()) && telefonTextField.getText().length() == 9) {
             Statement statement = connection.createBlockedStatement();
             try {
                 MessageDigest md = MessageDigest.getInstance("MD5");

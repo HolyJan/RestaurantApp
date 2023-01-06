@@ -26,6 +26,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
@@ -64,6 +65,8 @@ public class SmenyController implements Initializable {
     private DatePicker dpDatum;
     @FXML
     private ComboBox<String> cbSmena;
+    @FXML
+    private Button odebratBtn;
 
     /**
      * Initializes the controller class.
@@ -73,6 +76,9 @@ public class SmenyController implements Initializable {
         smenaCol.setCellValueFactory(new PropertyValueFactory<>("smena"));
         datumCol.setCellValueFactory(new PropertyValueFactory<>("datum"));
         init = false;
+        if(MainSceneController.roleId.get() == 2){
+            odebratBtn.setVisible(false);
+        }
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -190,26 +196,6 @@ public class SmenyController implements Initializable {
         loadData();
         }else{
             MainSceneController.showDialog("Není vybrán prvek pro odebrání");
-        }
-    }
-
-    @FXML
-    private void zamestnanciSmenyAction(ActionEvent event) {
-        smeny.clear();
-        tableView.getItems().clear();
-        Statement statement = connection.createBlockedStatement();
-        try {
-            ResultSet result = statement.executeQuery("SELECT * FROM zamestnanci_pozice_smena");
-            while (result.next()) {
-                if (result.getString("JMENO") != null) {
-                    smeny.add(new Smena(result.getInt("ID_SMENA"), result.getString("NAZEVSMENY"), result.getDate("DATUM"), result.getInt("ID_ZAMESTNANCE"),
-                            result.getString("JMENO"), result.getString("PRIJMENI"), result.getString("TELEFON"), result.getInt("ID_POZICE"), result.getString("NAZEVPOZICE")));
-                }
-            }
-            tableView.getItems().addAll(smeny);
-
-        } catch (SQLException e) {
-            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 

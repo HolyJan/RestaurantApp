@@ -118,6 +118,9 @@ public class PolozkyController implements Initializable {
             upravitButton.setVisible(false);
             odebratButton.setVisible(false);
         }
+        if (MainSceneController.roleId.get() == 2) {
+            odebratButton.setVisible(false);
+        }
         tfCena.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -176,7 +179,7 @@ public class PolozkyController implements Initializable {
                 controllerAkcePolozky.setData(polozka);
                 controllerAkcePolozky.setController(this);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
 
@@ -217,7 +220,7 @@ public class PolozkyController implements Initializable {
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 

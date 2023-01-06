@@ -79,7 +79,6 @@ public class AkceObrazekController implements Initializable {
         File selectedFile = fileChooser.showOpenDialog(DatabaseApplication.mainStage);
         if (selectedFile != null) {
             String path = selectedFile.toString();
-            System.out.println(path);
             int index = path.lastIndexOf('.');
             String extension = "";
             if (index > 0) {
@@ -118,7 +117,6 @@ public class AkceObrazekController implements Initializable {
                         pstmt.execute();
                         result = statement.executeQuery("SELECT obrazky_id_obrazku_seq.currval as id FROM dual");
                         result.next();
-                        System.out.println(result.getInt("id"));
                         this.obrazek = new Obrazek(result.getInt("id"), nazevObrazku, new Image(newImage));
                         obrazky.add(obrazek);
                     } else {

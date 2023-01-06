@@ -82,7 +82,6 @@ public class AkceAdresyController implements Initializable {
                     cstmt.setString(4, pscText.getText());
                     cstmt.setString(5, mestoText.getText());
                     cstmt.execute();
-                    System.out.println("aktualizace OK");
                 } else {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozAdresuProc(?,?,?,?)}");
                     cstmt.setString(1, uliceText.getText());
@@ -90,7 +89,6 @@ public class AkceAdresyController implements Initializable {
                     cstmt.setString(3, pscText.getText());
                     cstmt.setString(4, mestoText.getText());
                     cstmt.execute();
-                    System.out.println("vložení OK");
                 }
                 Stage stage = (Stage) uliceText.getScene().getWindow();
                 stage.close();

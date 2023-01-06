@@ -115,7 +115,6 @@ public class AkceObrazkyController implements Initializable {
                         pstmt.execute();
                         result = statement.executeQuery("SELECT obrazky_id_obrazku_seq.currval as id FROM dual");
                         result.next();
-                        System.out.println(result.getInt("id"));
                     } else {
                         PreparedStatement pstmt = connection.getConnection().prepareStatement("{call updateObrazekProc(?,?,?,?,?)}");
                         pstmt.setInt(1, idObrazku);
@@ -149,7 +148,6 @@ public class AkceObrazkyController implements Initializable {
         File selectedFile = fileChooser.showOpenDialog(DatabaseApplication.mainStage);
         if (selectedFile != null) {
             String path = selectedFile.toString();
-            System.out.println(path);
             int index = path.lastIndexOf('.');
             String extension = "";
             if (index > 0) {

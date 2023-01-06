@@ -115,7 +115,6 @@ public class AkceZakaznikController implements Initializable {
                     cstmt1.setString(4, adresaCombo.getValue().getPsc());
                     cstmt1.setString(5, adresaCombo.getValue().getMesto());
                     cstmt1.execute();
-                    System.out.println("aktualizace OK");
                 } else {
                     CallableStatement cstmt1 = connection.getConnection().prepareCall("{call vlozZakaznikaProc(?,?,?,?,?)}");
                     cstmt1.setString(1, jmenoText.getText());

@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="555.0" prefWidth="762.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="objednavky.PlatbyController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="586.0" prefWidth="852.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="objednavky.PlatbyController">
    <children>
-      <TableView fx:id="tableView" prefHeight="475.0" prefWidth="556.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="193.0" AnchorPane.topAnchor="0.0">
+      <TableView fx:id="tableView" prefHeight="555.0" prefWidth="557.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="295.0" AnchorPane.topAnchor="0.0">
          <columns>
             <TableColumn fx:id="castkaCol" prefWidth="101.0" text="Částka (Kč)" />
             <TableColumn fx:id="datumCol" prefWidth="100.0" text="Datum" />
@@ -24,15 +24,15 @@
             <TableColumn fx:id="NazevPolozkyCol" minWidth="3.0" prefWidth="124.00001831054692" text="Název položky" />
          </columns>
       </TableView>
-      <VBox alignment="TOP_CENTER" layoutX="619.0" layoutY="30.0" prefHeight="147.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="377.8" AnchorPane.rightAnchor="43.0">
+      <VBox alignment="TOP_CENTER" layoutX="659.0" layoutY="37.0" prefHeight="147.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="401.8" AnchorPane.rightAnchor="93.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
-            <Button mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />
-            <Button mnemonicParsing="false" onAction="#upravitAction" text="Upravit" />
-            <Button mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
+            <Button mnemonicParsing="false" onAction="#updateAction" prefWidth="75.0" text="Update" />
+            <Button mnemonicParsing="false" onAction="#pridatAction" prefWidth="75.0" text="Přidat " />
+            <Button mnemonicParsing="false" onAction="#upravitAction" prefWidth="75.0" text="Upravit" />
+            <Button fx:id="odebratBtn" mnemonicParsing="false" onAction="#odebratAction" prefWidth="75.0" text="Odebrat" />
          </children>
       </VBox>
-      <VBox layoutX="569.0" layoutY="193.0" prefHeight="340.0" prefWidth="193.0" spacing="10.0" AnchorPane.bottomAnchor="22.0" AnchorPane.rightAnchor="0.0">
+      <VBox layoutX="612.0" layoutY="189.0" prefHeight="381.0" prefWidth="246.0" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0">
          <children>
             <Label text="Filtr:">
                <font>
@@ -42,7 +42,7 @@
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Částka" />
-                  <TextField fx:id="tfCastka" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="tfCastka" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="150.0" />
                </children>
                <VBox.margin>
                   <Insets />
@@ -51,32 +51,34 @@
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Datum" />
-                  <DatePicker fx:id="dpDatum" prefHeight="25.0" prefWidth="80.0" />
+                  <DatePicker fx:id="dpDatum" prefHeight="25.0" prefWidth="150.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Typ platby" />
-                  <ComboBox fx:id="cbTypPlatby" prefHeight="25.0" prefWidth="80.0" />
+                  <ComboBox fx:id="cbTypPlatby" prefHeight="25.0" prefWidth="150.0" />
                </children>
             </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
+            <VBox alignment="TOP_RIGHT" prefHeight="83.0" prefWidth="194.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="26.0" prefWidth="70.0" text="Filtruj" />
-                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="26.0" prefWidth="99.0" text="Zobraz vše" />
+                  <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="25.0" prefWidth="120.0" text="Filtruj" />
+                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="25.0" prefWidth="120.0" text="Zobraz vše" />
                </children>
-            </HBox>
-            <HBox alignment="BOTTOM_RIGHT" prefHeight="47.0" prefWidth="171.0" spacing="5.0">
+            </VBox>
+            <HBox alignment="BOTTOM_RIGHT" prefHeight="108.0" prefWidth="246.0" spacing="5.0">
                <children>
                   <DatePicker fx:id="dpDatumFunkce" prefHeight="19.0" prefWidth="168.0" />
                </children>
             </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="82.0" prefWidth="171.0" spacing="5.0">
+            <VBox alignment="TOP_RIGHT" prefHeight="95.0" prefWidth="246.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#zabrazTrzbyKartouAction" prefHeight="89.0" prefWidth="70.0" text="Zobraz tržby kartou " wrapText="true" />
-                  <Button mnemonicParsing="false" onAction="#zobrazTrzbyHotoveAction" prefHeight="83.0" prefWidth="74.0" text="Zobraz tržby hotově" wrapText="true" />
+                  <Button mnemonicParsing="false" onAction="#zabrazTrzbyKartouAction" prefHeight="25.0" prefWidth="200.0" text="Zobraz tržby kartou " wrapText="true" />
+                  <Button mnemonicParsing="false" onAction="#zobrazTrzbyHotoveAction" prefHeight="25.0" prefWidth="200.0" text="Zobraz tržby hotově" wrapText="true" />
+                  <Button mnemonicParsing="false" onAction="#zobrazNejprodavanejsiPolozkuAction" prefHeight="25.0" prefWidth="240.0" text="Zobraz nejprodávanější položku" />
                </children>
-            </HBox>
+            </VBox>
+            <HBox alignment="TOP_RIGHT" prefHeight="78.0" prefWidth="246.0" spacing="5.0" />
          </children>
       </VBox>
    </children>

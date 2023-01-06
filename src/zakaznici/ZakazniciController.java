@@ -25,6 +25,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -84,6 +85,8 @@ public class ZakazniciController implements Initializable {
     private VBox btnsBox;
     @FXML
     private VBox FiltrBox;
+    @FXML
+    private Button odebratBtn;
 
     /**
      * Initializes the controller class.
@@ -94,6 +97,9 @@ public class ZakazniciController implements Initializable {
         if(MainSceneController.roleId.get() == 1){
             FiltrBox.setVisible(false);
             btnsBox.setVisible(false);
+        }
+        if(MainSceneController.roleId.get() == 2){
+            odebratBtn.setVisible(false);
         }
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override

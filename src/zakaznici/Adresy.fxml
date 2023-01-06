@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="453.0" prefWidth="609.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zakaznici.AdresyController">
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="453.0" prefWidth="709.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zakaznici.AdresyController">
    <children>
-      <TableView fx:id="tableView" layoutY="2.0" prefHeight="443.0" prefWidth="876.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="173.0" AnchorPane.topAnchor="0.0">
+      <TableView fx:id="tableView" layoutY="2.0" prefHeight="453.0" prefWidth="461.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="266.0" AnchorPane.topAnchor="0.0">
          <columns>
             <TableColumn fx:id="uliceCol" prefWidth="116.0" text="Ulice" />
             <TableColumn fx:id="cpCol" prefWidth="69.59996795654297" text="ČP" />
@@ -21,15 +21,15 @@
             <TableColumn fx:id="mestoCol" prefWidth="150.4000244140625" text="Obec" />
          </columns>
       </TableView>
-      <VBox fx:id="btnsBox" alignment="TOP_CENTER" layoutX="472.0" layoutY="27.0" prefHeight="146.0" prefWidth="114.0" spacing="10.0" AnchorPane.rightAnchor="22.600000000000023" AnchorPane.topAnchor="27.0">
+      <VBox fx:id="btnsBox" alignment="TOP_CENTER" layoutX="503.0" layoutY="23.0" prefHeight="146.0" prefWidth="114.0" spacing="10.0" AnchorPane.bottomAnchor="283.6" AnchorPane.rightAnchor="74.60000000000002" AnchorPane.topAnchor="23.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#updateAction" text="Update" />
-            <Button mnemonicParsing="false" onAction="#pridatAction" text="Přidat " />
-            <Button fx:id="upravitBtn" mnemonicParsing="false" onAction="#upravitAction" text="Upravit" />
-            <Button fx:id="odebratBtn" mnemonicParsing="false" onAction="#odebratAction" text="Odebrat" />
+            <Button mnemonicParsing="false" onAction="#updateAction" prefWidth="75.0" text="Update" />
+            <Button mnemonicParsing="false" onAction="#pridatAction" prefWidth="75.0" text="Přidat " />
+            <Button fx:id="upravitBtn" mnemonicParsing="false" onAction="#upravitAction" prefWidth="75.0" text="Upravit" />
+            <Button fx:id="odebratBtn" mnemonicParsing="false" onAction="#odebratAction" prefWidth="75.0" text="Odebrat" />
          </children>
       </VBox>
-      <VBox fx:id="filtrBox" layoutX="443.0" layoutY="197.0" prefHeight="215.0" prefWidth="158.0" spacing="10.0" AnchorPane.bottomAnchor="40.80000000000001" AnchorPane.rightAnchor="7.599999999999994">
+      <VBox fx:id="filtrBox" layoutX="466.0" layoutY="182.0" prefHeight="270.0" prefWidth="222.0" spacing="10.0" AnchorPane.bottomAnchor="0.6000000000000227" AnchorPane.rightAnchor="20.600000000000023">
          <children>
             <Label text="Filtr:">
                <font>
@@ -39,7 +39,7 @@
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Ulice" />
-                  <TextField fx:id="tfUlice" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="tfUlice" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="150.0" />
                </children>
                <VBox.margin>
                   <Insets />
@@ -48,27 +48,27 @@
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="ČP" />
-                  <TextField fx:id="tfCisloPop" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="tfCisloPop" prefHeight="25.0" prefWidth="150.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="PSČ" />
-                  <TextField fx:id="tfPSC" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="tfPSC" prefHeight="25.0" prefWidth="150.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
                <children>
                   <Label text="Obec" />
-                  <TextField fx:id="tfObec" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="tfObec" prefHeight="25.0" prefWidth="150.0" />
                </children>
             </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="26.0" prefWidth="114.0" spacing="5.0">
+            <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="152.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="26.0" prefWidth="60.0" text="Filtruj" />
-                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="26.0" prefWidth="90.0" text="Zobraz vše" />
+                  <Button mnemonicParsing="false" onAction="#filtruj" prefHeight="25.0" prefWidth="120.0" text="Filtruj" />
+                  <Button mnemonicParsing="false" onAction="#zobrazVse" prefHeight="25.0" prefWidth="120.0" text="Zobraz vše" />
                </children>
-            </HBox>
+            </VBox>
          </children>
       </VBox>
    </children>

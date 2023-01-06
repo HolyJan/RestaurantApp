@@ -5,6 +5,7 @@
  */
 package connection;
 
+import databaseapplication.MainSceneController;
 import java.sql.*;
 import enums.ConnectionStatus;
 import java.util.logging.Level;
@@ -66,7 +67,7 @@ public class DatabaseConnection extends Thread {
                 //Class.forName("oracle.jdbc.driver.OracleDriver");  
                 this.setConnection(DriverManager.getConnection("jdbc:oracle:thin:@fei-sql3.upceucebny.cz:1521:BDAS", this.getUser(), this.getPassword()));
             } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+            MainSceneController.showDialog(ex.getMessage().split(":")[1].split("\n")[0]);
                 throw new DatabaseException("");
             }
             this.connectionStatus = ConnectionStatus.CONNECTED;

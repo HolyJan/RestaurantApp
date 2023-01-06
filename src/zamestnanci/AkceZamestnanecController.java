@@ -109,7 +109,6 @@ public class AkceZamestnanecController implements Initializable {
                     cstmt.setString(4, telefonText.getText());
                     cstmt.setInt(5, idPoz);
                     cstmt.execute();
-                    System.out.println("aktualizace OK");
                 } else {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozZamestnanceProc(?,?,?,?)}");
                     cstmt.setString(1, jmenoText.getText());

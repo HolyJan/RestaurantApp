@@ -65,6 +65,9 @@ public class AkceRezervaceController implements Initializable {
             casCombo.getItems().add(i + ":00");
             casCombo.getItems().add(i + ":30");
         }
+        if (MainSceneController.roleId.get() == 1) {
+            zakaznikCombo.setDisable(true);
+        }
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -124,7 +127,6 @@ public class AkceRezervaceController implements Initializable {
                         cstmt.setInt(5, stulCombo.getValue().getIdStolu());
                         cstmt.execute();
 
-                        System.out.println("aktualizace OK");
                     } else {
                         CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozRezervaciProc(?,?,?,?)}");
                         cstmt.setString(1, casCombo.getValue());
@@ -140,7 +142,7 @@ public class AkceRezervaceController implements Initializable {
                 Stage stage = (Stage) zakaznikCombo.getScene().getWindow();
                 stage.close();
             } catch (Exception e) {
-            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
 
         }
@@ -155,13 +157,22 @@ public class AkceRezervaceController implements Initializable {
                 zakaznici.add(new Zakaznik(result1.getInt("ID_ZAKAZNIKA"), result1.getString("JMENO"),
                         result1.getString("PRIJMENI"), result1.getString("TELEFON"), result1.getString("EMAIL"), null));
             }
+            zakaznikCombo.setItems(zakaznici);
+            if (MainSceneController.roleId.get() == 1) {
+                for (Zakaznik z : zakaznici) {
+                    if (z.getJmeno().equals(MainSceneController.jmenoName.get())
+                            && z.getPrijmeni().equals(MainSceneController.prijmeniName.get())
+                            && z.getTelefon().equals(MainSceneController.telefon.get())) {
+                        zakaznikCombo.setValue(z);
+                    }
+                }
+            }
 
             ResultSet result2 = statement.executeQuery("SELECT * FROM STOLY_VIEW");
             while (result2.next()) {
                 stoly.add(new Stul(result2.getInt("ID_STUL"), result2.getInt("CISLO_STOLU"),
                         result2.getInt("POCET_MIST")));
             }
-            zakaznikCombo.setItems(zakaznici);
             stulCombo.setItems(stoly);
 
         } catch (SQLException e) {

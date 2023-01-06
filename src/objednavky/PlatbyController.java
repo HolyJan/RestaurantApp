@@ -29,6 +29,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
@@ -79,6 +80,8 @@ public class PlatbyController implements Initializable {
     private ComboBox<String> cbTypPlatby;
     @FXML
     private DatePicker dpDatumFunkce;
+    @FXML
+    private Button odebratBtn;
 
     /**
      * Initializes the controller class.
@@ -86,6 +89,9 @@ public class PlatbyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        if(MainSceneController.roleId.get() == 2){
+            odebratBtn.setVisible(false);
+        }
         tfCastka.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,

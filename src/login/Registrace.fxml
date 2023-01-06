@@ -17,13 +17,13 @@
                   <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
                         <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="58.0" text="Jméno" />
-                        <TextField fx:id="jmenoTextField" prefWidth="150.0" />
+                        <TextField fx:id="jmenoTextField" />
                      </children>
                   </HBox>
                   <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
                         <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="85.0" text="Příjmení" />
-                        <TextField fx:id="prijmeniTextField" prefWidth="150.0" />
+                        <TextField fx:id="prijmeniTextField" />
                      </children>
                   </HBox>
                   <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">

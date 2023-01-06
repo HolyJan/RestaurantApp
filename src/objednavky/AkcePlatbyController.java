@@ -183,7 +183,6 @@ public class AkcePlatbyController implements Initializable {
                     cstmt.setString(6, cisloKartyText.getText());
                     cstmt.execute();
 
-                    System.out.println("aktualizace OK");
                 } else {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozPlatbuProc(?,?,?,?,?)}");
                     cstmt.setInt(1, objednavkaCombo.getValue().getIdObjednavky());

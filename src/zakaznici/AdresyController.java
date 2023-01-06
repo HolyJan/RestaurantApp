@@ -87,6 +87,9 @@ public class AdresyController implements Initializable {
             filtrBox.setVisible(false);
             btnsBox.setVisible(false);
         }
+        if(MainSceneController.roleId.get() == 2){
+            odebratBtn.setVisible(false);
+        }
         tfCisloPop.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -182,7 +185,7 @@ public class AdresyController implements Initializable {
             try {
                 controllerAkceAdresy.setData(adresa);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
 

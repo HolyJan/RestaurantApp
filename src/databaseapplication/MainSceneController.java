@@ -178,9 +178,8 @@ public class MainSceneController implements Initializable {
         });
         try {
             connection = new DatabaseConnection("ST60990", "60990");
-            System.out.println("Přihlášení proběhlo úspěšně");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 

@@ -90,7 +90,6 @@ public class AkceStolyController implements Initializable {
                         cstmt.setInt(3, Integer.parseInt(cisloStoluTextField.getText()));
                         cstmt.execute();
 
-                        System.out.println("aktualizace OK");
                     } else {
                         CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozStulProc(?,?)}");
                         cstmt.setInt(1, Integer.parseInt(pocetMistTextField.getText()));

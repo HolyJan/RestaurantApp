@@ -25,6 +25,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -54,6 +55,8 @@ public class PoziceController implements Initializable {
     ObservableList<Pozice> pozice = FXCollections.observableArrayList();
     @FXML
     private TextField tfPozice;
+    @FXML
+    private Button odebratBtn;
 
     /**
      * Initializes the controller class.
@@ -61,6 +64,9 @@ public class PoziceController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
+        if (MainSceneController.roleId.get() == 2) {
+            odebratBtn.setVisible(false);
+        }
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -116,7 +122,7 @@ public class PoziceController implements Initializable {
                 controllerAkcePozice.setData(pozice.getIdPozice(),
                         pozice.getNazev());
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
 
@@ -131,6 +137,7 @@ public class PoziceController implements Initializable {
     private void pridatAction(ActionEvent event) throws IOException {
         edit = false;
         openANewView(event, "zamestnanci/AkcePozice.fxml", connection);
+        loadData();
     }
 
     @FXML

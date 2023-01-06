@@ -65,6 +65,10 @@ public class AkceObjednavkaController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         init = false;
         cenaText.setDisable(true);
+        if (MainSceneController.roleId.get() == 1) {
+            zakaznikCombo.setDisable(true);
+        }
+
         pane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -116,6 +120,17 @@ public class AkceObjednavkaController implements Initializable {
                         new Adresa(result2.getInt("ID_ADRESA"), result2.getString("ULICE"),
                                 result2.getString("CISLO_POPISNE"), result2.getString("PSC"), result2.getString("OBEC"))));
             }
+
+            if (MainSceneController.roleId.get() == 1) {
+                for (Zakaznik z : zakaznici) {
+                    if (z.getJmeno().equals(MainSceneController.jmenoName.get())
+                            && z.getPrijmeni().equals(MainSceneController.prijmeniName.get())
+                            && z.getTelefon().equals(MainSceneController.telefon.get())) {
+                        zakaznikCombo.setValue(z);
+                    }
+                }
+            }
+
             polozkaCombo.setItems(polozky);
             zakaznikCombo.setItems(zakaznici);
             casObjednaniCombo.setItems(casyObjednani);
@@ -160,7 +175,6 @@ public class AkceObjednavkaController implements Initializable {
                     cstmt1.setInt(1, idObjednavky);
                     cstmt1.setInt(2, idPol);
                     cstmt1.execute();
-                    System.out.println("aktualizace OK");
                 } else {
                     CallableStatement cstmt = connection.getConnection().prepareCall("{call vlozObjednavkuProc(?,?,?,?)}");
                     cstmt.setInt(1, idZakaznika);
@@ -180,7 +194,7 @@ public class AkceObjednavkaController implements Initializable {
                 Stage stage = (Stage) zakaznikCombo.getScene().getWindow();
                 stage.close();
             } catch (Exception e) {
-            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
 
         }
@@ -197,7 +211,7 @@ public class AkceObjednavkaController implements Initializable {
                 cenaText.setText(cena);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 

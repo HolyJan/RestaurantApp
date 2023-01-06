@@ -14,6 +14,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
@@ -80,6 +81,12 @@ public class RezervaceController implements Initializable {
     private ComboBox<String> cbCas;
     @FXML
     private Button zobrazNadchRezBtn;
+    @FXML
+    private Button upravitBtn;
+    @FXML
+    private Button odebratBtn;
+    @FXML
+    private DatePicker dpDatumPocetRezervaci;
 
     /**
      * Initializes the controller class.
@@ -91,8 +98,14 @@ public class RezervaceController implements Initializable {
             cbCas.getItems().add(i + ":00");
             cbCas.getItems().add(i + ":30");
         }
-        if(MainSceneController.roleId.get() == 1){
+        if(MainSceneController.roleId.get() == 2){
+            odebratBtn.setVisible(false);
+        }
+        if (MainSceneController.roleId.get() == 1) {
             zobrazNadchRezBtn.setVisible(false);
+            odebratBtn.setVisible(false);
+            upravitBtn.setVisible(false);
+
         }
         tfCisloStolu.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -192,7 +205,7 @@ public class RezervaceController implements Initializable {
             try {
                 controllerAkceRezervace.setData(rezervace);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         }
 
@@ -377,6 +390,26 @@ public class RezervaceController implements Initializable {
         tfJmeno.setText("");
         tfPrijmeni.setText("");
         dpDatum.setValue(null);
+    }
+
+    @FXML
+    private void zobrazPocetRezervaciAction(ActionEvent event) throws SQLException {
+        java.util.Date utilDate = null;
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yy");
+        String date = null;
+        if (dpDatumPocetRezervaci.getValue() != null) {
+            utilDate = new java.util.Date(Date.valueOf(dpDatumPocetRezervaci.getValue()).getTime());
+            date = DATE_FORMAT.format(utilDate);
+        }
+        if (date == null) {
+            MainSceneController.showError("Není vybrán datum!");
+        } else {
+            CallableStatement cs = this.connection.getConnection().prepareCall("{? = call pocet_rezervaci(?)}");
+            cs.registerOutParameter(1, Types.INTEGER);
+            cs.setString(2, date);
+            cs.executeUpdate();
+            MainSceneController.showDialog("Počet rezerací ve dnu " + date + " je: " + cs.getInt(1));
+        }
     }
 
 }

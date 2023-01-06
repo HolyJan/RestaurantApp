@@ -25,6 +25,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -69,6 +70,8 @@ public class ZamestnanciController implements Initializable {
     private TextField tfTelefon;
     @FXML
     private ComboBox<String> cbPozice;
+    @FXML
+    private Button odebratBtn;
 
     /**
      * Initializes the controller class.
@@ -278,6 +281,26 @@ public class ZamestnanciController implements Initializable {
             openANewView2(event, "zamestnanci/SmenyZamestnance.fxml", connection);
         } else {
             MainSceneController.showDialog("Není vybrán zaměstnanec pro zobrazení směn");
+        }
+    }
+
+    @FXML
+    private void zamestnanciSmenyAction(ActionEvent event) {
+        zamestnanci.clear();
+        tableView.getItems().clear();
+        Statement statement = connection.createBlockedStatement();
+        try {
+            ResultSet result = statement.executeQuery("SELECT * FROM zamestnanci_pozice_smena");
+            while (result.next()) {
+                if (result.getString("JMENO") != null) {
+                    zamestnanci.add(new Zamestnanec(result.getInt("ID_ZAMESTNANCE"),
+                            result.getString("JMENO"), result.getString("PRIJMENI"), result.getString("TELEFON"), result.getInt("ID_POZICE"), result.getString("NAZEVPOZICE"), 0));
+                }
+            }
+            tableView.getItems().addAll(zamestnanci);
+
+        } catch (SQLException e) {
+            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
         }
     }
 
