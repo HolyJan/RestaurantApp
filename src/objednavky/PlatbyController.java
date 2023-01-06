@@ -324,4 +324,8 @@ public class PlatbyController implements Initializable {
         }
     }
 
+    @FXML
+    private void zobrazNejprodavanejsiPolozkuAction(ActionEvent event) {
+    }
+
 }

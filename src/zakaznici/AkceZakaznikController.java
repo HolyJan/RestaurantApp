@@ -13,6 +13,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -98,36 +99,49 @@ public class AkceZakaznikController implements Initializable {
             Statement statement = connection.createBlockedStatement();
 
             try {
-                if (idZakaznika != -1) {
-                    CallableStatement cstmt = connection.getConnection().prepareCall("{call updateZakaznikaProc(?,?,?,?,?,?)}");
-                    cstmt.setInt(1, idZakaznika);
-                    cstmt.setString(2, jmenoText.getText());
-                    cstmt.setString(3, prijmeniText.getText());
-                    cstmt.setString(4, telefonText.getText());
-                    cstmt.setString(5, emailText.getText());
-                    cstmt.setInt(6, idAdresa);
-                    cstmt.execute();
-
-                    CallableStatement cstmt1 = connection.getConnection().prepareCall("{call updateAdresuProc(?,?,?,?,?)}");
-                    cstmt1.setInt(1, idAdresa);
-                    cstmt1.setString(2, adresaCombo.getValue().getUlice());
-                    cstmt1.setString(3, adresaCombo.getValue().getCisloPop());
-                    cstmt1.setString(4, adresaCombo.getValue().getPsc());
-                    cstmt1.setString(5, adresaCombo.getValue().getMesto());
-                    cstmt1.execute();
-                } else {
-                    CallableStatement cstmt1 = connection.getConnection().prepareCall("{call vlozZakaznikaProc(?,?,?,?,?)}");
-                    cstmt1.setString(1, jmenoText.getText());
-                    cstmt1.setString(2, prijmeniText.getText());
-                    cstmt1.setString(3, telefonText.getText());
-                    cstmt1.setString(4, emailText.getText());
-                    cstmt1.setInt(5, adresaCombo.getValue().getIdAdresy());
-                    cstmt1.execute();
+                int result = 1;
+                if (!emailText.getText().isEmpty()) {
+                    CallableStatement cs = this.connection.getConnection().prepareCall("{? = call check_email(?)}");
+                    cs.registerOutParameter(1, Types.INTEGER);
+                    cs.setString(2, emailText.getText());
+                    cs.executeUpdate();
+                    result = cs.getInt(1);
                 }
-                Stage stage = (Stage) jmenoText.getScene().getWindow();
-                stage.close();
+                if (result == 1) {
+                    if (idZakaznika != -1) {
+                        CallableStatement cstmt = connection.getConnection().prepareCall("{call updateZakaznikaProc(?,?,?,?,?,?)}");
+                        cstmt.setInt(1, idZakaznika);
+                        cstmt.setString(2, jmenoText.getText());
+                        cstmt.setString(3, prijmeniText.getText());
+                        cstmt.setString(4, telefonText.getText());
+                        cstmt.setString(5, emailText.getText());
+                        cstmt.setInt(6, idAdresa);
+                        cstmt.execute();
+
+                        CallableStatement cstmt1 = connection.getConnection().prepareCall("{call updateAdresuProc(?,?,?,?,?)}");
+                        cstmt1.setInt(1, idAdresa);
+                        cstmt1.setString(2, adresaCombo.getValue().getUlice());
+                        cstmt1.setString(3, adresaCombo.getValue().getCisloPop());
+                        cstmt1.setString(4, adresaCombo.getValue().getPsc());
+                        cstmt1.setString(5, adresaCombo.getValue().getMesto());
+                        cstmt1.execute();
+                    } else {
+                        CallableStatement cstmt1 = connection.getConnection().prepareCall("{call vlozZakaznikaProc(?,?,?,?,?)}");
+                        cstmt1.setString(1, jmenoText.getText());
+                        cstmt1.setString(2, prijmeniText.getText());
+                        cstmt1.setString(3, telefonText.getText());
+                        cstmt1.setString(4, emailText.getText());
+                        cstmt1.setInt(5, adresaCombo.getValue().getIdAdresy());
+                        cstmt1.execute();
+                    }
+                    Stage stage = (Stage) jmenoText.getScene().getWindow();
+                    stage.close();
+                } else {
+                    MainSceneController.showDialog("Zadaný email není validní.");
+                }
+
             } catch (Exception e) {
-            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
+                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
         } else {
             if (telefonText.getText().length() != 9) {
