@@ -95,7 +95,7 @@ public class AkceZakaznikController implements Initializable {
     @FXML
     private void potvrditAction(ActionEvent event) {
         if (!"".equals(jmenoText.getText()) && !"".equals(prijmeniText.getText())
-                && !"".equals(telefonText.getText()) || telefonText.getText().length() != 9) {
+                && !"".equals(telefonText.getText()) || telefonText.getText().length() == 9) {
             Statement statement = connection.createBlockedStatement();
 
             try {

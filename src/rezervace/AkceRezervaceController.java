@@ -13,6 +13,8 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -52,6 +54,9 @@ public class AkceRezervaceController implements Initializable {
     Date datum;
     String cas;
     int cisloStolu;
+    Date staryDatum;
+    String staryCas;
+
     @FXML
     private ComboBox<String> casCombo;
 
@@ -92,33 +97,44 @@ public class AkceRezervaceController implements Initializable {
         datum = rezervace.getDatum();
         cas = rezervace.getCas();
         cisloStolu = rezervace.getCisloStolu();
+        staryCas = rezervace.getCas();
+        staryDatum = rezervace.getDatum();
     }
 
     @FXML
-    private void PotvrditAction(ActionEvent event) {
+    private void PotvrditAction(ActionEvent event) throws SQLException {
         if (!"".equals(zakaznikCombo.getValue())
-                && !"".equals(stulCombo.getValue()) && !"".equals(datumDatePicker.getValue())
+                && !"".equals(stulCombo.getValue()) && datumDatePicker.getValue() != null
                 && casCombo.getValue() != null) {
             Statement statement = connection.createBlockedStatement();
             try {
-                boolean podminka = false;
-                ResultSet result = statement.executeQuery("SELECT * FROM REZERVACE_VIEW");
-                while (result.next()) {
-                    if (result.getString("CAS").equals(casCombo.getValue())
-                            && result.getDate("DATUM").compareTo(Date.valueOf(datumDatePicker.getValue())) == 0
-                            && result.getInt("CISLO_STOLU") == stulCombo.getValue().getCisloStolu()) {
-                        podminka = true;
-                        if (result.getString("CAS").equals(cas)
-                                && result.getDate("DATUM").compareTo(datum) == 0
-                                && result.getInt("CISLO_STOLU") == cisloStolu) {
-                            podminka = false;
-                        }
-
-                    }
+                String vystup = null;
+                java.util.Date utilDate = null;
+                SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yy");
+                String date = null;
+                if (datumDatePicker.getValue() != null) {
+                    utilDate = new java.util.Date(Date.valueOf(datumDatePicker.getValue()).getTime());
+                    date = DATE_FORMAT.format(utilDate);
                 }
-                if (!podminka) {
-                    if (idRezervace != -1) {
+                if (idRezervace != -1) {
+                    if (staryDatum.compareTo(Date.valueOf(datumDatePicker.getValue())) != 0 && !staryCas.equals(casCombo.getValue()) && cisloStolu != stulCombo.getValue().getCisloStolu()) {
 
+                        CallableStatement cs = this.connection.getConnection().prepareCall("{? = call je_volny_stul(?,?,?)}");
+                        cs.registerOutParameter(1, Types.VARCHAR);
+                        cs.setString(2, date);
+                        cs.setString(3, casCombo.getValue());
+                        cs.setInt(4, stulCombo.getValue().getCisloStolu());
+                        cs.executeUpdate();
+                        vystup = cs.getString(1);
+                    } else {
+                        vystup = "Volno";
+                    }
+                } else {
+                    vystup = "Volno";
+                }
+
+                if (vystup.equals("Volno")) {
+                    if (idRezervace != -1) {
                         CallableStatement cstmt = connection.getConnection().prepareCall("{call updateRezervaciProc(?,?,?,?,?)}");
                         cstmt.setInt(1, idRezervace);
                         cstmt.setString(2, casCombo.getValue());
@@ -136,13 +152,28 @@ public class AkceRezervaceController implements Initializable {
                         cstmt.execute();
 
                     }
+                    //                ResultSet result = statement.executeQuery("SELECT * FROM REZERVACE_VIEW");
+                    //                while (result.next()) {
+                    //                    if (result.getString("CAS").equals(casCombo.getValue())
+                    //                            && result.getDate("DATUM").compareTo(Date.valueOf(datumDatePicker.getValue())) == 0
+                    //                            && result.getInt("CISLO_STOLU") == stulCombo.getValue().getCisloStolu()) {
+                    //                        podminka = true;
+                    //                        if (result.getString("CAS").equals(cas)
+                    //                                && result.getDate("DATUM").compareTo(datum) == 0
+                    //                                && result.getInt("CISLO_STOLU") == cisloStolu) {
+                    //                            podminka = false;
+                    //                        }
+                    //
+                    //                    }
+                    //                }
+                    Stage stage = (Stage) zakaznikCombo.getScene().getWindow();
+                    stage.close();
                 } else {
-                    MainSceneController.showError("V tento čas je jíž stůl obsazen!");
+                    MainSceneController.showError(vystup);
                 }
-                Stage stage = (Stage) zakaznikCombo.getScene().getWindow();
-                stage.close();
             } catch (Exception e) {
-                MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
+                System.out.println(e.getMessage());
+//            MainSceneController.showDialog(e.getMessage().split(":")[1].split("\n")[0]);
             }
 
         }
